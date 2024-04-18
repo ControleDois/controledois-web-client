@@ -1,0 +1,261 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Configuração</h2>
+    <button class="button-back" mat-icon-button routerLink="/dash">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+    <form [formGroup]="myForm">
+      <mat-tab-group>
+        <mat-tab label="Dados da empresa" formGroupName="people">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">store</mat-icon>
+            Dados da empresa
+          </ng-template>
+          <div class="basic-form-header" style="margin-top: 20px;">
+            <h3>Dados gerais</h3>
+          </div>
+
+          <div class="label-group">
+            <label class="label-w30">
+              <span class="field">Tipo de pessoa</span>
+              <select formControlName="people_type">
+                <option *ngFor="let role of peopleRole" [value]="role.type">{{ role.name }}
+                </option>
+              </select>
+            </label>
+
+            <label>
+              <div class="double-spans">
+                <span class="field">{{myForm.value.people.people_type == 0 ? 'CPF' : 'CNPJ'}}</span>
+                <span *ngIf="myForm.value.people.people_type != 0" class="field-right-search" (click)="getCNPJ()">Consultar CNPJ</span>
+              </div>
+              <input [ngClass]="{'errorValidation': getValidation('document')}" formControlName="document" type="text"
+                [mask]="myForm.value.people.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'">
+            </label>
+
+            <label class="label-w50">
+              <span class="field">{{myForm.value.people.people_type == 0 ? 'Nome' : 'Nome Fantasia'}}</span>
+              <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Ex: Empresa fulano de tal">
+            </label>
+          </div>
+
+          <div class="basic-form-header">
+            <h3>Informações adicionais</h3>
+          </div>
+
+          <div class="label-group">
+            <label class="label-w50">
+              <span class="field">E-mail principal</span>
+              <input [ngClass]="{'errorValidation': getValidation('email')}" formControlName="email" type="email">
+            </label>
+
+            <label>
+              <span class="field">Telefone comercial</span>
+              <input [ngClass]="{'errorValidation': getValidation('phone_commercial')}" formControlName="phone_commercial" type="text">
+            </label>
+
+            <label>
+              <span class="field">Telefone celular</span>
+              <input [ngClass]="{'errorValidation': getValidation('phone_cell')}" formControlName="phone_cell" type="text">
+            </label>
+
+            <label>
+              <span class="field">{{myForm.value.people.people_type == 0 ? 'Nascimento' : 'Data abertura'}}</span>
+              <input [ngClass]="{'errorValidation': getValidation('birth')}" formControlName="birth" type="date">
+            </label>
+          </div>
+
+          <div class="label-group">
+            <label *ngIf="myForm.value.people.people_type == 0">
+              <span class="field">RG</span>
+              <input [ngClass]="{'errorValidation': getValidation('general_record')}" formControlName="general_record" type="text">
+            </label>
+          </div>
+
+          <div class="basic-form-header">
+            <h3>Informações fiscais</h3>
+          </div>
+
+          <div class="label-group" *ngIf="myForm.value.people.people_type == 1">
+            <label class="label-w50">
+              <span class="field">Razão social</span>
+              <input [ngClass]="{'errorValidation': getValidation('social_name')}" formControlName="social_name" type="text">
+            </label>
+
+            <label class="check">
+              <input type="checkbox" formControlName="simple">
+              <span>Optante pelo simples?</span>
+            </label>
+          </div>
+
+          <div class="label-group">
+            <label class="label-w30">
+              <span class="field">Indicador de Inscrição Estadual</span>
+              <select formControlName="state_registration_indicator">
+                <option *ngFor="let state of stateRegistrationIndicator" [value]="state.type">{{ state.name }}
+                </option>
+              </select>
+            </label>
+
+            <label *ngIf="myForm.value.state_registration_indicator != 2">
+              <span class="field">Inscrição Estadual</span>
+              <input formControlName="state_registration" type="text">
+            </label>
+
+            <label *ngIf="myForm.value.people.people_type == 1">
+              <span class="field">Inscrição municipal</span>
+              <input formControlName="municipal_registration" type="text">
+            </label>
+
+            <label *ngIf="myForm.value.people.people_type == 1">
+              <span class="field">Inscrição Suframa</span>
+              <input formControlName="inscription_suframa" type="text">
+            </label>
+          </div>
+
+          <div class="basic-form-header">
+            <h3>Endereço</h3>
+          </div>
+
+          <div formGroupName="address">
+            <div class="label-group">
+              <label>
+                <div class="double-spans"><span class="field">CEP</span>
+                  <span class="field-right-search" (click)="getCEP()">Consultar CEP</span>
+                </div>
+                <input [ngClass]="{'errorValidation': getValidation('zip_code')}" formControlName="zip_code" type="text" mask="00000-000">
+              </label>
+
+              <label class="label-w50">
+                <span class="field">Endereço</span>
+                <input [ngClass]="{'errorValidation': getValidation('address')}" formControlName="address" type="text">
+              </label>
+
+              <label>
+                <span class="field">Número</span>
+                <input [ngClass]="{'errorValidation': getValidation('number')}" formControlName="number" type="text">
+              </label>
+            </div>
+
+            <div class="label-group">
+              <label>
+                <span class="field">Estado</span>
+                <input [ngClass]="{'errorValidation': getValidation('state')}" formControlName="state" type="text">
+              </label>
+
+              <label>
+                <span class="field">Cidade</span>
+                <input [ngClass]="{'errorValidation': getValidation('city')}" formControlName="city" type="text">
+              </label>
+
+              <label class="label-w30">
+                <span class="field">Bairro</span>
+                <input [ngClass]="{'errorValidation': getValidation('district')}" formControlName="district" type="text">
+              </label>
+
+              <label class="label-w30">
+                <span class="field">Complemento</span>
+                <input formControlName="complement" type="text">
+              </label>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Configurações de venda">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">point_of_sale</mat-icon>
+            Configurações de venda
+          </ng-template>
+
+          <div class="basic-form-header" style="margin-top: 20px;">
+            <h3>Dados gerais</h3>
+          </div>
+
+          <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
+          <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
+          <app-search-loading-unique class="label-w50" [search]="searchBank"></app-search-loading-unique>
+        </mat-tab>
+
+        <mat-tab label="Shop">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">shopping_bag</mat-icon>
+            Shop
+          </ng-template>
+
+          <ng-container formGroupName="shop">
+            <div class="basic-form-header" style="margin-top: 20px;">
+              <h3>Dados gerais</h3>
+            </div>
+
+            <div class="label-group">
+              <div class="label-group-check" style="margin-bottom: 10px; min-width: 135px;">
+                <span class="title">Shop</span>
+                <div class="checks">
+                  <label class="check">
+                    <input type="checkbox" formControlName="is_active" >
+                    <span>Ativar shop?</span>
+                  </label>
+                </div>
+              </div>
+
+              <label>
+                <span class="field">Cor padrão</span>
+                <input formControlName="color_default" type="color" style="height: 40px;">
+              </label>
+            </div>
+
+            <div class="basic-form-header">
+              <h3>Categorias que aparecem no shop</h3>
+            </div>
+
+            <div class="label-group" style="margin-bottom: 10px; padding: 0 20px;">
+              <app-search-loading-chips class="label-w100" [search]="searchCategories"></app-search-loading-chips>
+            </div>
+
+            <div class="basic-form-header">
+              <h3>Acesso</h3>
+            </div>
+
+            <label class="label-w100">
+              <span class="field">Link URL</span>
+              <input formControlName="link_url" type="text">
+            </label>
+          </ng-container>
+        </mat-tab>
+
+        <mat-tab label="API Comunicação">
+          <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings_ethernet</mat-icon>
+            API Comunicação
+          </ng-template>
+
+          <div class="basic-form-header" style="margin-top: 20px;">
+            <h3>Dados gerais</h3>
+          </div>
+
+          <div class="label-group">
+            <label class="label-w100">
+              <span class="field">Token</span>
+              <input formControlName="token" type="text" readonly>
+            </label>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

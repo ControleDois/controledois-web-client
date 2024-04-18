@@ -1,0 +1,71 @@
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  background-color: #fff /* Altere para a cor desejada */
+  /* Adicione outros estilos conforme necessário */
+}
+
+.message {
+  text-align: center;
+  max-width: 400px;
+
+  mat-icon {
+    height: 62px;
+    width: 62px;
+    font-size: 62px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: #606060;
+  }
+
+  p {
+    color: #575757;
+  }
+}
+
+.message-next {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 400px;
+  background-color: #f3f5fc;
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+
+  h1 {
+    color: #606060;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  p {
+    color: #606060;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+}
+
+.message-help {
+  margin-top: 10px;
+
+  button {
+    display: block;
+    width: 100%;
+    margin: 10px 0 10px 0;
+    background: rgb(130, 87, 229);
+    border-radius: 5px;
+    border: 0px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    height: 50px;
+    transition: background 0.2s ease 0s, color 0.2s ease 0s;
+    font-size: 16px;
+    text-transform: uppercase;
+
+    &:hover {
+      background: rgb(168, 131, 255);
+    }
+  }
+}

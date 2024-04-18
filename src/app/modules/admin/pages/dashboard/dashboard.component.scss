@@ -1,0 +1,152 @@
+.dash {
+  display: flex;
+
+  .dash-left {
+    flex-basis: calc(30% - 10px);
+  }
+
+  .dash-right {
+    margin-left: 20px;
+    flex-basis: calc(70% - 10px);
+  }
+}
+
+.card {
+  background: #fff;
+  width: 100%;
+  box-shadow: 0 0 10px 0 rgb(201 211 221 / 40%);
+  border: 1px solid #c9d3dd;
+  border-radius: 3px;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  padding: 20px;
+  color: #395a7a;
+
+  p {
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  .card-header {
+    padding: 20px;
+    margin-top: -20px;
+    margin-bottom: 20px;
+    margin-left: -20px;
+    border-bottom: 1px solid #f1f1f1;
+    width: 100%;
+    box-sizing: content-box;
+
+    h4 {
+      font-size: 16px;
+      color: #395a7a;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      line-height: 1;
+      font-weight: 300;
+    }
+  }
+
+  .card-content {
+    padding: 10px;
+  }
+
+  .card-helper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-left: -10px;
+    margin-right: -10px;
+
+    .card-helper-img {
+      padding-left: 10px;
+      padding-right: 10px;
+      box-sizing: border-box;
+
+      img {
+        width: 70px;
+      }
+    }
+
+    .card-helper-description {
+      padding-left: 10px;
+      padding-right: 10px;
+      box-sizing: border-box;
+
+      h3 {
+        font-weight: 400;
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+.bill {
+  display: flex;
+  margin-bottom: 20px;
+
+  .card + .card {
+    margin-left: 20px;
+  }
+
+  .card {
+    flex-basis: calc(50% - 10px);
+  }
+
+  .card-header-bill {
+    h4 {
+      font-weight: 400;
+      font-size: 18px;
+    }
+  }
+}
+
+.bank {
+  padding: 20px;
+  margin-top: -20px;
+  margin-left: -20px;
+  width: 100%;
+  box-sizing: content-box;
+  min-width: 100px;
+
+  h4 {
+    padding: 20px 0;
+  }
+}
+
+.bank + .bank {
+  border-top: 1px solid #f1f1f1;
+}
+
+@media (max-width: 62em) {
+  .bill {
+    display: block;
+
+    .card {
+      margin-top: 20px;
+    }
+
+    .card + .card {
+      margin-left: 0;
+    }
+  }
+}
+
+@media (max-width: 62em) {
+  .dash {
+    display: block;
+
+    .dash-left {
+      .card-help {
+        display: none;
+      }
+    }
+
+    .dash-right {
+      margin: 20px 0 0 0;
+    }
+  }
+}
+

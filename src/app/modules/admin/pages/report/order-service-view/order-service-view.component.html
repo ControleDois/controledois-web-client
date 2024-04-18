@@ -1,0 +1,68 @@
+<div class="report">
+  <header>
+    <div>Data de abertura: {{libraryService.getFormatData(os?.date_start)}}</div>
+    <div>Ordem de Serviço <b>{{os.id}}</b></div>
+  </header>
+
+  <section class="company">
+    <!--<div class="logo">
+      <h1>eebu</h1>
+    </div>-->
+
+    <div class="description">
+      <h1>{{auth.company?.people?.name}}</h1>
+      <p>{{auth.company?.people?.address}},
+        {{auth.company?.people?.address_number}},
+        {{auth.company?.people?.address_district}},
+        {{auth.company?.people?.address_city}}-{{auth.company?.people?.address_state}}
+        CEP: {{auth.company?.people?.zip_code}}</p>
+      <div>
+        <p>{{auth.company?.people?.role == 0 ? 'CPF: ' : 'CNPJ: '}}{{auth.company.people.document | mask: auth.company?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </p>
+        <p style="margin-left: 20px">Fone: {{auth.company.people.phone_commercial | mask: '(00) 00000-0000'}}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="people">
+    <div class="namePhone">
+      <p>{{os?.people?.name}}</p>
+      <p>{{os?.people?.phone_commercial ? (os?.people?.phone_commercial | mask: os?.people?.phone_commercial.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000') : ''}}</p>
+    </div>
+
+    <div class="documentEmail">
+      <p style="opacity: 0.8">CNPJ: {{os?.people?.document | mask: os?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} IE: {{os?.people?.ie}}</p>
+      <p>{{os?.people?.email}}</p>
+    </div>
+
+    <p style="margin-top: 5px">{{os?.people?.address}}, {{os?.people?.address_number}} - {{os?.people?.address_complement}} - {{os?.people?.address_district}} - {{os?.people?.address_city}} - {{os?.people?.address_state}} - CEP: {{os?.people?.zip_code}}</p>
+  </section>
+
+  <section class="problem">
+    <div>
+      <h2>Problema ou defeito apresentado</h2>
+      <p>{{os?.note_problem}}</p>
+    </div>
+
+    <div style="margin-left: 5px">
+      <h2>Serviço que será prestado</h2>
+      <p>{{os?.note_service}}</p>
+    </div>
+  </section>
+
+  <section class="problem">
+    <div>
+      <h2>Técnico responsável:</h2>
+      <p>{{os?.responsible}}</p>
+    </div>
+
+    <div style="margin-left: 5px">
+      <h2>Observação:</h2>
+      <p>.</p>
+    </div>
+  </section>
+
+  <section class="assinature">
+    <p style="border-top: 1px solid #454242; margin: 40px 10px 0 auto; width: 50%;">Técnico Responsável</p>
+    <p style="border-top: 1px solid #454242; margin: 40px auto 0 10px; width: 50%;">Cliente ou Responsável</p>
+  </section>
+</div>

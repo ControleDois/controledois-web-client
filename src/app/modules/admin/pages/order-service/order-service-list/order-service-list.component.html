@@ -1,0 +1,80 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Cadastro de Ordens de Serviço</h2>
+    <button class="button-add" mat-button routerLink="/os/new">
+      Adicionar
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="page-search">
+      <app-search-simple [search]="search"></app-search-simple>
+      <app-search-date-month [date]="vDateFilter" (eventEmit)="load()"></app-search-date-month>
+    </div>
+
+    <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Nº da O.S. </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date_start">
+        <th mat-header-cell *matHeaderCellDef> Data de Início </th>
+        <td mat-cell *matCellDef="let element"> {{libraryService.getFormatData(element.date_start)}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="client">
+        <th mat-header-cell *matHeaderCellDef> Cliente </th>
+        <td mat-cell *matCellDef="let element" style="width: 30%;"> {{element?.people?.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status da O.S.</th>
+        <td mat-cell *matCellDef="let element">
+          <div class="status-active"
+               [style.color]="getStatusColor(element.status)"
+               [style.background]="getStatusColorBack(element.status)">
+            {{getStatus(element)}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="responsible">
+        <th mat-header-cell *matHeaderCellDef> Responsável </th>
+        <td mat-cell *matCellDef="let element"> {{element.responsible || element?.user?.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="table-actions" [matMenuTriggerFor]="actions">
+            <span>Ações</span>
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </div>
+          <mat-menu #actions="matMenu">
+            <button mat-menu-item (click)="createPDF(element.id)">
+              <span>Imprimir</span>
+            </button>
+            <button mat-menu-item [routerLink]="'/os/' + element.id">
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item (click)="delete(element.id)">
+              <span>Remover</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">Nenhum resultado encontrado</td>
+      </tr>
+    </table>
+
+    <mat-paginator [length]="tableLength" [pageSizeOptions]="[10, 50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+
+<div #priceListPDF></div>
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

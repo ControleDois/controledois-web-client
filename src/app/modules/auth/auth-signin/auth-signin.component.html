@@ -1,0 +1,30 @@
+<div class="login">
+  <div class="login-form">
+    <div class="login-form-content">
+      <h1>controle<i>Dois</i></h1>
+      <p>Informe seus dados abaixo</p>
+
+      <div class="basic-form">
+        <form [formGroup]="myForm">
+          <label>
+            <span class="field">E-mail</span>
+            <input formControlName="email" type="email" placeholder="Informe o email de acesso">
+          </label>
+          <label>
+            <span class="field">Senha</span>
+            <input formControlName="password" type="password" placeholder="Senha">
+          </label>
+        </form>
+      </div>
+
+      <a routerLink="/auth/recover-password">Esqueci minha senha</a>
+
+      <div class="login-sign">
+        <button mat-button (click)="login()">Entrar</button>
+        <a routerLink="/auth/signup">Não tem uma conta? Experimente grátis!</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

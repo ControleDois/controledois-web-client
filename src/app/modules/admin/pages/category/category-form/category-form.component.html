@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Novo cadastro</h2>
+    <button class="button-back" mat-icon-button routerLink="/category">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+      <div class="basic-form-header">
+        <h3>Dados gerais</h3>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <label class="label-w30">
+            <span class="field">Tipo</span>
+            <select formControlName="role" (change)="getRole()">
+              <option *ngFor="let role of roles" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Nome</span>
+            <input formControlName="name" type="text">
+          </label>
+
+          <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
+        </div>
+      </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

@@ -1,0 +1,45 @@
+.ajax_load {
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,.6);
+  z-index: calc(4 * 2);
+}
+
+.ajax_load_box {
+  margin: auto;
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 1px 1px 1px rgb(0 0 0 / 50%);
+}
+
+.ajax_load_box_circle {
+  border: 16px solid #e3e3e3;
+  border-top: 16px solid #00aff0;
+  border-radius: 50%;
+  margin: auto;
+  width: 80px;
+  height: 80px;
+  -webkit-animation: spin 1.2s linear infinite;
+  -o-animation: spin 1.2s linear infinite;
+  animation: spin 1.2s linear infinite;
+}
+
+.ajax_load_box_title {
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

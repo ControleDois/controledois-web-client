@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Novo cadastro</h2>
+    <button class="button-back" mat-icon-button routerLink="/streaming">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+      <div class="basic-form-header">
+        <h3>Dados gerais</h3>
+      </div>
+
+      <form [formGroup]="myForm">
+        <label>
+          <span class="field">Titulo</span>
+          <input formControlName="title" type="text" placeholder="Titulo da mensagem.">
+        </label>
+
+        <label>
+          <span class="field">Descrição do problema ou defeito apresentado</span>
+          <textarea formControlName="message" placeholder="Mensagem a ser entregue."></textarea>
+        </label>
+      </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

@@ -1,0 +1,33 @@
+<header>
+  <h3>{{data.deleted ? 'Excluir cadastro(s)' : 'Inativar cadastro'}}</h3>
+  <button class="button-back" mat-icon-button [mat-dialog-close]="false">
+    <mat-icon>close</mat-icon>
+  </button>
+</header>
+
+<section>
+  <p class="description" *ngIf="data.deleted">
+    Você está prestes a <b>excluir</b> o cadastro. Após excluir, as informações desse cadastro serão permanentemente
+    apagadas da
+    sua base.
+  </p>
+  <p class="description" *ngIf="!data.deleted">
+    Você está prestes a <b>inativar o cadastro.</b> Ele deixará de ser apresentado na listagem para seleção e novas
+    operações.
+  </p>
+  <p class="question">
+    Tem certeza que deseja completar esta ação?
+  </p>
+</section>
+
+<footer>
+  <button mat-button class="btn-cancel" [mat-dialog-close]="false">
+    Cancelar
+  </button>
+  <button mat-button class="btn-delete" [mat-dialog-close]="true" *ngIf="data.deleted">
+    Excluir
+  </button>
+  <button mat-button class="btn-confirm" [mat-dialog-close]="true" *ngIf="!data.deleted">
+    Inativar
+  </button>
+</footer>

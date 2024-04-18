@@ -1,0 +1,40 @@
+<div class="login">
+  <div class="login-form">
+    <div class="login-form-content">
+      <h1>controle<i>Dois</i></h1>
+      <p>Seja Bem Vindo!</p>
+      <p class="text">Cadastre-se e aproveite.</p>
+
+      <div class="basic-form">
+        <form [formGroup]="myForm">
+          <label>
+            <span class="field">Nome</span>
+            <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Seu nome">
+          </label>
+
+          <label>
+            <span class="field">E-mail</span>
+            <input [ngClass]="{'errorValidation': getValidation('email')}" formControlName="email" type="email" placeholder="Email de acesso">
+          </label>
+
+          <label>
+            <span class="field">Senha</span>
+            <input [ngClass]="{'errorValidation': getValidation('password')}" formControlName="password" type="password" placeholder="Senha para acesso">
+          </label>
+
+          <label>
+            <span class="field">Senha</span>
+            <input [ngClass]="{'errorValidation': getValidation('repeat_password')}" formControlName="repeat_password" type="password" placeholder="Confirme a senha">
+          </label>
+        </form>
+      </div>
+
+      <div class="sign">
+        <button mat-button routerLink="/auth/signin">Cancelar</button>
+        <button class="register" mat-button (click)="register()">Cadastrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

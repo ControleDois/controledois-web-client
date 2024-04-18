@@ -1,0 +1,17 @@
+<div mat-dialog-content>
+  <div class="message">
+    <mat-icon [ngStyle]="{'color': data.iconColor}">{{data.icon}}</mat-icon>
+    <h1>{{data.title}}</h1>
+    <p>{{data.message}}</p>
+  </div>
+
+  <div class="message-next" *ngIf="data.message_next">
+    <h1>O que fazer agora?</h1>
+    <p>{{data.message_next}}</p>
+
+    <div class="message-help" *ngIf="data.message_help_link">
+      <h1>Tem alguma dúvida?</h1>
+      <button mat-button (click)="showLink(data.message_help_link || '')">Veja como fazer</button>
+    </div>
+  </div>
+</div>

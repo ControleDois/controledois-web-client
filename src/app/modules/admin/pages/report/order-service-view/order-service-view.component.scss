@@ -1,0 +1,173 @@
+.report {
+  padding: 20px;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: normal;
+    margin-bottom: 10px;
+
+    b {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  .company {
+    align-items: center;
+    text-align: center;
+    border: 1px solid #454242;
+    padding: 8px;
+    border-radius: 4px;
+
+    .logo {
+      flex: 0 0 16.666667%;
+      max-width: 16.666667%;
+
+      h1 {
+        color: #00aff0;
+      }
+    }
+
+    .description {
+      font-size: 12px;
+      font-weight: normal;
+
+      h1 {
+        font-size: 16px;
+      }
+
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .osDates {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #454242;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  .people {
+    margin-top: 5px;
+    border: 1px solid #454242;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+
+    .namePhone {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: bold;
+    }
+
+    .documentEmail {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .equipment {
+    margin-top: 5px;
+    border: 1px solid #454242;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 12px;
+
+    .details {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      h2 {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .problem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    div {
+      margin-top: 5px;
+      border: 1px solid #454242;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      width: 100%;
+
+      h2 {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .observation {
+    margin-top: 5px;
+    border: 1px solid #454242;
+    padding: 8px 8px 50px 8px;
+    border-radius: 4px;
+
+    h2 {
+      font-size: 12px;
+    }
+  }
+
+  .line {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-bottom: 3px dotted #454242;
+  }
+
+  .assinature {
+    margin-top: 5px;
+    border: 1px solid #454242;
+    padding: 5px;
+    border-radius: 4px;
+    text-align: center;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+
+  .btn-cancel {
+    color: #1b69c8;
+    background-color: #f1f4f9;
+    border: 1px solid #c9d3dd;
+  }
+
+  .btn-confirm {
+    background-color: #1b9b45;
+    color: #fff;
+  }
+
+  .btn-delete {
+    background-color: #db242a;
+    color: #fff;
+  }
+}
+

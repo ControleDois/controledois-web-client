@@ -1,0 +1,84 @@
+<div class="dash container">
+  <div class="dash-left">
+    <div class="card card-help" style="margin-bottom: 20px">
+      <div class="card-header">
+        <h4>Precisa de ajuda?</h4>
+      </div>
+      <div class="card-content">
+        <div class="card-helper">
+          <div class="card-helper-img">
+            <img src="assets/phone-04.svg" />
+          </div>
+          <div class="card-helper-description">
+            <p>Ligue agora.</p>
+            <h3>66 98430-7974</h3>
+          </div>
+        </div>
+
+        <p style="margin-top: 20px; text-align: center">Se preferir, entramos em contato.</p>
+        <button class="button-add" mat-button style="color: #fff; background-color: #2687e9; width: 100%">
+          Receber contato
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header" style="display: flex; justify-content: space-between">
+        <h4>Contas</h4>
+        <span>R$ {{getTotalBanks()}}</span>
+      </div>
+      <div class="bank" *ngFor="let bank of banks">
+        <h4 style="text-align: center">{{bank.name}}</h4>
+        <p style="text-align: right">R$ {{bank.total}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="dash-right">
+    <div class="bill">
+      <div class="card" style="padding: 30px">
+        <div class="card-header-bill">
+          <h4>A receber hoje</h4>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <h2 style="color: #4AB858;" *ngIf="receviementToday > 0">R$ {{receviementToday}}</h2>
+          <p style="font-weight: bold" *ngIf="receviementToday == 0">Não há recebimentos hoje.</p>
+          <p>Restante do mês: R$ {{receviementRemaining}}</p>
+        </div>
+      </div>
+      <div class="card" style="padding: 30px">
+        <div class="card-header-bill">
+          <h4>A pagar hoje</h4>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+          <h2 style="color: #F43E61;" *ngIf="paymentToday > 0">R$ {{paymentToday}}</h2>
+          <p style="font-weight: bold" *ngIf="paymentToday == 0">Não há pagamentos hoje.</p>
+          <p>Restante do mês: R$ {{paymentRemaining}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="bill">
+      <div class="card" style="padding: 30px">
+        <div class="card-header-bill">
+          <h4>Recebimentos em atraso</h4>
+        </div>
+
+        <h2 style="text-align: center; margin: 30px 0; color: #4AB858;" [style.opacity]="receviementLate == 0 ? '0.4' : 1">R$ {{receviementLate}}</h2>
+        <p style="text-align: center" *ngIf="receviementLate == 0">Você não possui recebimentos em atraso.</p>
+      </div>
+      <div class="card" style="padding: 30px">
+        <div class="card-header-bill">
+          <h4>Pagamentos em atraso</h4>
+        </div>
+
+        <h2 style="text-align: center; margin: 30px 0; color: #F43E61;" [style.opacity]="paymentLate == 0 ? '0.4' : 1">R$ {{paymentLate}}</h2>
+        <p style="text-align: center" *ngIf="paymentLate == 0">Você não possui pagamentos em atraso</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <canvas #meuCanvas></canvas>
+    </div>
+  </div>
+</div>

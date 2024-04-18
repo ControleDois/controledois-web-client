@@ -1,0 +1,19 @@
+<label class="label-search-loading">
+  <span class="field" *ngIf="!search.noTitle">{{search.title}}</span>
+  <input [ngClass]="{'errorValidation': !search.validation}" type="text" placeholder="Selecionar" #searchInput [formControl]="search.searchField"
+         [matAutocomplete]="matAutocompleteSearch" [readonly]="search.searchFieldOn">
+  <button mat-button *ngIf="search.searchFieldOn" matSuffix mat-icon-button
+          (click)="removeItem()">
+    <mat-icon>delete</mat-icon>
+  </button>
+  <button mat-button *ngIf="!search.searchFieldOn && !loading" matSuffix mat-icon-button
+          (click)="load()">
+    <mat-icon style="color: #2F4050">arrow_drop_down</mat-icon>
+  </button>
+  <div class="load_circle" *ngIf="loading && !search.searchFieldOn"></div>
+  <mat-autocomplete #matAutocompleteSearch="matAutocomplete" (optionSelected)="selectedItem($event)">
+    <mat-option *ngFor="let item of list" [value]="item">
+      {{ item[search.searchFieldOnCollum] }}
+    </mat-option>
+  </mat-autocomplete>
+</label>

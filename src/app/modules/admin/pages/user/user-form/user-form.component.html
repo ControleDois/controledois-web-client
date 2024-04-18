@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Novo cadastro</h2>
+    <button class="button-back" mat-icon-button routerLink="/user">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+      <div class="basic-form-header">
+        <h3>Dados gerais</h3>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <label class="label-w50">
+            <span class="field">Email</span>
+            <input formControlName="email" type="email"  [readonly]="this.formId !== 'new'">
+          </label>
+
+          <label class="label-w50" *ngIf="this.formId === 'new'">
+            <span class="field">Senha</span>
+            <input formControlName="password" type="password">
+          </label>
+        </div>
+      </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

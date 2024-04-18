@@ -1,0 +1,29 @@
+<label class="label-search-loading">
+  <span class="field" *ngIf="!search.noTitle">{{search.title}}</span>
+  <mat-chip-list #chipList>
+    <mat-chip
+      *ngFor="let item of search.searchFieldOn"
+      (removed)="removeItem(item)">
+      {{item}}
+      <button matChipRemove>
+        <mat-icon>cancel</mat-icon>
+      </button>
+    </mat-chip>
+    <input
+      type="text"
+      placeholder="Selecionar"
+      #searchInput
+      [formControl]="search.searchField"
+      [matAutocomplete]="matAutocompleteSearch"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event)">
+  </mat-chip-list>
+  <div class="load_circle" *ngIf="loading && !search.searchFieldOn"></div>
+  <mat-autocomplete #matAutocompleteSearch="matAutocomplete" (optionSelected)="selectedItem($event)">
+    <mat-option *ngFor="let item of list" [value]="item">
+      {{ item[search.searchFieldOnCollum] }}
+    </mat-option>
+  </mat-autocomplete>
+</label>
+

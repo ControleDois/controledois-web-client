@@ -1,0 +1,117 @@
+<header>
+  <div class="logo">
+    <h1>controle<i>Dois</i></h1>
+  </div>
+
+  <nav [ngClass]="{'nav-on': menuMobileOn}">
+    <ul class="nav-ul">
+      <li class="nav-ul-li nav-ul-li-mobile" (click)="menuMobileOn = !menuMobileOn"><a>
+          <mat-icon>close</mat-icon>
+        </a></li>
+      <li class="nav-ul-li" (click)="menuMobileOn = !menuMobileOn"><a routerLink="/dash">Visão geral</a></li>
+      <li class="nav-ul-li">
+        <a class="menu-list">Vendas <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <ul>
+          <article>
+            <li><span>Controle</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/os">Ordens de Serviço</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/sale">Vendas e Orçamentos</a>
+            </li>
+          </article>
+          <article>
+            <li><span>Cadastro</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/people">Clientes</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/product">Produtos</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/service">Serviços</a>
+            </li>
+          </article>
+        </ul>
+      </li>
+      <li class="nav-ul-li">
+        <a class="menu-list">Compras <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <ul>
+          <article>
+            <li><span>Controle</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/purchase">Compra e Orçamentos</a>
+            </li>
+          </article>
+          <article>
+            <li><span>Cadastro</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/people">Fornecedores</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/product">Produtos</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/service">Serviços</a>
+            </li>
+          </article>
+        </ul>
+      </li>
+      <li class="nav-ul-li">
+        <a class="menu-list">Financeiro <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <ul>
+          <article>
+            <li><span>Controle</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/bank">Conta</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/bill-payment">Conta a pagar</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/bill-receivement">Conta a receber</a>
+            </li>
+          </article>
+          <article>
+            <li><span>Cadastro</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/category">Categorias</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/cost-center">Centro de custo</a>
+            </li>
+          </article>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <ul class="ul-config">
+    <li class="ul-config-li">
+      <a>
+        <mat-icon>person</mat-icon>
+      </a>
+      <ul>
+        <li><span>{{auth.user.people.name}}</span></li>
+        <li>
+          <a routerLink="/user">Usuários</a>
+        </li>
+        <li>
+          <a routerLink="/company">Empresas</a>
+        </li>
+        <li>
+          <a routerLink="/configuration">Configuração</a>
+        </li>
+        <li>
+          <a (click)="logout()">Sair</a>
+        </li>
+      </ul>
+    </li>
+    <li class="ul-config-li ul-config-li-mobile">
+      <a (click)="menuMobileOn = !menuMobileOn">
+        <mat-icon>menu</mat-icon>
+      </a>
+    </li>
+  </ul>
+</header>

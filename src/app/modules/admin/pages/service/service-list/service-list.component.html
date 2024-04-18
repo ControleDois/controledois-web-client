@@ -1,0 +1,57 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Cadastro de serviços</h2>
+    <button class="button-add" mat-button routerLink="/service/new">
+      Adicionar
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="page-search">
+      <app-search-simple [search]="search"></app-search-simple>
+    </div>
+
+    <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nome do serviço </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sale_value">
+        <th mat-header-cell *matHeaderCellDef> Valor de venda (R$) </th>
+        <td mat-cell *matCellDef="let element"> {{element.sale_value | currency}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="table-actions" [matMenuTriggerFor]="actions">
+            <span>Ações</span>
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </div>
+          <mat-menu #actions="matMenu">
+            <button mat-menu-item [routerLink]="'/service/' + element.id">
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item (click)="deactivate(element.id)">
+              <span>Inativar</span>
+            </button>
+            <button mat-menu-item (click)="delete(element.id)">
+              <span>Remover</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">Nenhum resultado encontrado</td>
+      </tr>
+    </table>
+
+    <mat-paginator [length]="tableLength" [pageSizeOptions]="[10, 50, 100]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

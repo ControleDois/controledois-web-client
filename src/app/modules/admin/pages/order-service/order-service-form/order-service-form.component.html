@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Novo cadastro</h2>
+    <button class="button-back" mat-icon-button routerLink="/os">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+      <div class="basic-form-header">
+        <h3>Dados gerais</h3>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
+
+          <label class="label-w30">
+            <span class="field">Status da Ordem de Serviço</span>
+            <select formControlName="status">
+              <option *ngFor="let status of statusList" [value]="status.type">{{ status.name }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div class="label-group">
+          <label>
+            <span class="field">Data de início</span>
+            <input formControlName="date_start" type="date">
+          </label>
+
+          <label>
+            <span class="field">Previsão de entrega</span>
+            <input formControlName="date_finish" type="date">
+          </label>
+
+          <app-search-loading-unique class="label-w100" [search]="searchUser"></app-search-loading-unique>
+        </div>
+
+        <div class="label-group">
+          <label class="label-w100">
+            <span class="field" >Equipamento recebido</span>
+            <input formControlName="equipment_received" type="text">
+          </label>
+
+          <label>
+            <span class="field">Nº de série</span>
+            <input formControlName="serial_number" type="text">
+          </label>
+
+          <label>
+            <span class="field">Marca</span>
+            <input formControlName="brand" type="text">
+          </label>
+
+          <label>
+            <span class="field">Modelo</span>
+            <input formControlName="model" type="text">
+          </label>
+        </div>
+
+        <label>
+          <span class="field">Observações sobre o recebimento do equipamento</span>
+          <textarea formControlName="note_equipment" placeholder="Detalhe a condição do equipamento no momento da entrega pelo cliente."></textarea>
+        </label>
+
+        <label>
+          <span class="field">Descrição do problema ou defeito apresentado</span>
+          <textarea formControlName="note_problem" placeholder="Qual foi o problema reportado pelo cliente?"></textarea>
+        </label>
+
+        <label>
+          <span class="field">Descrição do serviço que será prestado</span>
+          <textarea formControlName="note_service"></textarea>
+        </label>
+
+        <label>
+          <span class="field">Observações internas (Não aparece para o cliente)</span>
+          <textarea formControlName="note_private"></textarea>
+        </label>
+      </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

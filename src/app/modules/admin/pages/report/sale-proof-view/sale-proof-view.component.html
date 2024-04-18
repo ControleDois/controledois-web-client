@@ -1,0 +1,96 @@
+<div class="report">
+  <header>
+    <div>Comprovante de {{data?.role === 0 ? 'Compra' : 'Venda'}}</div>
+    <div>{{libraryService.getFormatData(data?.date_sale)}}</div>
+  </header>
+
+  <section class="company">
+    <!--<div class="logo">
+      <h1>eebu</h1>
+    </div>-->
+
+    <div class="description">
+      <h1>{{auth.company.people?.name}}</h1>
+      <p>{{auth.company?.people?.address}},
+        {{auth.company?.people?.address_number}},
+        {{auth.company?.people?.address_district}},
+        {{auth.company?.people?.address_city}}-{{auth.company?.people?.address_state}}
+        CEP: {{auth.company?.people?.zip_code}}</p>
+      <div>
+        <p>{{auth.company?.people?.role == 0 ? 'CPF: ' : 'CNPJ: '}}{{auth.company.people.document | mask: auth.company?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </p>
+        <p style="margin-left: 20px">Fone: {{auth.company.people.phone_commercial | mask: '(00) 00000-0000'}}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="people">
+    <div class="namePhone">
+      <p>{{data?.people?.name}}</p>
+      <p>{{data?.people?.phone_commercial ? (data?.people?.phone_commercial | mask: data?.people?.phone_commercial.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000') : ''}}</p>
+    </div>
+
+    <div class="documentEmail">
+      <p style="opacity: 0.8">CNPJ: {{data?.people?.document | mask: data?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} IE: {{data?.people?.ie}}</p>
+      <p>{{data?.people?.email}}</p>
+    </div>
+
+    <p style="margin-top: 5px">{{data?.people?.address}}, {{data?.people?.address_number}} - {{data?.people?.address_complement}} - {{data?.people?.address_district}} - {{data?.people?.address_city}} - {{data?.people?.address_state}} - CEP: {{data?.people?.zip_code}}</p>
+  </section>
+
+  <section class="products-grid">
+    <ul class="products-grid-header">
+      <li style="width: 55%">Produto/Serviço</li>
+      <!-- <li style="width: 30%">Detalhes do item</li> -->
+      <li style="text-align: right">Quantidade</li>
+      <li style="text-align: right">Valor</li>
+      <li style="text-align: right">Subtotal</li>
+    </ul>
+
+    <ul class="products-grid-list" *ngFor="let product of products; index as i">
+      <li style="width: 55%">{{product.product?.name}} {{product?.description ?  '/ ' + product?.description : ''}}</li>
+      <!-- <li style="width: 30%">{{product.description}}</li> -->
+      <li style="text-align: right">{{product.amount}}</li>
+      <li style="text-align: right">{{product.cost_value | currency}}</li>
+      <li style="text-align: right">{{product.subtotal | currency}}</li>
+    </ul>
+  </section>
+
+  <section class="subtotal">
+    <div class="values">
+      <p class="title">Valor Total</p>
+      <p>{{data?.amount | currency}}</p>
+    </div>
+    <div class="values">
+      <p class="title">Desconto</p>
+      <p>{{data?.discount | currency}}</p>
+    </div>
+    <div class="values">
+      <p class="title">Frete</p>
+      <p>{{data?.shipping | currency}}</p>
+    </div>
+    <div class="values">
+      <p class="title">Total líquido</p>
+      <p>{{data?.net_total | currency}}</p>
+    </div>
+  </section>
+
+  <section class="products-grid">
+    <ul class="products-grid-header">
+      <li style="text-align: left">Parcela</li>
+      <li style="text-align: left">Vencimento</li>
+      <li style="text-align: left">Valor</li>
+      <li style="width: 55%">Obsercação da parcela</li>
+    </ul>
+
+    <ul class="products-grid-list" *ngFor="let portion of plots; index as i">
+      <li style="text-align: left">{{i+ 1}}</li>
+      <li style="text-align: left">{{libraryService.getFormatData(portion.date_due)}}</li>
+      <li style="text-align: left">{{portion.amount | currency}}</li>
+      <li style="width: 55%">{{portion.name}}</li>
+    </ul>
+  </section>
+
+  <section class="assinatura">
+    <p>ASSINATURA</p>
+  </section>
+</div>
