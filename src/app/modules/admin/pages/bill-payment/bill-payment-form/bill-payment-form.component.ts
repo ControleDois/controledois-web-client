@@ -128,8 +128,8 @@ export class BillPaymentFormComponent implements OnInit {
     validation: true,
     paramsArray: [
       {
-        param: 'role',
-        value: 1
+        param: 'roles',
+        value: '{3}'
       }
     ]
   };
@@ -137,7 +137,7 @@ export class BillPaymentFormComponent implements OnInit {
   @Output() searchCost: SearchLoadingUnique = {
     noTitle: false,
     title: 'Centro de custo',
-    url: 'cost',
+    url: 'cost-center',
     searchFieldOn: null,
     searchFieldOnCollum: 'name',
     sortedBy: 'name',

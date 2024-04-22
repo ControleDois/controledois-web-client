@@ -215,16 +215,17 @@ export class BillPaymentListComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  receiveBill(id: string, billValue: string) {
+  receiveBill(bill: any) {
     let data = {
+      ...bill,
       status: 1,
       date_received: this.datePipe.transform(new Date(), 'yyyy-MM-dd'),
       discount: 0,
       fees: 0,
-      bill_value: billValue
+      bill_value: bill.amount
     }
 
-    this.billPaymentService.save(id, data).pipe(
+    this.billPaymentService.save(bill.id, data).pipe(
       finalize(() => this.loadingFull.active = false),
       catchError((error) => {
         this.notificationService.warn(error.error);
@@ -237,8 +238,9 @@ export class BillPaymentListComponent implements OnInit {
     ).subscribe();
   }
 
-  receiveBillBack(id: any) {
+  receiveBillBack(bill: any) {
     let data = {
+      ...bill,
       status: 0,
       date_received: null,
       discount: 0,
@@ -246,7 +248,7 @@ export class BillPaymentListComponent implements OnInit {
       bill_value: null
     }
 
-    this.billPaymentService.save(id, data).pipe(
+    this.billPaymentService.save(bill.id, data).pipe(
       finalize(() => this.loadingFull.active = false),
       catchError((error) => {
         this.notificationService.warn(error.error);

@@ -45,7 +45,7 @@
 
           <label class="label-w30">
             <span class="field">Valor</span>
-            <input formControlName="amount" type="text" (keyup)="sumValues()">
+            <input formControlName="amount" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
           </label>
         </div>
 
@@ -98,17 +98,17 @@
 
           <label class="label-w30" *ngIf="myForm.value.status">
             <span class="field">Descontos / Taxas</span>
-            <input formControlName="discount" type="text" (keyup)="sumValues()">
+            <input formControlName="discount" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
           </label>
 
           <label class="label-w30" *ngIf="myForm.value.status">
             <span class="field">Juros / Multa</span>
-            <input formControlName="fees" type="text" (keyup)="sumValues()">
+            <input formControlName="fees" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
           </label>
 
           <label class="label-w30" *ngIf="myForm.value.status">
             <span class="field">Valor Pago</span>
-            <input formControlName="bill_value" type="text" (keyup)="sumValues()">
+            <input formControlName="bill_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
           </label>
         </div>
       </form>
