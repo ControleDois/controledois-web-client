@@ -93,7 +93,7 @@ export class SaleListComponent implements OnInit {
       case 2:
         return 'Orçamento recusado';
       case 3:
-        if (element.isContract) {
+        if (element.is_contract) {
           return element.contract_portion;
         } else {
           return 'Venda';

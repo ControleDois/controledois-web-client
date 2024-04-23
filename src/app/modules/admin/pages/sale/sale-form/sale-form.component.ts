@@ -52,7 +52,7 @@ export class SaleFormComponent implements OnInit {
     complementary_information: new FormControl('', Validators.required),
     form_payment: new FormControl(9),
     payment_terms: new FormControl(0),
-    isContract: new FormControl(false),
+    is_contract: new FormControl(false),
     contract_billing_day: new FormControl(5),
     contract_validity_type: new FormControl(0),
     contract_date_finish: new FormControl(
@@ -298,13 +298,12 @@ export class SaleFormComponent implements OnInit {
   }
 
   validateForm(): void {
-    console.log(this.myForm.value)
     this.searchPeople.validation = !!this.myForm.value.peopleId;
     this.validationFields.find((v) => v.name === 'peopleId').validation =
       !!this.myForm.value.peopleId;
     if (
       parseInt(this.myForm.value.status, 0) === 3 &&
-      !this.myForm.value.isContract
+      !this.myForm.value.is_contract
     ) {
       this.searchCategory.validation = !!this.myForm.value.categoryId;
       this.validationFields.find((v) => v.name === 'categoryId').validation =

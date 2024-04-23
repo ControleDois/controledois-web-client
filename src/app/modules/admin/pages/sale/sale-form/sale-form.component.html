@@ -16,7 +16,7 @@
         <div class="label-group">
           <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
 
-          <label class="label-w30" *ngIf="!myForm.value.isContract">
+          <label class="label-w30" *ngIf="!myForm.value.is_contract">
             <span class="field">Situação da Negociação</span>
             <select formControlName="status" (change)="changePortion()">
               <option *ngFor="let status of statusList" [value]="status.type">{{ status.name }}</option>
@@ -24,7 +24,7 @@
           </label>
 
           <label class="check"  *ngIf="myForm.value.status === 3">
-            <input type="checkbox" formControlName="isContract" (click)="calcValidityContract()">
+            <input type="checkbox" formControlName="is_contract" (click)="calcValidityContract()">
             <span>Contrato?</span>
           </label>
         </div>
@@ -38,7 +38,7 @@
           <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
         </div>
 
-        <div class="label-group" *ngIf="myForm.value.isContract">
+        <div class="label-group" *ngIf="myForm.value.is_contract">
           <label class="label-w30">
             <span class="field">Cobrar sempre no</span>
             <select formControlName="contract_billing_day" (change)="calcValidityContract()">
@@ -174,7 +174,7 @@
           </div>
         </div>
 
-        <div class="label-group" *ngIf="!myForm.value.isContract && myForm.value.status === 3">
+        <div class="label-group" *ngIf="!myForm.value.is_contract && myForm.value.status === 3">
           <app-search-loading-unique class="label-w30" [search]="searchBank"></app-search-loading-unique>
 
           <label class="label-w30">
@@ -186,7 +186,7 @@
           </label>
         </div>
 
-        <div class="shopping-budget" style="margin-bottom: 10px" *ngIf="myForm.value.status === 3 && !myForm.value.isContract">
+        <div class="shopping-budget" style="margin-bottom: 10px" *ngIf="myForm.value.status === 3 && !myForm.value.is_contract">
           <div class="shopping-budget-grid">
             <ul class="shopping-budget-grid-header">
               <li style="width: 10%">Parcela</li>

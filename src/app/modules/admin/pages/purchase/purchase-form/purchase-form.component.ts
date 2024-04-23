@@ -24,11 +24,11 @@ export class PurchaseFormComponent implements OnInit {
   public myForm: FormGroup = new FormGroup({
     id: new FormControl(0),
     company_id: new FormControl(0),
-    people_id: new FormControl('', Validators.required),
-    user_id: new FormControl('', Validators.required),
-    category_id: new FormControl(''),
-    sale_id: new FormControl(''),
-    bank_account_id: new FormControl('', Validators.required),
+    peopleId: new FormControl('', Validators.required),
+    userId: new FormControl('', Validators.required),
+    categoryId: new FormControl(''),
+    saleId: new FormControl(''),
+    bankAccountId: new FormControl('', Validators.required),
     role: new FormControl(0),
     status: new FormControl(0, Validators.required),
     introduction: new FormControl('', Validators.required),
@@ -45,7 +45,7 @@ export class PurchaseFormComponent implements OnInit {
     complementary_information: new FormControl('', Validators.required),
     form_payment: new FormControl(9),
     payment_terms: new FormControl(0),
-    isContract: new FormControl(false),
+    is_contract: new FormControl(false),
     contract_billing_day: new FormControl(5),
     contract_validity_type: new FormControl(0),
     contract_date_finish: new FormControl(this.datePipe.transform(new Date(), 'yyyy-MM-dd')),
@@ -105,11 +105,19 @@ export class PurchaseFormComponent implements OnInit {
   ];
 
   public validationFields: Array<any> = [
-    {name: 'people_id', validation: true, msg: 'Informe um cliente!'},
-    {name: 'category_id', validation: true, msg: 'Informe uma categoria!'},
-    {name: 'user_id', validation: true, msg: 'Informe um usuário!'},
-    {name: 'bank_account_id', validation: true, msg: 'Informe uma conta bancaria!'},
-    {name: 'products', validation: true, msg: 'É necessário adicionar produto ou serviço!'}
+    { name: 'peopleId', validation: true, msg: 'Informe um cliente!' },
+    { name: 'categoryId', validation: true, msg: 'Informe uma categoria!' },
+    { name: 'userId', validation: true, msg: 'Informe um usuário!' },
+    {
+      name: 'bankAccountId',
+      validation: true,
+      msg: 'Informe uma conta bancaria!',
+    },
+    {
+      name: 'products',
+      validation: true,
+      msg: 'É necessário adicionar produto ou serviço!',
+    },
   ];
 
   @Output() searchPeople: SearchLoadingUnique = {
@@ -124,8 +132,8 @@ export class PurchaseFormComponent implements OnInit {
     validation: true,
     paramsArray: [
       {
-        param: 'isProvider',
-        value: true
+        param: 'roles',
+        value: '{3}'
       }
     ]
   };
@@ -160,8 +168,8 @@ export class PurchaseFormComponent implements OnInit {
     validation: true,
     paramsArray: [
       {
-        param: 'isUser',
-        value: true
+        param: 'roles',
+        value: '{0}'
       }
     ]
   };
@@ -258,28 +266,37 @@ export class PurchaseFormComponent implements OnInit {
   }
 
   validateForm(): void {
-    this.searchPeople.validation = !!this.myForm.value.people_id;
-    this.validationFields.find(v => v.name === 'people_id').validation = !!this.myForm.value.people_id;
-    if (parseInt(this.myForm.value.status, 0) === 3 && !this.myForm.value.isContract) {
-      this.searchCategory.validation = !!this.myForm.value.category_id;
-      this.validationFields.find(v => v.name === 'category_id').validation = !!this.myForm.value.category_id;
+    this.searchPeople.validation = !!this.myForm.value.peopleId;
+    this.validationFields.find((v) => v.name === 'peopleId').validation =
+      !!this.myForm.value.peopleId;
+    if (
+      parseInt(this.myForm.value.status, 0) === 3 &&
+      !this.myForm.value.is_contract
+    ) {
+      this.searchCategory.validation = !!this.myForm.value.categoryId;
+      this.validationFields.find((v) => v.name === 'categoryId').validation =
+        !!this.myForm.value.categoryId;
 
-      this.searchBank.validation = !!this.myForm.value.bank_account_id;
-      this.validationFields.find(v => v.name === 'bank_account_id').validation = !!this.myForm.value.bank_account_id;
+      this.searchBank.validation = !!this.myForm.value.bankAccountId;
+      this.validationFields.find(
+        (v) => v.name === 'bankAccountId'
+      ).validation = !!this.myForm.value.bankAccountId;
     }
 
-    this.validationFields.find(v => v.name === 'products').validation = !!this.products.controls[0].value.product_id;
-    this.searchUser.validation = !!this.myForm.value.user_id;
-    this.validationFields.find(v => v.name === 'user_id').validation = !!this.myForm.value.user_id;
+    this.validationFields.find((v) => v.name === 'products').validation =
+      !!this.products.controls[0].value.product_id;
+    this.searchUser.validation = !!this.myForm.value.userId;
+    this.validationFields.find((v) => v.name === 'userId').validation =
+      !!this.myForm.value.userId;
   }
 
   save(): void {
     this.loadingFull.active = true;
 
-    this.myForm.value.people_id = this.searchPeople?.searchFieldOn?.id;
-    this.myForm.value.user_id = this.searchUser?.searchFieldOn?.id;
-    this.myForm.value.category_id = this.searchCategory?.searchFieldOn?.id;
-    this.myForm.value.bank_account_id = this.searchBank?.searchFieldOn?.id;
+    this.myForm.value.peopleId = this.searchPeople?.searchFieldOn?.id;
+    this.myForm.value.userId = this.searchUser?.searchFieldOn?.id;
+    this.myForm.value.categoryId = this.searchCategory?.searchFieldOn?.id;
+    this.myForm.value.bankAccountId = this.searchBank?.searchFieldOn?.id;
     this.myForm.value.status = parseInt(this.myForm.value.status, 0);
 
     this.validateForm();
