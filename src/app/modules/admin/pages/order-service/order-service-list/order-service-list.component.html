@@ -15,7 +15,7 @@
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> Nº da O.S. </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.code}} </td>
       </ng-container>
 
       <ng-container matColumnDef="date_start">

@@ -1,7 +1,7 @@
 <div class="report">
   <header>
     <div>Data de abertura: {{libraryService.getFormatData(os?.date_start)}}</div>
-    <div>Ordem de Serviço <b>{{os.id}}</b></div>
+    <div>Ordem de Serviço <b>{{os.code}}</b></div>
   </header>
 
   <section class="company">
@@ -52,7 +52,7 @@
   <section class="problem">
     <div>
       <h2>Técnico responsável:</h2>
-      <p>{{os?.responsible}}</p>
+      <p>{{os?.user?.name}}</p>
     </div>
 
     <div style="margin-left: 5px">

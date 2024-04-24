@@ -1,5 +1,5 @@
 import {Component, OnInit, Output} from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {DatePipe} from '@angular/common';
 import {ActivatedRoute, Router} from "@angular/router";
 import {catchError, finalize, map} from "rxjs/operators";
@@ -23,13 +23,12 @@ export class OrderServiceFormComponent implements OnInit {
   }
   public myForm: FormGroup = new FormGroup({
     id: new FormControl(0),
-    company_id: new FormControl(0),
-    people_id: new FormControl('', Validators.required),
-    role: new FormControl(1),
+    companyId: new FormControl(0),
+    peopleId: new FormControl('', Validators.required),
+    userId: new FormControl('', Validators.required),
     status: new FormControl(0, Validators.required),
     date_start: new FormControl(this.datePipe.transform(new Date(), 'yyyy-MM-dd')),
     date_finish: new FormControl(this.datePipe.transform(new Date(), 'yyyy-MM-dd')),
-    responsible: new FormControl('', Validators.required),
     equipment_received: new FormControl('', Validators.required),
     serial_number: new FormControl('', Validators.required),
     brand: new FormControl('', Validators.required),
@@ -57,7 +56,12 @@ export class OrderServiceFormComponent implements OnInit {
     orderBy: 'name',
     searchField: new FormControl(''),
     validation: true,
-    paramsArray: []
+    paramsArray: [
+      {
+        param: 'roles',
+        value: '{2}'
+      }
+    ]
   };
 
   @Output() searchUser: SearchLoadingUnique = {
@@ -72,15 +76,15 @@ export class OrderServiceFormComponent implements OnInit {
     validation: true,
     paramsArray: [
       {
-        name: 'isUser',
-        value: true
+        param: 'roles',
+        value: '{0}'
       }
     ],
   };
 
   public validationFields: Array<any> = [
-    {name: 'people_id', validation: true, msg: 'Informe um cliente!'},
-    {name: 'user_id', validation: true, msg: 'Informe um Usuário!'},
+    {name: 'peopleId', validation: true, msg: 'Informe um cliente!'},
+    {name: 'userId', validation: true, msg: 'Informe um Usuário!'},
   ];
 
   constructor(
@@ -124,18 +128,18 @@ export class OrderServiceFormComponent implements OnInit {
   }
 
   validateForm(): void {
-    this.searchPeople.validation = !!this.myForm.value.people_id;
-    this.validationFields.find(v => v.name === 'people_id').validation = !!this.myForm.value.people_id;
-    this.searchUser.validation = !!this.myForm.value.user_id;
-    this.validationFields.find((v) => v.name === 'user_id').validation =
-      !!this.myForm.value.user_id;
+    this.searchPeople.validation = !!this.myForm.value.peopleId;
+    this.validationFields.find(v => v.name === 'peopleId').validation = !!this.myForm.value.peopleId;
+    this.searchUser.validation = !!this.myForm.value.userId;
+    this.validationFields.find((v) => v.name === 'userId').validation =
+      !!this.myForm.value.userId;
   }
 
   save(): void {
     this.loadingFull.active = true;
 
-    this.myForm.value.people_id = this.searchPeople?.searchFieldOn?.id;
-    this.myForm.value.user_id = this.searchUser?.searchFieldOn?.id;
+    this.myForm.value.peopleId = this.searchPeople?.searchFieldOn?.id;
+    this.myForm.value.userId = this.searchUser?.searchFieldOn?.id;
     this.myForm.value.status = parseInt(this.myForm.value.status, 0);
 
     this.validateForm();

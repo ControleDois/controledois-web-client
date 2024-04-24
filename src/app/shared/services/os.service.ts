@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class OsService {
-  private resource = 'order';
+  private resource = 'orderService';
 
   constructor(private apiService: ApiService) {}
 
