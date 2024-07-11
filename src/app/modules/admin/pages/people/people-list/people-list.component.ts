@@ -56,7 +56,8 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
   load(): void {
     this.peopleService.index(this.search.value ? this.search.value : '',
-    'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1','10', [
+    'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+    this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10', [
       { param: 'roles', value: '{2}' }
     ]).pipe(
       map(res => {

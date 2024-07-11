@@ -322,7 +322,7 @@ export class SaleFormComponent implements OnInit {
       !!this.myForm.value.userId;
   }
 
-  save(): void {
+  save(continueForm: boolean): void {
     this.loadingFull.active = true;
 
     this.myForm.value.peopleId = this.searchPeople?.searchFieldOn?.id;
@@ -346,7 +346,9 @@ export class SaleFormComponent implements OnInit {
           }),
           map(() => {
             this.notificationService.success('Salvo com sucesso.');
-            this.router.navigate(['sale']);
+            if (!continueForm) {
+              this.router.navigate(['sale']);
+            }
           })
         )
         .subscribe();

@@ -241,8 +241,11 @@
       </form>
 
       <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
+        <button class="button-add" mat-button (click)="save(false)">
           Salvar
+        </button>
+        <button class="button-add-continue" mat-button (click)="save(true)">
+          Salvar e Manter dados
         </button>
       </div>
     </div>

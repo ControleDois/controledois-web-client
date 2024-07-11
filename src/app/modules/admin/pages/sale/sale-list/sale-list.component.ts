@@ -1,8 +1,8 @@
-import {Component, ComponentFactoryResolver, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
-import {throwError} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, finalize, map} from 'rxjs/operators';
+import {merge, throwError} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, finalize, map, tap} from 'rxjs/operators';
 import {SelectionModel} from '@angular/cdk/collections';
 import {FormControl} from '@angular/forms';
 import {DatePipe} from '@angular/common';
@@ -15,12 +15,13 @@ import html2pdf from 'html2pdf.js'
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-sale-list',
   templateUrl: './sale-list.component.html',
 })
-export class SaleListComponent implements OnInit {
+export class SaleListComponent implements OnInit, AfterViewInit {
   private sales: Array<any> = [];
   public filterStatus = 4;
   public loadingFull: LoadingFull = {
@@ -38,6 +39,9 @@ export class SaleListComponent implements OnInit {
   ];
   public dataSource = new MatTableDataSource<any>();
   public selection = new SelectionModel<any>(true, []);
+  public tableLength!: number;
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
   @ViewChild(MatSort)
   public sort!: MatSort;
   public vDateFilter = new Date();
@@ -71,15 +75,26 @@ export class SaleListComponent implements OnInit {
     this.load();
   }
 
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(tap(() => this.load()))
+      .subscribe();
+  }
+
   load(): void {
     this.sales = this.storageService.getList(`listSales`);
     this.dataSource.data = this.sales;
 
-    this.saleService.index(this.search.value ? this.search.value : '', this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), 'date_sale', 'date_sale').pipe(
+    this.saleService.index(this.search.value ? this.search.value : '',
+      this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), 'date_sale', 'date_sale',
+      this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.storageService.setList(`listSales`, res.data);
         this.sales = res.data;
         this.dataSource.data = res.data;
+        this.tableLength = res.meta.total;
       })
     ).subscribe();
   }
