@@ -1,6 +1,6 @@
 import { catchError, finalize, map } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { DatePipe } from "@angular/common";
@@ -8,6 +8,8 @@ import { PeopleService } from 'src/app/shared/services/people.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { LibraryService } from 'src/app/shared/services/library.service';
+import { MD5 } from 'crypto-js';
 
 @Component({
   selector: 'app-client-form',
@@ -49,7 +51,10 @@ export class PeopleFormComponent implements OnInit {
       complement: new FormControl(''),
     }),
     note: new FormControl(''),
+    keys: new FormArray([]),
   });
+
+  public keys = this.myForm.get('keys') as FormArray;
 
   public peopleRole = [
     { name: '⦿ Física', type: 0 },
@@ -74,6 +79,7 @@ export class PeopleFormComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private dialogMessageService: DialogMessageService,
+    private libraryService: LibraryService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
   }
@@ -104,6 +110,12 @@ export class PeopleFormComponent implements OnInit {
     if (value) {
       this.myForm.patchValue(value);
       this.myForm.controls['birth'].setValue(this.datePipe.transform(value.birth, 'yyyy-MM-dd'));
+
+      if (value.keys && value.keys.length > 0) {
+        for (const key of value.keys) {
+          this.addKey(key);
+        }
+      }
     }
   }
 
@@ -207,5 +219,45 @@ export class PeopleFormComponent implements OnInit {
 
   getValidation(name: string): boolean {
     return !this.validationFields.find((v) => v.name === name).validation;
+  }
+
+  addKey(value: any): void {
+    const control = new FormGroup({
+      role: new FormControl(value?.role || 0),
+      key: new FormControl(value?.key || ''),
+      due_date: new FormControl(this.datePipe.transform(value?.due_date || new Date(), 'yyyy-MM-dd')),
+    });
+
+    this.keys.push(control);
+  }
+
+  removeKey(index: any): void {
+    this.keys.controls.splice(index, 1);
+    this.keys.value.splice(index, 1);
+  }
+
+  gerenateKey(index: any): void {
+    const serialKeySystem = this.keys.controls[index].value.role + ' - encryptSerial - 16/04/2023';
+    const due_date = this.libraryService.getFormatData(
+      this.keys.controls[index].value.due_date
+    );
+    const key = serialKeySystem + ' - ' + this.myForm.value.document + ' - ' + due_date;
+    const keyMD5 = MD5(key).toString().toUpperCase();
+    this.keys.at(index).get('key')?.setValue(keyMD5);
+  }
+
+  getDaysKey(index: any): string {
+    const dueDate = this.keys.controls[index].value?.due_date;
+    if (dueDate) {
+      const hoje = new Date();
+      const dataAlvo = new Date(dueDate);
+
+      const diffTime = dataAlvo.getTime() - hoje.getTime();
+      const diffDays = Math.abs(Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
+      return `${diffDays} dias até a data de vencimento!`;
+    } else {
+      return 'Data de vencimento não definida.';
+    }
   }
 }
