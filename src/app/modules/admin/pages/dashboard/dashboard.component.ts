@@ -35,16 +35,16 @@ export class DashboardComponent implements OnInit {
   }
 
   load(): void {
-    // this.receviementToday = this.storageService.getList(`receviementToday`);
-    // this.receviementRemaining = this.storageService.getList(`receviementRemaining`);
-    // this.receviementLate = this.storageService.getList(`receviementLate`);
+    this.receviementToday = this.storageService.getList(`receviementToday`);
+    this.receviementRemaining = this.storageService.getList(`receviementRemaining`);
+    this.receviementLate = this.storageService.getList(`receviementLate`);
 
-    // this.paymentToday = this.storageService.getList(`paymentToday`);
-    // this.paymentRemaining = this.storageService.getList(`paymentRemaining`);
-    // this.paymentLate = this.storageService.getList(`paymentLate`);
+    this.paymentToday = this.storageService.getList(`paymentToday`);
+    this.paymentRemaining = this.storageService.getList(`paymentRemaining`);
+    this.paymentLate = this.storageService.getList(`paymentLate`);
 
 
-    // this.banks = this.storageService.getList(`DashBanks`);
+    this.banks = this.storageService.getList(`DashBanks`);
 
     this.dashboardService.receviementAndPayment().pipe(
       map(res => {

@@ -214,7 +214,7 @@ export class SaleFormComponent implements OnInit {
       });
     }
 
-    for (let i = 1; i <= 28; i++) {
+    for (let i = 1; i <= 30; i++) {
       this.contractBillingDayList.push({ name: `⦿ ${i}° dia do mês`, type: i });
     }
 
