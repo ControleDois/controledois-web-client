@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  api: 'https://api.controledois.com.br',
+  api: 'https://api.ctrix.com.br',
   firebase: {
     apiKey: "AIzaSyA7Rb1Eh33X8fd8XU284V0_zxt2tWHBXEk",
     authDomain: "controledois-br.firebaseapp.com",

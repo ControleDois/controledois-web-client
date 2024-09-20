@@ -84,6 +84,26 @@
           </article>
         </ul>
       </li>
+      <li class="nav-ul-li">
+        <a class="menu-list">Fiscal <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <ul>
+          <article>
+            <li><span>Controle</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/nfe">NFe</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/bill-payment">NFCe</a>
+            </li>
+          </article>
+          <article>
+            <li><span>Cadastro</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/people">Pessoas</a>
+            </li>
+          </article>
+        </ul>
+      </li>
     </ul>
   </nav>
 

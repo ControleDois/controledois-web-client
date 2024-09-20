@@ -40,6 +40,8 @@ import { StreamingFormComponent } from './pages/streaming/streaming-form/streami
 import { StreamingListComponent } from './pages/streaming/streaming-list/streaming-list.component';
 import { CompanyListComponent } from './pages/company/company-list/company-list.component';
 import { CompanyFormComponent } from './pages/company/company-form/company-form.component';
+import { NfeListComponent } from './pages/nfe/nfe-list/nfe-list.component';
+import { NfeFormComponent } from './pages/nfe/nfe-form/nfe-form.component';
 
 const routes: Routes = [
   {
@@ -201,6 +203,16 @@ const routes: Routes = [
     path: 'company/:id',
     component: CompanyFormComponent,
     data: { title: "Cadastro de Empresas - Controle Dois" },
+  },
+  {
+    path: 'nfe',
+    component: NfeListComponent,
+    data: { title: "NFe - Controle Dois" },
+  },
+  {
+    path: 'nfe/:id',
+    component: NfeFormComponent,
+    data: { title: "Cadastro de NFe - Controle Dois" },
   }
 ]
 
@@ -240,7 +252,9 @@ const routes: Routes = [
     StreamingFormComponent,
     StreamingListComponent,
     CompanyListComponent,
-    CompanyFormComponent
+    CompanyFormComponent,
+    NfeListComponent,
+    NfeFormComponent
   ],
   imports: [
     CommonModule,

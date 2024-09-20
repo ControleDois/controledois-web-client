@@ -41,7 +41,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
         debounceTime(400),
         distinctUntilChanged(),
         map(() => {
-          this.paginator.pageIndex = 0;
           this.load();
         })
       )
@@ -65,7 +64,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
       (this.paginator && this.paginator.pageSize) || 10).pipe(
       map(res => {
         this.dataSource.data = res.data;
-        this.tableLength = res.total;
+        this.tableLength = res.meta.total;
       })
     ).subscribe();
   }
