@@ -43,6 +43,8 @@ import { CompanyFormComponent } from './pages/company/company-form/company-form.
 import { NfeListComponent } from './pages/nfe/nfe-list/nfe-list.component';
 import { NfeFormComponent } from './pages/nfe/nfe-form/nfe-form.component';
 
+const appName = 'CTrix';
+
 const routes: Routes = [
   {
     path: '',
@@ -52,167 +54,167 @@ const routes: Routes = [
   {
     path: 'dash',
     component: DashboardComponent,
-    data: { title: "Dashborad - Controle Dois" },
+    data: { title: `Dashborad -  ${appName}` },
   },
   {
     path: 'people',
     component: PeopleListComponent,
-    data: { title: "Pessoas - Controle Dois" },
+    data: { title: `Pessoas -  ${appName}` },
   },
   {
     path: 'people/:id',
     component: PeopleFormComponent,
-    data: { title: "Cadastro de Pessoas - Controle Dois" },
+    data: { title: `Cadastro de Pessoas -  ${appName}` },
   },
   {
     path: 'product',
     component: ProductListComponent,
-    data: { title: "Produtos - Controle Dois" },
+    data: { title: `Produtos -  ${appName}` },
   },
   {
     path: 'product/:id',
     component: ProductFormComponent,
-    data: { title: "Cadastro de Produtos - Controle Dois" },
+    data: { title: `Cadastro de Produtos -  ${appName}` },
   },
   {
     path: 'service',
     component: ServiceListComponent,
-    data: { title: "Serviços - Controle Dois" },
+    data: { title: `Serviços -  ${appName}` },
   },
   {
     path: 'service/:id',
     component: ServiceFormComponent,
-    data: { title: "Cadastro de Serviços - Controle Dois" },
+    data: { title: `Cadastro de Serviços -  ${appName}` },
   },
   {
     path: 'category',
     component: CategoryListComponent,
-    data: { title: "Categorias - Controle Dois" },
+    data: { title: `Categorias -  ${appName}` },
   },
   {
     path: 'category/:id',
     component: CategoryFormComponent,
-    data: { title: "Cadastro de Categorias - Controle Dois" },
+    data: { title: `Cadastro de Categorias -  ${appName}`},
   },
   {
     path: 'cost-center',
     component: CostCenterListComponent,
-    data: { title: "Centro de Custo - Controle Dois" },
+    data: { title: `Centro de Custo -  ${appName}`},
   },
   {
     path: 'cost-center/:id',
     component: CostCenterFormComponent,
-    data: { title: "Cadastro de Centro de Custo - Controle Dois" },
+    data: { title: `Cadastro de Centro de Custo -  ${appName}`},
   },
   {
     path: 'bank',
     component: BankListComponent,
-    data: { title: "Bancos - Controle Dois" },
+    data: { title: `Bancos -  ${appName}`},
   },
   {
     path: 'bank/:id',
     component: BankFormComponent,
-    data: { title: "Cadastro de Bancos - Controle Dois" },
+    data: { title: `Cadastro de Bancos -  ${appName}`},
   },
   {
     path: 'bank-extract',
     component: BankExtractComponent,
-    data: { title: "Extraton de Banco - Controle Dois" },
+    data: { title: `Extraton de Banco -  ${appName}`},
   },
   {
     path: 'bill-payment',
     component: BillPaymentListComponent,
-    data: { title: "Contas a Pagar - Controle Dois" },
+    data: { title: `Contas a Pagar -  ${appName}`},
   },
   {
     path: 'bill-payment/:id',
     component: BillPaymentFormComponent,
-    data: { title: "Cadastro de Contas a Pagar - Controle Dois" },
+    data: { title: `Cadastro de Contas a Pagar -  ${appName}`},
   },
   {
     path: 'bill-receivement',
     component: BillReceivementListComponent,
-    data: { title: "Contas a Receber - Controle Dois" },
+    data: { title: `Dashborad -  ${appName}`},
   },
   {
     path: 'bill-receivement/:id',
     component: BillReceivementFormComponent,
-    data: { title: "Cadastro de Contas a Receber - Controle Dois" },
+    data: { title: `Cadastro de Contas a Receber -  ${appName}`},
   },
   {
     path: 'purchase',
     component: PurchaseListComponent,
-    data: { title: "Compras - Controle Dois" },
+    data: { title: `Compras -  ${appName}`},
   },
   {
     path: 'purchase/:id',
     component: PurchaseFormComponent,
-    data: { title: "Cadastro de Compras - Controle Dois" },
+    data: { title: `Cadastro de Compras -  ${appName}`},
   },
   {
     path: 'os',
     component: OrderServiceListComponent,
-    data: { title: "Ordem de Serviço - Controle Dois" },
+    data: { title: `Ordem de Serviço -  ${appName}`},
   },
   {
     path: 'os/:id',
     component: OrderServiceFormComponent,
-    data: { title: "Cadastro de Ordem de Serviço - Controle Dois" },
+    data: { title: `Cadastro de Ordem de Serviço -  ${appName}`},
   },
   {
     path: 'sale',
     component: SaleListComponent,
-    data: { title: "Venda - Controle Dois" },
+    data: { title: `Venda -  ${appName}`},
   },
   {
     path: 'sale/:id',
     component: SaleFormComponent,
-    data: { title: "Cadastro de Venda - Controle Dois" },
+    data: { title: `Cadastro de Venda -  ${appName}`},
   },
   {
     path: 'streaming',
     component: StreamingListComponent,
-    data: { title: "Transmissão - Controle Dois" },
+    data: { title: `Transmissão -  ${appName}`},
   },
   {
     path: 'streaming/:id',
     component: StreamingFormComponent,
-    data: { title: "Cadastro de Transmissão - Controle Dois" },
+    data: { title: `Cadastro de Transmissão -  ${appName}`},
   },
   {
     path: 'configuration',
     component: ConfigComponent,
-    data: { title: "Configuração de Sistema - Controle Dois" },
+    data: { title: `Configuração de Sistema -  ${appName}`},
   },
   {
     path: 'user',
     component: UserListComponent,
-    data: { title: "Usuários - Controle Dois" },
+    data: { title: `Usuários -  ${appName}`},
   },
   {
     path: 'user/:id',
     component: UserFormComponent,
-    data: { title: "Cadastro de Usuários - Controle Dois" },
+    data: { title: `Cadastro de Usuários -  ${appName}`},
   },
   {
     path: 'company',
     component: CompanyListComponent,
-    data: { title: "Empresas - Controle Dois" },
+    data: { title: `Empresas -  ${appName}`},
   },
   {
     path: 'company/:id',
     component: CompanyFormComponent,
-    data: { title: "Cadastro de Empresas - Controle Dois" },
+    data: { title: `Cadastro de Empresas -  ${appName}`},
   },
   {
     path: 'nfe',
     component: NfeListComponent,
-    data: { title: "NFe - Controle Dois" },
+    data: { title: `NFe -  ${appName}`},
   },
   {
     path: 'nfe/:id',
     component: NfeFormComponent,
-    data: { title: "Cadastro de NFe - Controle Dois" },
+    data: { title: `Cadastro de NFe -  ${appName}`},
   }
 ]
 
