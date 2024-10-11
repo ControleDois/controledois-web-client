@@ -36,6 +36,8 @@ export class ProductFormComponent implements OnInit {
       name: new FormControl(''),
       sale_value: new FormControl(0),
       description: new FormControl(''),
+      active_minimum_sales_quantity: new FormControl(false),
+      minimum_sales_quantity: new FormControl(1),
       active: new FormControl(false),
     }),
     categories: new FormArray([]),

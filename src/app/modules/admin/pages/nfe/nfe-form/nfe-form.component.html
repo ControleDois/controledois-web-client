@@ -1,1 +1,91 @@
-<p>nfe-form works!</p>
+<div class="container">
+  <div class="page-header">
+    <h2>Novo cadastro</h2>
+    <button class="button-back" mat-icon-button routerLink="/nfe">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <mat-tab-group>
+          <mat-tab label="Dados da Pessoa">
+            <ng-template mat-tab-label>
+              <mat-icon class="example-tab-icon">people</mat-icon>
+              Dados da Pessoa
+            </ng-template>
+
+            <div class="basic-form-header" style="margin-top: 20px;">
+              <h3>Dados gerais</h3>
+            </div>
+
+            <div class="label-group">
+              <label class="label">
+                <span class="field">Série</span>
+                <input  formControlName="serie" type="text">
+              </label>
+
+              <label class="label">
+                <span class="field">Número</span>
+                <input  formControlName="numero" type="text">
+              </label>
+
+              <label class="label-w50">
+                <span class="field">Natureza da Operação</span>
+                <input formControlName="natureza_operacao" type="text">
+              </label>
+            </div>
+
+            <div class="label-group">
+              <label class="label">
+                <span class="field">Data de Emissão</span>
+                <input formControlName="data_emissao" type="date">
+              </label>
+
+              <label class="label">
+                <span class="field">Data de Saída</span>
+                <input formControlName="data_entrada_saida" type="date">
+              </label>
+
+              <label class="label-w50">
+                <span class="field">Tipo de Nota</span>
+                <select formControlName="tipo_documento">
+                  <option value="0">Nota de entrada</option>
+                  <option value="1">Nota de saída</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="basic-form-header">
+              <h3>Informações adicionais</h3>
+            </div>
+
+
+          </mat-tab>
+
+          <mat-tab label="Chaves Liberadas" *ngIf="myForm.value.id !== 0">
+            <ng-template mat-tab-label>
+              <mat-icon class="example-tab-icon">key</mat-icon>
+              Chaves Liberadas
+            </ng-template>
+
+            <div class="basic-form-header" style="margin-top: 20px;">
+              <h3>Chaves</h3>
+            </div>
+
+
+          </mat-tab>
+        </mat-tab-group>
+      </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

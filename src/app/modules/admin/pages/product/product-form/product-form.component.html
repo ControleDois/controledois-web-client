@@ -92,6 +92,28 @@
                 <textarea formControlName="description"></textarea>
               </label>
             </div>
+
+            <div class="basic-form-header">
+              <h3>Opções de Venda</h3>
+            </div>
+
+            <div class="label-group">
+              <div class="label-group-check" style="min-width: 135px;">
+                <span class="title">Opção de Venda</span>
+                <div class="checks">
+                  <label class="check">
+                    <input type="checkbox" formControlName="active_minimum_sales_quantity">
+                    <span>Ativa Mínimo De quantidade na venda?</span>
+                  </label>
+                </div>
+              </div>
+
+              <label *ngIf="myForm.value.shop.active_minimum_sales_quantity">
+                <span class="field">Quantidade mínima de venda</span>
+                <input formControlName="minimum_sales_quantity" type="number">
+              </label>
+            </div>
+
           </mat-tab>
 
           <mat-tab label="Complementos de Produto">
