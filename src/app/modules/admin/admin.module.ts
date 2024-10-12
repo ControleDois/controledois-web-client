@@ -42,6 +42,8 @@ import { CompanyListComponent } from './pages/company/company-list/company-list.
 import { CompanyFormComponent } from './pages/company/company-form/company-form.component';
 import { NfeListComponent } from './pages/nfe/nfe-list/nfe-list.component';
 import { NfeFormComponent } from './pages/nfe/nfe-form/nfe-form.component';
+import { ContactListComponent } from './pages/contact/contact-list/contact-list.component';
+import { ContactFormComponent } from './pages/contact/contact-form/contact-form.component';
 
 const appName = 'CTrix';
 
@@ -215,6 +217,16 @@ const routes: Routes = [
     path: 'nfe/:id',
     component: NfeFormComponent,
     data: { title: `Cadastro de NFe -  ${appName}`},
+  },
+  {
+    path: 'contact',
+    component: ContactListComponent,
+    data: { title: `Contato -  ${appName}`},
+  },
+  {
+    path: 'contact/:id',
+    component: ContactFormComponent,
+    data: { title: `Cadastro de Contato -  ${appName}`},
   }
 ]
 
@@ -256,7 +268,9 @@ const routes: Routes = [
     CompanyListComponent,
     CompanyFormComponent,
     NfeListComponent,
-    NfeFormComponent
+    NfeFormComponent,
+    ContactListComponent,
+    ContactFormComponent
   ],
   imports: [
     CommonModule,

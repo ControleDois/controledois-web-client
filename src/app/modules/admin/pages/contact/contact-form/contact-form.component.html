@@ -1,0 +1,71 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Novo cadastro</h2>
+    <button class="button-back" mat-icon-button routerLink="/contact">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+      <div class="basic-form-header">
+        <h3>Dados gerais</h3>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <div class="label-group-check" style="min-width: 135px;">
+            <span class="title">Grupo</span>
+            <div class="checks">
+              <label class="check">
+                <input type="checkbox" formControlName="is_group" [disabled]="true">
+                <span>É um grupo?</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="label-w50">
+            <span class="field">Nome</span>
+            <input formControlName="name" type="text">
+          </label>
+
+          <label class="label-w50">
+            <span class="field">E-mail</span>
+            <input formControlName="email" type="email">
+          </label>
+        </div>
+
+        <div class="label-group">
+          <label>
+            <span class="field">Telefone</span>
+            <input formControlName="phone" type="text">
+          </label>
+
+          <label>
+            <span class="field">Nascimento</span>
+            <input formControlName="birth" type="date">
+          </label>
+        </div>
+
+        <div class="basic-form-header">
+          <h3>Observações gerais</h3>
+        </div>
+
+        <div class="label-group">
+          <label class="label-w100">
+            <span class="field">Observações</span>
+            <textarea formControlName="observation"></textarea>
+          </label>
+        </div>
+      </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>
