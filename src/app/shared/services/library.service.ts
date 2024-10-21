@@ -49,9 +49,15 @@ export class LibraryService {
         (data.getMinutes() <= 9 ? '0' + data.getMinutes() : data.getMinutes())
       );
     } else {
-      const data = isDate.substring(0, 10).split('-');
+      const data = isDate ? isDate.substring(0, 10).split('-') : new Date().toISOString().substring(0, 10).split('-');
       return data[2] + '/' + data[1] + '/' + data[0];
     }
+  }
+
+  getFormatDataHora(isDate: any): string {
+    const data = isDate ? isDate.substring(0, 10).split('-') : new Date().toISOString().substring(0, 10).split('-');
+    const hora = isDate ? isDate.substring(11, 16).split(':') : new Date().toISOString().substring(11, 16).split(':');
+    return data[2] + '/' + data[1] + '/' + data[0] + ' ' + hora[0] + ':' + hora[1];
   }
 
   getFormatSOData(data: string): string {

@@ -44,6 +44,7 @@ import { NfeListComponent } from './pages/nfe/nfe-list/nfe-list.component';
 import { NfeFormComponent } from './pages/nfe/nfe-form/nfe-form.component';
 import { ContactListComponent } from './pages/contact/contact-list/contact-list.component';
 import { ContactFormComponent } from './pages/contact/contact-form/contact-form.component';
+import { NfeManifestListComponent } from './pages/nfe-manifest/nfe-manifest-list/nfe-manifest-list.component';
 
 const appName = 'CTrix';
 
@@ -227,6 +228,11 @@ const routes: Routes = [
     path: 'contact/:id',
     component: ContactFormComponent,
     data: { title: `Cadastro de Contato -  ${appName}`},
+  },
+  {
+    path: 'nfe-manifest',
+    component: NfeManifestListComponent,
+    data: { title: `NFe Manifesto -  ${appName}`},
   }
 ]
 
@@ -270,7 +276,8 @@ const routes: Routes = [
     NfeListComponent,
     NfeFormComponent,
     ContactListComponent,
-    ContactFormComponent
+    ContactFormComponent,
+    NfeManifestListComponent
   ],
   imports: [
     CommonModule,
