@@ -14,6 +14,8 @@ import { FirebaseService } from 'src/app/shared/services/firebase.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogWhatsappConnectComponent } from 'src/app/shared/widget/dialog-whatsapp-connect/dialog-whatsapp-connect.component';
 
 @Component({
   selector: 'app-config',
@@ -45,9 +47,6 @@ export class ConfigComponent implements OnInit {
       inscription_suframa: new FormControl(''),
       document: new FormControl('', Validators.required),
       general_record: new FormControl('', Validators.required),
-      email: new FormControl('', Validators.required),
-      phone_commercial: new FormControl('', Validators.required),
-      phone_cell: new FormControl('', Validators.required),
       birth: new FormControl('', Validators.required),
       address: new FormGroup({
         zip_code: new FormControl('', Validators.required),
@@ -65,6 +64,7 @@ export class ConfigComponent implements OnInit {
       is_active: new FormControl(false, Validators.required),
       categories: new FormArray([]),
     }),
+    whatsapps: new FormArray([]),
   });
 
   public peopleRole = [
@@ -146,9 +146,6 @@ export class ConfigComponent implements OnInit {
   public validationFields: Array<any> = [
     { name: 'document', validation: true, msg: this.myForm.value.people_type == 0 ? 'É necessário informar o CPF' : 'É necessário informar o CNPJ' },
     { name: 'name', validation: true, msg: this.myForm.value.people_type == 0 ? 'É necessário informar o nome' : 'É necessário informar o nome fantasia' },
-    { name: 'email', validation: true, msg: 'É necessário informar o email' },
-    { name: 'phone_commercial', validation: true, msg: 'É necessário informar o telefone comercial' },
-    { name: 'phone_cell', validation: true, msg: 'É necessário informar o telefone celular' },
     { name: 'birth', validation: true, msg: this.myForm.value.people_type == 0 ? 'É necessário informar a data de nascimento' : 'É necessário informar a data de abertura' },
     { name: 'general_record', validation: true, msg: 'É necessário informar o RG' },
     { name: 'social_name', validation: true, msg: 'É necessário informar a razão social' },
@@ -163,6 +160,8 @@ export class ConfigComponent implements OnInit {
     { name: 'sale_bank_account_default_id', validation: true, msg: 'Em configurações de venda. É necessário informar a conta padrão' },
   ];
 
+  public whatsapps = this.myForm.get('whatsapps') as FormArray;
+
   constructor(
     private notificationService: NotificationService,
     private router: Router,
@@ -172,6 +171,7 @@ export class ConfigComponent implements OnInit {
     private firebaseService: FirebaseService,
     private storageService: StorageService,
     private dialogMessageService: DialogMessageService,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -194,9 +194,6 @@ export class ConfigComponent implements OnInit {
   validateForm(): void {
     this.validationFields.find((v) => v.name === 'name').validation = !!this.myForm.value.people.name;
     this.validationFields.find((v) => v.name === 'document').validation = !!this.myForm.value.people.document;
-    this.validationFields.find((v) => v.name === 'email').validation = !!this.myForm.value.people.email;
-    this.validationFields.find((v) => v.name === 'phone_commercial').validation = !!this.myForm.value.people.phone_commercial;
-    this.validationFields.find((v) => v.name === 'phone_cell').validation = !!this.myForm.value.people.phone_cell;
     this.validationFields.find((v) => v.name === 'birth').validation = !!this.myForm.value.people.birth;
     if (this.myForm.value.people.people_type == 0) {
       (this.myForm.get('people') as FormGroup).controls['general_record'].validator = Validators.required;
@@ -242,6 +239,12 @@ export class ConfigComponent implements OnInit {
 
       (this.myForm.get('people') as FormGroup).patchValue(value?.company?.people);
       (this.myForm.get('shop') as FormGroup).patchValue(value?.company?.shop);
+
+      if (value.company?.whatsapps && value.company?.whatsapps.length > 0) {
+        for (const whatsapp of value.company?.whatsapps) {
+          this.addWhatsapp(whatsapp);
+        }
+      }
 
       this.searchCategories.searchFieldOn = value?.shop?.categories?.map((category: any) => category.name) || [];
       this.myForm.patchValue(value);
@@ -372,5 +375,43 @@ export class ConfigComponent implements OnInit {
     if (btn) {
       btn.click();
     }
+  }
+
+  addWhatsapp(value: any): void {
+    const control = new FormGroup({
+      id: new FormControl(value?.id || ''),
+      name: new FormControl(value?.name || ''),
+      phone: new FormControl(value?.phone || ''),
+      status: new FormControl(value?.status || 0),
+    });
+
+    this.whatsapps.push(control);
+  }
+
+  removeWhatsapp(index: any): void {
+    this.whatsapps.controls.splice(index, 1);
+    this.whatsapps.value.splice(index, 1);
+  }
+
+  connectWhatsapp(index: any): void {
+    this.loadingFull.message = 'Buscando conexão...';
+    this.loadingFull.active = true;
+
+    const whatsappId = this.whatsapps.controls[index].value.id;
+
+    this.ConfigService.whatsappConnect(whatsappId).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        this.notificationService.warn(error.error);
+        return throwError(error);
+      }),
+      map((res) => {
+        console.log(res);
+        this.dialog.open(DialogWhatsappConnectComponent, {
+          data: { id: whatsappId, qr: res.qr },
+        });
+      })
+    ).subscribe();
+
   }
 }

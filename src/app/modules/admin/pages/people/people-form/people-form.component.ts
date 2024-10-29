@@ -1,5 +1,5 @@
 import { catchError, finalize, map } from 'rxjs/operators';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { throwError } from 'rxjs';
@@ -10,6 +10,8 @@ import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { MD5 } from 'crypto-js';
+import { MatAutocomplete } from '@angular/material/autocomplete';
+import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 
 @Component({
   selector: 'app-client-form',
@@ -37,9 +39,6 @@ export class PeopleFormComponent implements OnInit {
     inscription_suframa: new FormControl(''),
     document: new FormControl(''),
     general_record: new FormControl(''),
-    email: new FormControl(''),
-    phone_commercial: new FormControl(''),
-    phone_cell: new FormControl(''),
     birth: new FormControl(''),
     address: new FormGroup({
       zip_code: new FormControl(''),
@@ -52,9 +51,13 @@ export class PeopleFormComponent implements OnInit {
     }),
     note: new FormControl(''),
     keys: new FormArray([]),
+    contacts: new FormArray([])
   });
 
   public keys = this.myForm.get('keys') as FormArray;
+
+  public contacts = this.myForm.get('contacts') as FormArray;
+  @Output() public contactsOutPut: Array<SearchLoadingUnique> = [];
 
   public peopleRole = [
     { name: '⦿ Física', type: 0 },
@@ -116,6 +119,12 @@ export class PeopleFormComponent implements OnInit {
           this.addKey(key);
         }
       }
+
+      if (value.contacts && value.contacts.length > 0) {
+        for (const contact of value.contacts) {
+          this.addContact({ contact });
+        }
+      }
     }
   }
 
@@ -124,6 +133,11 @@ export class PeopleFormComponent implements OnInit {
 
     if (this.myForm.valid) {
       this.loadingFull.active = true;
+
+      this.myForm.value.contacts = this.myForm.value.contacts.map(
+        (contact) => contact.contact_id
+      );
+
       this.peopleService.save(this.formId, this.myForm.value).pipe(
         finalize(() => this.loadingFull.active = false),
         catchError((res) => {
@@ -259,5 +273,47 @@ export class PeopleFormComponent implements OnInit {
     } else {
       return 'Data de vencimento não definida.';
     }
+  }
+
+  selectContact(event: any, i: any): void {
+    //se o contato ja existir nao adicionar
+    if (this.contacts.value.find((v: any) => v.contact_id === event.id)) {
+      this.removeContact(i);
+      return;
+    }
+
+    this.contacts.at(i).setValue({
+      contact_id: event.id,
+      email: event.email,
+      phone: event.phone
+    });
+  }
+
+  addContact(value: any): void {
+    const control = new FormGroup({
+      contact_id: new FormControl(value?.contact?.id || null),
+      email: new FormControl(value?.contact?.email || ''),
+      phone: new FormControl(value?.contact?.phone || ''),
+    });
+
+    this.contacts.push(control);
+
+    this.contactsOutPut.push({
+      noTitle: true,
+      title: 'Contatos',
+      url: 'contact',
+      searchFieldOn: value?.contact || null,
+      searchFieldOnCollum: 'name',
+      sortedBy: 'name',
+      orderBy: 'name',
+      searchField: new FormControl(''),
+      validation: true,
+      paramsArray: [],
+    });
+  }
+
+  removeContact(index: any): void {
+    this.contacts.controls.splice(index, 1);
+    this.contactsOutPut.splice(index, 1);
   }
 }

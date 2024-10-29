@@ -45,6 +45,8 @@ import { NfeFormComponent } from './pages/nfe/nfe-form/nfe-form.component';
 import { ContactListComponent } from './pages/contact/contact-list/contact-list.component';
 import { ContactFormComponent } from './pages/contact/contact-form/contact-form.component';
 import { NfeManifestListComponent } from './pages/nfe-manifest/nfe-manifest-list/nfe-manifest-list.component';
+import { PostFormComponent } from './pages/post/post-form/post-form.component';
+import { PostListComponent } from './pages/post/post-list/post-list.component';
 
 const appName = 'CTrix';
 
@@ -233,6 +235,16 @@ const routes: Routes = [
     path: 'nfe-manifest',
     component: NfeManifestListComponent,
     data: { title: `NFe Manifesto -  ${appName}`},
+  },
+  {
+    path: 'post',
+    component: PostListComponent,
+    data: { title: `Transmissão de mensagens -  ${appName}`},
+  },
+  {
+    path: 'post/:id',
+    component: PostFormComponent,
+    data: { title: `Cadastro transmissão de mensagens -  ${appName}`},
   }
 ]
 
@@ -277,7 +289,9 @@ const routes: Routes = [
     NfeFormComponent,
     ContactListComponent,
     ContactFormComponent,
-    NfeManifestListComponent
+    NfeManifestListComponent,
+    PostFormComponent,
+    PostListComponent
   ],
   imports: [
     CommonModule,

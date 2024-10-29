@@ -35,38 +35,38 @@ export class DashboardComponent implements OnInit {
   }
 
   load(): void {
-    this.receviementToday = this.storageService.getList(`receviementToday`);
-    this.receviementRemaining = this.storageService.getList(`receviementRemaining`);
-    this.receviementLate = this.storageService.getList(`receviementLate`);
+    //this.receviementToday = this.storageService.getList(`receviementToday`);
+    //this.receviementRemaining = this.storageService.getList(`receviementRemaining`);
+    //this.receviementLate = this.storageService.getList(`receviementLate`);
 
-    this.paymentToday = this.storageService.getList(`paymentToday`);
-    this.paymentRemaining = this.storageService.getList(`paymentRemaining`);
-    this.paymentLate = this.storageService.getList(`paymentLate`);
+    //this.paymentToday = this.storageService.getList(`paymentToday`);
+    //this.paymentRemaining = this.storageService.getList(`paymentRemaining`);
+    //this.paymentLate = this.storageService.getList(`paymentLate`);
 
 
-    this.banks = this.storageService.getList(`DashBanks`);
+    //this.banks = this.storageService.getList(`DashBanks`);
 
     this.dashboardService.receviementAndPayment().pipe(
       map(res => {
-        this.storageService.setList(`receviementToday`, res.receviement_today);
+        //this.storageService.setList(`receviementToday`, res.receviement_today);
         this.receviementToday = res.receviement_today;
-        this.storageService.setList(`receviementRemaining`, res.receviement_remaining);
+        //this.storageService.setList(`receviementRemaining`, res.receviement_remaining);
         this.receviementRemaining = res.receviement_remaining;
-        this.storageService.setList(`receviementLate`, res.receviement_late);
+        //this.storageService.setList(`receviementLate`, res.receviement_late);
         this.receviementLate = res.receviement_late;
 
-        this.storageService.setList(`paymentToday`, res.payment_today);
+        //this.storageService.setList(`paymentToday`, res.payment_today);
         this.paymentToday = res.payment_today;
-        this.storageService.setList(`paymentRemaining`, res.payment_remaining);
+        //this.storageService.setList(`paymentRemaining`, res.payment_remaining);
         this.paymentRemaining = res.payment_remaining;
-        this.storageService.setList(`paymentLate`, res.payment_late);
+        //this.storageService.setList(`paymentLate`, res.payment_late);
         this.paymentLate = res.payment_late;
       })
     ).subscribe();
 
     this.dashboardService.banksAccounts().pipe(
       map(res => {
-        this.storageService.setList(`DashBanks`, res);
+        //this.storageService.setList(`DashBanks`, res);
         this.banks = res;
       })
     ).subscribe();

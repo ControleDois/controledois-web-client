@@ -8,6 +8,8 @@ import { SearchLoadingChipsComponent } from './search-loading-chips/search-loadi
 import { SearchLoadingUniqueComponent } from './search-loading-unique/search-loading-unique.component';
 import { SearchDateMonthComponent } from './search-date-month/search-date-month.component';
 import { DialogMessageFullComponent } from './dialog-message-full/dialog-message-full.component';
+import { DialogWhatsappConnectComponent } from './dialog-whatsapp-connect/dialog-whatsapp-connect.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,8 @@ import { DialogMessageFullComponent } from './dialog-message-full/dialog-message
     SearchLoadingChipsComponent,
     SearchLoadingUniqueComponent,
     SearchDateMonthComponent,
-    DialogMessageFullComponent
+    DialogMessageFullComponent,
+    DialogWhatsappConnectComponent
   ],
     exports: [
         LoadingFullComponent,
@@ -30,7 +33,8 @@ import { DialogMessageFullComponent } from './dialog-message-full/dialog-message
     ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    NgxQRCodeModule
   ]
 })
 export class WidgetModule { }

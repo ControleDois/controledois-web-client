@@ -27,6 +27,9 @@
               <a routerLink="/people">Clientes</a>
             </li>
             <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/contact">Contatos</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
               <a routerLink="/product">Produtos</a>
             </li>
             <li (click)="menuMobileOn = !menuMobileOn">
@@ -103,6 +106,23 @@
             <li><span>Cadastro</span></li>
             <li (click)="menuMobileOn = !menuMobileOn">
               <a routerLink="/people">Pessoas</a>
+            </li>
+          </article>
+        </ul>
+      </li>
+      <li class="nav-ul-li">
+        <a class="menu-list">Conexão <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <ul>
+          <article>
+            <li><span>Controle</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/post">Transmissão</a>
+            </li>
+          </article>
+          <article>
+            <li><span>Cadastro</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/contact">Contatos</a>
             </li>
           </article>
         </ul>
