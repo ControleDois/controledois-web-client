@@ -272,6 +272,83 @@
               </div>
             </div>
           </mat-tab>
+
+          <mat-tab label="Backups" *ngIf="myForm.value.id !== 0">
+            <ng-template mat-tab-label>
+              <mat-icon class="example-tab-icon">backup</mat-icon>
+              Backups
+            </ng-template>
+
+            <mat-tab-group>
+              <mat-tab label="Banco de Dados" *ngIf="myForm.value.id !== 0">
+                <ng-template mat-tab-label>
+                  <mat-icon class="example-tab-icon">table</mat-icon>
+                  Banco de dados
+                </ng-template>
+
+                <section class="files">
+                  <div *ngFor="let file of files" class="file-item">
+                    <i class="file-icon fas fa-hdd"></i>
+                    <div class="file-info">
+                      <p class="file-name">{{ file.name }}</p>
+                      <p class="file-date">{{ file.client_modified | date:'mediumDate' }} | {{formatBytes(file.size, 2)}}
+                      </p>
+                    </div>
+                    <button class="action-btn" mat-button (click)="downloadFile(file.path_display)">Baixar</button>
+                  </div>
+                  <div *ngIf="files.length === 0" class="no-files-message">
+                    Nenhum resultado encontrado
+                  </div>
+                </section>
+              </mat-tab>
+
+              <mat-tab label="XML NFe" *ngIf="myForm.value.id !== 0">
+                <ng-template mat-tab-label>
+                  <mat-icon class="example-tab-icon">description</mat-icon>
+                  XML NFe
+                </ng-template>
+
+                <section class="files">
+                  <div *ngFor="let nfe of nfe" class="file-item">
+                    <i class="file-icon fas fa-file"></i>
+                    <div class="file-info">
+                      <p class="file-name">{{ nfe.name }}</p>
+                      <p class="file-date">{{ nfe.client_modified | date:'mediumDate' }} | {{formatBytes(nfe.size,
+                        2)}}
+                      </p>
+                    </div>
+                    <button class="action-btn" mat-button (click)="downloadFile(nfe.path_display)">Baixar</button>
+                  </div>
+                  <div *ngIf="nfe.length === 0" class="no-files-message">
+                    Nenhum resultado encontrado
+                  </div>
+                </section>
+              </mat-tab>
+
+              <mat-tab label="XML NFCe" *ngIf="myForm.value.id !== 0">
+                <ng-template mat-tab-label>
+                  <mat-icon class="example-tab-icon">receipt_long</mat-icon>
+                  XML NFCe
+                </ng-template>
+
+                <section class="files">
+                  <div *ngFor="let nfce of nfce" class="file-item">
+                    <i class="file-icon fas fa-receipt"></i>
+                    <div class="file-info">
+                      <p class="file-name">{{ nfce.name }}</p>
+                      <p class="file-date">{{ nfce.client_modified | date:'mediumDate' }} | {{formatBytes(nfce.size,
+                        2)}}
+                      </p>
+                    </div>
+                    <button class="action-btn" mat-button (click)="downloadFile(nfce.path_display)">Baixar</button>
+                  </div>
+                  <div *ngIf="nfce.length === 0" class="no-files-message">
+                    Nenhum resultado encontrado
+                  </div>
+                </section>
+              </mat-tab>
+            </mat-tab-group>
+          </mat-tab>
         </mat-tab-group>
       </form>
 

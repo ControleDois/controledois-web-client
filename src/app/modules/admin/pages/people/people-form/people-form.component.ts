@@ -12,10 +12,13 @@ import { LibraryService } from 'src/app/shared/services/library.service';
 import { MD5 } from 'crypto-js';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
 
 @Component({
   selector: 'app-client-form',
   templateUrl: './people-form.component.html',
+  styleUrls: ['./people-form.component.scss'],
+
 })
 export class PeopleFormComponent implements OnInit {
   private formId: string;
@@ -75,6 +78,11 @@ export class PeopleFormComponent implements OnInit {
     { name: 'name', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o nome' : 'É necessário informar o nome fantasia' },
   ];
 
+  public files: any[] = [];
+  public nfe: any[] = [];
+  public nfce: any[] = [];
+
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private peopleService: PeopleService,
@@ -82,7 +90,8 @@ export class PeopleFormComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private dialogMessageService: DialogMessageService,
-    private libraryService: LibraryService
+    private libraryService: LibraryService,
+    private dropboxService: DropboxService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
   }
@@ -125,6 +134,10 @@ export class PeopleFormComponent implements OnInit {
           this.addContact({ contact });
         }
       }
+
+      this.listDropboxFolder();
+      this.listDropboxNFe();
+      this.listDropboxNFCe();
     }
   }
 
@@ -315,5 +328,99 @@ export class PeopleFormComponent implements OnInit {
   removeContact(index: any): void {
     this.contacts.controls.splice(index, 1);
     this.contactsOutPut.splice(index, 1);
+  }
+
+  openFile(file) {
+    window.open(file, '_blank');
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = [
+      'Bytes',
+      'KiB',
+      'MiB',
+      'GiB',
+      'TiB',
+      'PiB',
+      'EiB',
+      'ZiB',
+      'YiB',
+    ];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  }
+
+  listDropboxFolder(): void {
+    const documentPath = this.myForm.controls['document'].value || '';
+    if (documentPath) {
+      this.dropboxService.listFolder(documentPath).subscribe({
+        next: (response) => {
+          this.files = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.error('Backup não encontrado.');
+        },
+      });
+    }
+  }
+
+  listDropboxNFe(): void {
+    const documentPath = this.myForm.controls['document'].value || '';
+    if (documentPath) {
+      this.dropboxService.listNfe(documentPath).subscribe({
+        next: (response) => {
+          this.nfe = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.error('NFe não encontrado.');
+        },
+      });
+    }
+  }
+
+  listDropboxNFCe(): void {
+    const documentPath = this.myForm.controls['document'].value || '';
+    if (documentPath) {
+      this.dropboxService.listNfce(documentPath).subscribe({
+        next: (response) => {
+          this.nfce = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.error('NFCe não encontrado.');
+        },
+      });
+    }
+  }
+
+  downloadFile(path: string): void {
+    this.loadingFull.active = true;
+    this.dropboxService.downloadFile(path).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = path.split('/').pop() ?? 'default_filename';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.loadingFull.active = false;
+        this.notificationService.success('Arquivo baixado com sucesso!.');
+      },
+      (error) => {
+        console.error('Download error:', error);
+        this.notificationService.error('Erro ao baixar o arquivo.');
+        this.loadingFull.active = false;
+      }
+    );
   }
 }
