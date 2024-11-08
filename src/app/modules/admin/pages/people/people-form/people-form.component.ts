@@ -54,13 +54,16 @@ export class PeopleFormComponent implements OnInit {
     }),
     note: new FormControl(''),
     keys: new FormArray([]),
-    contacts: new FormArray([])
+    contacts: new FormArray([]),
+    backups: new FormArray([]),
   });
 
   public keys = this.myForm.get('keys') as FormArray;
 
   public contacts = this.myForm.get('contacts') as FormArray;
   @Output() public contactsOutPut: Array<SearchLoadingUnique> = [];
+
+  public backups = this.myForm.get('backups') as FormArray;
 
   public peopleRole = [
     { name: '⦿ Física', type: 0 },
@@ -132,6 +135,12 @@ export class PeopleFormComponent implements OnInit {
       if (value.contacts && value.contacts.length > 0) {
         for (const contact of value.contacts) {
           this.addContact({ contact });
+        }
+      }
+
+      if (value.backups && value.backups.length > 0) {
+        for (const backup of value.backups) {
+          this.addBackup(backup);
         }
       }
 
@@ -328,6 +337,24 @@ export class PeopleFormComponent implements OnInit {
   removeContact(index: any): void {
     this.contacts.controls.splice(index, 1);
     this.contactsOutPut.splice(index, 1);
+  }
+
+  addBackup(value: any): void {
+    const control = new FormGroup({
+      name: new FormControl(value?.name || ''),
+      path: new FormControl(value?.path || ''),
+      size: new FormControl(value?.size || 0),
+      role: new FormControl(value?.role || 0),
+      last_backup: new FormControl(this.datePipe.transform(value?.last_backup || new Date(), 'yyyy-MM-dd')),
+      active: new FormControl(value?.active || false),
+    });
+
+    this.backups.push(control);
+  }
+
+  removeBackup(index: any): void {
+    this.backups.controls.splice(index, 1);
+    this.backups.value.splice(index, 1);
   }
 
   openFile(file) {

@@ -3,20 +3,24 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { DropboxFile } from '../interfaces/dropbox.interface';
+import { Auth } from '../interfaces/auth.interface';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DropboxService {
+  private auth: Auth;
   private readonly dropboxApiUrl =
     'https://api.dropboxapi.com/2/files/list_folder';
   private readonly dropboxTokenUrl = 'https://api.dropboxapi.com/oauth2/token';
-  private readonly clientId = 'midwt55zj3ngec7';
-  private readonly clientSecret = 'x0ykm02s6ouhz6n';
-  private readonly refreshToken =
-    'yRQFUtlIrDEAAAAAAAAAAdbB4ZKfN6UC9E-ivoFz-QB9Apryyj5irpuIMlwzNzsJ';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private storageService: StorageService
+  ) {
+    this.auth = this.storageService.getAuth();
+  }
 
   private getAccessToken(): Observable<string> {
     const headers = new HttpHeaders({
@@ -25,9 +29,9 @@ export class DropboxService {
 
     const body = new URLSearchParams({
       grant_type: 'refresh_token',
-      client_id: this.clientId,
-      client_secret: this.clientSecret,
-      refresh_token: this.refreshToken,
+      client_id: this.auth.company.config.dropbox_client_id || '',
+      client_secret: this.auth.company.config.dropbox_client_secret || '',
+      refresh_token: this.auth.company.config.dropbox_refresh_token || '',
     });
 
     return this.http

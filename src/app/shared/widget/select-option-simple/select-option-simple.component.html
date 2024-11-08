@@ -1,0 +1,6 @@
+<div class="option">
+  <select [formControl]="option">
+    <option *ngFor="let status of optionsType" [value]="status.type">{{ status.name }}
+    </option>
+  </select>
+</div>

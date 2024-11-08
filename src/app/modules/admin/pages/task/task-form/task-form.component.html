@@ -1,0 +1,97 @@
+<div class="container">
+  <div class="page-header">
+    <h2>Novo cadastro</h2>
+    <button class="button-back" mat-icon-button routerLink="/task">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="page-content">
+    <div class="basic-form">
+      <div class="basic-form-header">
+        <h3>Dados gerais</h3>
+      </div>
+
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <label class="label-w30">
+            <span class="field">Prioridade</span>
+            <select formControlName="priority">
+              <option *ngFor="let priority of priorityType" [value]="priority.type">{{ priority.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Status</span>
+            <select formControlName="status">
+              <option *ngFor="let status of statusType" [value]="status.type">{{ status.name }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <label class="label-w100">
+          <span class="field">Titulo</span>
+          <input formControlName="title" type="text">
+        </label>
+
+        <label class="label-w100">
+          <span class="field">Descrição</span>
+          <textarea formControlName="description"></textarea>
+        </label>
+
+        <!-- <section class="drag-files">
+          <mat-icon>cloud_upload</mat-icon>
+
+          <h3>Importe seus arquivos</h3>
+          <p>Arraste ou clique para fazer upload</p>
+
+          <input type="file" (change)="getFile($event)"/>
+        </section> -->
+
+        <!-- <section class="files">
+          <div *ngFor="let file of myForm.value.files as i" class="box done">
+            <div class="icon">
+              <mat-icon>insert_drive_file</mat-icon>
+            </div>
+            <div class="info">
+              <div class="filename-link" (click)="openFile(file.file_url)">{{ file.file_name }}</div>
+              <div class="filesize">
+                <span>{{ formatBytes(file.file_size) }}</span>
+              </div>
+            </div>
+            <div class="action" (click)="deleteFileForm(file)">
+              <mat-icon>delete</mat-icon>
+            </div>
+          </div>
+        </section> -->
+
+        <!-- <section class="files">
+          <div *ngFor="let file of filesUpload as i" class="box done" >
+            <div class="icon">
+              <mat-icon>insert_drive_file</mat-icon>
+            </div>
+            <div class="info">
+              <div class="filename">{{ file.name }}</div>
+              <div class="filesize">
+                <span>{{ formatBytes(file.size) }}</span>
+              </div>
+            </div>
+            <div class="action" (click)="deleteFile(file)">
+              <mat-icon>delete</mat-icon>
+            </div>
+          </div>
+        </section> -->
+      </form>
+
+      <div class="basic-form-footer">
+        <button class="button-add" mat-button (click)="save()">
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

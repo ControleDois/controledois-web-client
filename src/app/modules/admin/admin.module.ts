@@ -47,6 +47,8 @@ import { ContactFormComponent } from './pages/contact/contact-form/contact-form.
 import { NfeManifestListComponent } from './pages/nfe-manifest/nfe-manifest-list/nfe-manifest-list.component';
 import { PostFormComponent } from './pages/post/post-form/post-form.component';
 import { PostListComponent } from './pages/post/post-list/post-list.component';
+import { TaskFormComponent } from './pages/task/task-form/task-form.component';
+import { TaskListComponent } from './pages/task/task-list/task-list.component';
 
 const appName = 'CTrix';
 
@@ -245,6 +247,16 @@ const routes: Routes = [
     path: 'post/:id',
     component: PostFormComponent,
     data: { title: `Cadastro transmissão de mensagens -  ${appName}`},
+  },
+  {
+    path: 'task',
+    component: TaskListComponent,
+    data: { title: `Tarefas -  ${appName}`},
+  },
+  {
+    path: 'task/:id',
+    component: TaskFormComponent,
+    data: { title: `Cadastro de Tarefas -  ${appName}`},
   }
 ]
 
@@ -291,7 +303,9 @@ const routes: Routes = [
     ContactFormComponent,
     NfeManifestListComponent,
     PostFormComponent,
-    PostListComponent
+    PostListComponent,
+    TaskFormComponent,
+    TaskListComponent
   ],
   imports: [
     CommonModule,

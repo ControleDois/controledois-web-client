@@ -10,6 +10,7 @@ import { SearchDateMonthComponent } from './search-date-month/search-date-month.
 import { DialogMessageFullComponent } from './dialog-message-full/dialog-message-full.component';
 import { DialogWhatsappConnectComponent } from './dialog-whatsapp-connect/dialog-whatsapp-connect.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { SelectOptionSimpleComponent } from './select-option-simple/select-option-simple.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
     SearchLoadingUniqueComponent,
     SearchDateMonthComponent,
     DialogMessageFullComponent,
-    DialogWhatsappConnectComponent
+    DialogWhatsappConnectComponent,
+    SelectOptionSimpleComponent
   ],
     exports: [
         LoadingFullComponent,
@@ -29,7 +31,8 @@ import { NgxQRCodeModule } from 'ngx-qrcode2';
         SearchLoadingChipsComponent,
         SearchLoadingUniqueComponent,
         SearchDateMonthComponent,
-        DialogMessageFullComponent
+        DialogMessageFullComponent,
+        SelectOptionSimpleComponent
     ],
   imports: [
     CommonModule,
