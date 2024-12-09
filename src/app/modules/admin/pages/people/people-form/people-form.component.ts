@@ -13,6 +13,8 @@ import { MD5 } from 'crypto-js';
 import { MatAutocomplete } from '@angular/material/autocomplete';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 
 @Component({
   selector: 'app-client-form',
@@ -58,6 +60,16 @@ export class PeopleFormComponent implements OnInit {
     backups: new FormArray([]),
   });
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Cliente`,
+    description: 'Cadastro de cliente',
+    button: {
+      text: 'Voltar',
+      routerLink: '/people',
+      icon: 'arrow_back',
+    },
+  };
+
   public keys = this.myForm.get('keys') as FormArray;
 
   public contacts = this.myForm.get('contacts') as FormArray;
@@ -85,6 +97,17 @@ export class PeopleFormComponent implements OnInit {
   public nfe: any[] = [];
   public nfce: any[] = [];
 
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Dados da Pessoa', index: 0, icon: 'info' },
+      { text: 'Endereço', index: 1, icon: 'info' },
+      { text: 'Contatos', index: 2, icon: 'contacts' },
+      { text: 'Chaves', index: 3, icon: 'vpn_key' },
+      { text: 'Backups', index: 4, icon: 'backup' },
+      { text: 'Observações', index: 5, icon: 'notes' },
+    ],
+    selectedItem: 0
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -97,6 +120,7 @@ export class PeopleFormComponent implements OnInit {
     private dropboxService: DropboxService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Novo Cliente' : 'Editar Cliente';
   }
 
   validateForm(): void {

@@ -10,13 +10,15 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 
 @Component({
   selector: 'app-sale-form',
   templateUrl: './sale-form.component.html',
 })
 export class SaleFormComponent implements OnInit {
-  private formId: string;
+  private formId: string = '';
 
   public loadingFull: LoadingFull = {
     active: false,
@@ -126,6 +128,26 @@ export class SaleFormComponent implements OnInit {
     },
   ];
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Nova Venda`,
+    description: 'Preencha os campos para salvar a venda.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/sale',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Informações Gerais', index: 0, icon: 'info' },
+      { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
+      { text: 'Pagamentos', index: 2, icon: 'payment' },
+      { text: 'Observações', index: 3, icon: 'description' },
+    ],
+    selectedItem: 0
+  }
+
   @Output() searchPeople: SearchLoadingUnique = {
     noTitle: false,
     title: 'Cliente',
@@ -203,6 +225,7 @@ export class SaleFormComponent implements OnInit {
     private storageService: StorageService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Venda' : 'Editar Venda';
     this.productsOutPut = [];
   }
 

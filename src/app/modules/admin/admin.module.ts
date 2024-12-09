@@ -49,6 +49,8 @@ import { PostFormComponent } from './pages/post/post-form/post-form.component';
 import { PostListComponent } from './pages/post/post-list/post-list.component';
 import { TaskFormComponent } from './pages/task/task-form/task-form.component';
 import { TaskListComponent } from './pages/task/task-list/task-list.component';
+import { PageHeaderComponent } from './components/page-header/page-header.component';
+import { BasicFormNavigationComponent } from './components/basic-form-navigation/basic-form-navigation.component';
 
 const appName = 'CTrix';
 
@@ -305,7 +307,9 @@ const routes: Routes = [
     PostFormComponent,
     PostListComponent,
     TaskFormComponent,
-    TaskListComponent
+    TaskListComponent,
+    PageHeaderComponent,
+    BasicFormNavigationComponent
   ],
   imports: [
     CommonModule,

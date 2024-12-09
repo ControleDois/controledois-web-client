@@ -4,33 +4,6 @@
   margin: 50px auto 70px auto;
 }
 
-/* Page */
-.page-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  h2 {
-    color: #333;
-    line-height: 48px;
-  }
-
-  .button-back {
-    color: #2687e9;
-  }
-
-  .button-add {
-    background-color: #1b9b45;
-    color: #fff;
-  }
-
-  .button-add-continue {
-    margin-left: 20px !important;
-    background-color: #1b9b45;
-    color: #fff;
-  }
-}
-
 .page-content {
   background-color: #fff;
   padding: 16px;
@@ -79,7 +52,36 @@
 }
 
 /* Forms */
+.basic {
+  display: flex;
+  justify-content: space-between;
+}
+
 .basic-form {
+  flex: 70%;
+  display: block;
+  position: relative;
+
+  .tab-no-labels {
+    .mat-tab-header {
+      border: none;
+    }
+
+    .mat-tab-label {
+      display: none !important;
+    }
+  }
+
+  .tab-labels {
+    .mat-tab-header {
+      border-bottom: 1px solid #ddd !important;
+    }
+
+    .mat-tab-label {
+      display: block !important;
+    }
+  }
+
   .basic-form-header {
     border-bottom: 1px solid #c9d3dd;
     padding-bottom: 8px;

@@ -1,12 +1,7 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Cadastro de pessoas</h2>
-    <button class="button-add" mat-button routerLink="/people/new">
-      Adicionar
-    </button>
-  </div>
-
   <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
     </div>

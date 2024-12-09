@@ -78,19 +78,18 @@ export class DropboxService {
   }
 
   listFolder(path: string): Observable<DropboxFile[]> {
-    const fullPath = `/CTrix/Backups/${path}`;
+    const fullPath = `/Backups/${path}/Database`;
     return this.listFiles(fullPath);
   }
 
   listNfe(path: string): Observable<DropboxFile[]> {
-    const currentYear = new Date().getFullYear();
-    const fullPath = `/CTrix/XMLS/${path}/NFE/${currentYear}`;
+    const fullPath = `/Backups/${path}/XMLS/NFe`;
+    console.log(fullPath);
     return this.listFiles(fullPath);
   }
 
   listNfce(path: string): Observable<DropboxFile[]> {
-    const currentYear = new Date().getFullYear();
-    const fullPath = `/CTrix/XMLS/${path}/NFCE/${currentYear}`;
+    const fullPath = `/Backups/${path}/XMLS/NFCe`;
     return this.listFiles(fullPath);
   }
 

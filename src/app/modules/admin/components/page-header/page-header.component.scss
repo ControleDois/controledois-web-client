@@ -1,0 +1,20 @@
+/* Page */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #c9d3dd;
+
+  .title {
+    h2 {
+      color: var(--primary-color);
+    }
+
+    p {
+      color: #666;
+      font-size: 0.875em;
+    }
+  }
+}

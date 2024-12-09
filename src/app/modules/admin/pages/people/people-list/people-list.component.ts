@@ -8,6 +8,7 @@ import { FormControl } from "@angular/forms";
 import { PeopleService } from 'src/app/shared/services/people.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-client-list',
@@ -26,6 +27,16 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Clientes',
+    description: 'Listagem de clientes cadastrados no sistema',
+    button: {
+      text: 'Novo Cliente',
+      routerLink: '/people/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private peopleService: PeopleService,

@@ -16,6 +16,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { MatPaginator } from '@angular/material/paginator';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-sale-list',
@@ -48,6 +49,16 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   @Output() search = new FormControl('');
   @ViewChild('priceListPDF', { static: true, read: ViewContainerRef })
   priceListPDF!: ViewContainerRef;
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Vendas e Orçamentos',
+    description: 'Listagem de vendas e orçamentos realizados.',
+    button: {
+      text: 'Nova venda',
+      routerLink: '/sale/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private saleService: SaleService,

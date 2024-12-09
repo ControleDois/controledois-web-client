@@ -1,252 +1,274 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Novo cadastro</h2>
-    <button class="button-back" mat-icon-button routerLink="/sale">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
   <div class="page-content">
-    <div class="basic-form">
-      <div class="basic-form-header">
-        <h3>Dados gerais</h3>
-      </div>
 
-      <form [formGroup]="myForm">
-        <div class="label-group">
-          <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
 
-          <label class="label-w30" *ngIf="!myForm.value.is_contract">
-            <span class="field">Situação da Negociação</span>
-            <select formControlName="status" (change)="changePortion()">
-              <option *ngFor="let status of statusList" [value]="status.type">{{ status.name }}</option>
-            </select>
-          </label>
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
 
-          <label class="check"  *ngIf="myForm.value.status === 3">
-            <input type="checkbox" formControlName="is_contract" (click)="calcValidityContract()">
-            <span>Contrato?</span>
-          </label>
-        </div>
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="basic-form-header">
+                <h3>Dados gerais</h3>
+              </div>
 
-        <div class="label-group" *ngIf="myForm.value.status === 3">
-          <label>
-            <span class="field">Data da venda</span>
-            <input formControlName="date_sale" type="date" (change)="calcValidityContract()">
-          </label>
+              <div class="label-group">
+                <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
 
-          <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
-        </div>
+                <label class="label-w30" *ngIf="!myForm.value.is_contract">
+                  <span class="field">Situação da Negociação</span>
+                  <select formControlName="status" (change)="changePortion()">
+                    <option *ngFor="let status of statusList" [value]="status.type">{{ status.name }}</option>
+                  </select>
+                </label>
 
-        <div class="label-group" *ngIf="myForm.value.is_contract">
-          <label class="label-w30">
-            <span class="field">Cobrar sempre no</span>
-            <select formControlName="contract_billing_day" (change)="calcValidityContract()">
-              <option *ngFor="let billing of contractBillingDayList" [value]="billing.type">{{ billing.name }}
-              </option>
-            </select>
-          </label>
+                <label class="check"  *ngIf="myForm.value.status === 3">
+                  <input type="checkbox" formControlName="is_contract" (click)="calcValidityContract()">
+                  <span>Contrato?</span>
+                </label>
+              </div>
 
-          <label class="label-w30">
-            <span class="field">Término da vigência</span>
-            <select formControlName="contract_validity_type">
-              <option *ngFor="let validity of contractValidityTypeList" [value]="validity.type">{{ validity.name }}
-              </option>
-            </select>
-          </label>
+              <div class="label-group" *ngIf="myForm.value.status === 3">
+                <label>
+                  <span class="field">Data da venda</span>
+                  <input formControlName="date_sale" type="date" (change)="calcValidityContract()">
+                </label>
 
-          <label *ngIf="myForm.value.contract_validity_type !== 1">
-            <span class="field">Data de término</span>
-            <input formControlName="contract_date_finish" type="date" (change)="calcDateBilling()">
-          </label>
+                <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
+              </div>
 
-          <label *ngIf="myForm.value.contract_validity_type !== 1">
-            <span class="field">Vigência total</span>
-            <h4>{{contractDateBilling}} meses</h4>
-          </label>
-        </div>
+              <div class="label-group" *ngIf="myForm.value.is_contract">
+                <label class="label-w30">
+                  <span class="field">Cobrar sempre no</span>
+                  <select formControlName="contract_billing_day" (change)="calcValidityContract()">
+                    <option *ngFor="let billing of contractBillingDayList" [value]="billing.type">{{ billing.name }}
+                    </option>
+                  </select>
+                </label>
 
-        <label *ngIf="myForm.value.status !== 3">
-          <span class="field">Introdução</span>
-          <textarea formControlName="introduction" placeholder="Faça um breve descritivo da sua empresa e dos produtos e serviços que sua empresa vende."></textarea>
-        </label>
+                <label class="label-w30">
+                  <span class="field">Término da vigência</span>
+                  <select formControlName="contract_validity_type">
+                    <option *ngFor="let validity of contractValidityTypeList" [value]="validity.type">{{ validity.name }}
+                    </option>
+                  </select>
+                </label>
 
-        <div class="label-group" *ngIf="myForm.value.status !== 3">
-          <label>
-            <span class="field">Data orçamento</span>
-            <input formControlName="date_budget" type="date">
-          </label>
+                <label *ngIf="myForm.value.contract_validity_type !== 1">
+                  <span class="field">Data de término</span>
+                  <input formControlName="contract_date_finish" type="date" (change)="calcDateBilling()">
+                </label>
 
-          <label>
-            <span class="field">Validade orçamento</span>
-            <input formControlName="date_budget_validity" type="date">
-          </label>
+                <label *ngIf="myForm.value.contract_validity_type !== 1">
+                  <span class="field">Vigência total</span>
+                  <h4>{{contractDateBilling}} meses</h4>
+                </label>
+              </div>
 
-          <label class="label-w100">
-            <span class="field">Previsão de entrega</span>
-            <input formControlName="delivery_forecast_budget" type="text" placeholder="Em quanto tempo você entregará os produtos ou prestará o serviço?">
-          </label>
-        </div>
+              <label *ngIf="myForm.value.status !== 3">
+                <span class="field">Introdução</span>
+                <textarea formControlName="introduction" placeholder="Faça um breve descritivo da sua empresa e dos produtos e serviços que sua empresa vende."></textarea>
+              </label>
 
-        <div class="shopping-budget">
-          <div class="shopping-budget-grid">
-            <ul class="shopping-budget-grid-header">
-              <li style="width: 25%">Produto/Serviço</li>
-              <li style="width: 30%">Detalhes do item</li>
-              <li style="text-align: right">Quantidade</li>
-              <li style="text-align: right">Valor</li>
-              <li style="text-align: right">Subtotal</li>
-            </ul>
+              <div class="label-group" *ngIf="myForm.value.status !== 3">
+                <label>
+                  <span class="field">Data orçamento</span>
+                  <input formControlName="date_budget" type="date">
+                </label>
 
-            <ng-container formArrayName="products">
-              <div *ngFor="let product of products.controls; index as i" class="shopping-budget-grid-list">
-                <ng-container [formGroupName]="i">
-                  <div class="label-group">
-                    <app-search-loading-unique style="width: 25%" [search]="productsOutPut[i]" (eventEmit)="selectProduct($event, i)"></app-search-loading-unique>
+                <label>
+                  <span class="field">Validade orçamento</span>
+                  <input formControlName="date_budget_validity" type="date">
+                </label>
 
-                    <label style="width: 30%">
-                      <span class="label-title">Detalhes do item</span>
-                      <input formControlName="description" type="text">
-                    </label>
+                <label class="label-w100">
+                  <span class="field">Previsão de entrega</span>
+                  <input formControlName="delivery_forecast_budget" type="text" placeholder="Em quanto tempo você entregará os produtos ou prestará o serviço?">
+                </label>
+              </div>
+            </mat-tab>
 
-                    <label>
-                      <span class="label-title">Quantidade</span>
-                      <input formControlName="amount" type="number" style="text-align: right" (keyup)="sumProductDetails(i)">
-                    </label>
+            <mat-tab>
+              <div class="basic-form-header">
+                <h3>Produtos</h3>
+              </div>
 
-                    <label>
-                      <span class="label-title">Valor</span>
-                      <input formControlName="cost_value" currencyMask type="text" style="text-align: right" (keyup)="sumProductDetails(i)">
-                    </label>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid">
+                  <ul class="shopping-budget-grid-header">
+                    <li style="width: 25%">Produto/Serviço</li>
+                    <li style="width: 30%">Detalhes do item</li>
+                    <li style="text-align: right">Quantidade</li>
+                    <li style="text-align: right">Valor</li>
+                    <li style="text-align: right">Subtotal</li>
+                  </ul>
 
-                    <label>
-                      <span class="label-title">Subtotal</span>
-                      <input formControlName="subtotal" currencyMask type="text" style="text-align: right" readonly>
-                    </label>
+                  <ng-container formArrayName="products">
+                    <div *ngFor="let product of products.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <app-search-loading-unique style="width: 25%" [search]="productsOutPut[i]" (eventEmit)="selectProduct($event, i)"></app-search-loading-unique>
 
-                    <button class="add-item" mat-icon-button (click)="removeProduct(i)" *ngIf="products.length > 1">
-                      <mat-icon>clear</mat-icon>
-                    </button>
+                          <label style="width: 30%">
+                            <span class="label-title">Detalhes do item</span>
+                            <input formControlName="description" type="text">
+                          </label>
+
+                          <label>
+                            <span class="label-title">Quantidade</span>
+                            <input formControlName="amount" type="number" style="text-align: right" (keyup)="sumProductDetails(i)">
+                          </label>
+
+                          <label>
+                            <span class="label-title">Valor</span>
+                            <input formControlName="cost_value" currencyMask type="text" style="text-align: right" (keyup)="sumProductDetails(i)">
+                          </label>
+
+                          <label>
+                            <span class="label-title">Subtotal</span>
+                            <input formControlName="subtotal" currencyMask type="text" style="text-align: right" readonly>
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removeProduct(i)" *ngIf="products.length > 1">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addProduct(null)">Adicionar mais uma linha</button>
+                    <div class="amount">
+                      <p>Valor total</p>
+                      <h2>{{myForm.value.amount | currency}}</h2>
+                    </div>
                   </div>
-                </ng-container>
-              </div>
-            </ng-container>
-          </div>
 
-          <div class="shopping-budget-footer">
-            <div class="amount-button-add">
-              <button mat-button (click)="addProduct(null)">Adicionar mais uma linha</button>
-              <div class="amount">
-                <p>Valor total</p>
-                <h2>{{myForm.value.amount | currency}}</h2>
-              </div>
-            </div>
+                  <div class="discount">
+                    <p>Desconto</p>
 
-            <div class="discount">
-              <p>Desconto</p>
-
-              <label>
-                <select formControlName="discount_type" (change)="descountTypeAndShipping()">
-                  <option *ngFor="let discount of discountTypes" [value]="discount.type">{{ discount.name }}
-                  </option>
-                </select>
-              </label>
-
-              <label style="width: 110px">
-                <input formControlName="discount" type="text" currencyMask [options]="{ prefix: myForm.value.discount_type == 1 ? 'R$ ' : '% ', thousands: '.', decimal: ',' }" style="text-align: right" (keyup)="descountTypeAndShipping()">
-              </label>
-            </div>
-
-            <div class="shipping">
-              <p>Frete a cobrado (R$)</p>
-
-              <label style="width: 110px">
-                <input formControlName="shipping" type="text" currencyMask style="text-align: right" (keyup)="descountTypeAndShipping()">
-              </label>
-            </div>
-
-            <div class="net-total">
-              <div class="net-total-value">
-                <h2>Total líquido</h2>
-                <h2>{{myForm.value.net_total | currency}}</h2>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="label-group" *ngIf="!myForm.value.is_contract && myForm.value.status === 3">
-          <app-search-loading-unique class="label-w30" [search]="searchBank"></app-search-loading-unique>
-
-          <label class="label-w30">
-            <span class="field">Condição de pagamento</span>
-            <select formControlName="payment_terms" (change)="changePortion()">
-              <option *ngFor="let term of paymentTermsList" [value]="term.type">{{ term.name }}
-              </option>
-            </select>
-          </label>
-        </div>
-
-        <div class="shopping-budget" style="margin-bottom: 10px" *ngIf="myForm.value.status === 3 && !myForm.value.is_contract">
-          <div class="shopping-budget-grid">
-            <ul class="shopping-budget-grid-header">
-              <li style="width: 10%">Parcela</li>
-              <li style="width: 23.3%">Pagamento</li>
-              <li style="width: 23.3%">Vencimento</li>
-              <li style="text-align: right; width: 23.3%">Valor</li>
-              <li style="width: 50%">Obsercação da parcela</li>
-            </ul>
-
-            <ng-container formArrayName="plots">
-              <div *ngFor="let portion of plots.controls; index as i" class="shopping-budget-grid-list">
-                <ng-container [formGroupName]="i">
-                  <div class="label-group">
-                    <p style="font-weight: bold; margin-top: 10px; width: 10%; text-align: center; color: #395a7a">{{portion.value.portion}} / {{plots.length}}</p>
-
-                    <label style="width: 23.3%">
-                      <select formControlName="form_payment">
-                        <option *ngFor="let payment of formPaymentList" [value]="payment.type">{{ payment.name }}
+                    <label>
+                      <select formControlName="discount_type" (change)="descountTypeAndShipping()">
+                        <option *ngFor="let discount of discountTypes" [value]="discount.type">{{ discount.name }}
                         </option>
                       </select>
                     </label>
 
-                    <label style="width: 23.3%">
-                      <input formControlName="date_due" type="date">
-                    </label>
-
-                    <label style="width: 23.3%">
-                      <input formControlName="amount" currencyMask type="text" style="text-align: right">
-                    </label>
-
-                    <label style="width: 50%">
-                      <input formControlName="note" type="text">
+                    <label style="width: 110px">
+                      <input formControlName="discount" type="text" currencyMask [options]="{ prefix: myForm.value.discount_type == 1 ? 'R$ ' : '% ', thousands: '.', decimal: ',' }" style="text-align: right" (keyup)="descountTypeAndShipping()">
                     </label>
                   </div>
-                </ng-container>
+
+                  <div class="shipping">
+                    <p>Frete a cobrado (R$)</p>
+
+                    <label style="width: 110px">
+                      <input formControlName="shipping" type="text" currencyMask style="text-align: right" (keyup)="descountTypeAndShipping()">
+                    </label>
+                  </div>
+
+                  <div class="net-total">
+                    <div class="net-total-value">
+                      <h2>Total líquido</h2>
+                      <h2>{{myForm.value.net_total | currency}}</h2>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </ng-container>
-          </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="basic-form-header">
+                <h3>Pagamentos</h3>
+              </div>
+
+              <div class="label-group" *ngIf="!myForm.value.is_contract && myForm.value.status === 3">
+                <app-search-loading-unique class="label-w30" [search]="searchBank"></app-search-loading-unique>
+
+                <label class="label-w30">
+                  <span class="field">Condição de pagamento</span>
+                  <select formControlName="payment_terms" (change)="changePortion()">
+                    <option *ngFor="let term of paymentTermsList" [value]="term.type">{{ term.name }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="shopping-budget" style="margin-bottom: 10px" *ngIf="myForm.value.status === 3 && !myForm.value.is_contract">
+                <div class="shopping-budget-grid">
+                  <ul class="shopping-budget-grid-header">
+                    <li style="width: 10%">Parcela</li>
+                    <li style="width: 23.3%">Pagamento</li>
+                    <li style="width: 23.3%">Vencimento</li>
+                    <li style="text-align: right; width: 23.3%">Valor</li>
+                    <li style="width: 50%">Obsercação da parcela</li>
+                  </ul>
+
+                  <ng-container formArrayName="plots">
+                    <div *ngFor="let portion of plots.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <p style="font-weight: bold; margin-top: 10px; width: 10%; text-align: center; color: #395a7a">{{portion.value.portion}} / {{plots.length}}</p>
+
+                          <label style="width: 23.3%">
+                            <select formControlName="form_payment">
+                              <option *ngFor="let payment of formPaymentList" [value]="payment.type">{{ payment.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label style="width: 23.3%">
+                            <input formControlName="date_due" type="date">
+                          </label>
+
+                          <label style="width: 23.3%">
+                            <input formControlName="amount" currencyMask type="text" style="text-align: right">
+                          </label>
+
+                          <label style="width: 50%">
+                            <input formControlName="note" type="text">
+                          </label>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab >
+              <div class="basic-form-header">
+                <h3>Observações</h3>
+              </div>
+
+              <label>
+                <span class="field">Observações de pagamento</span>
+                <textarea formControlName="note" placeholder="Descreva informações sobre o pagamento que podem ser relevantes para você."></textarea>
+              </label>
+
+              <label>
+                <span class="field">Informações Complementares</span>
+                <textarea formControlName="note" placeholder="Descreva outras informações que possam ser relevantes para você e seu cliente."></textarea>
+              </label>
+
+              <app-search-loading-unique [search]="searchUser"></app-search-loading-unique>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+
+        <div class="basic-form-footer">
+          <button class="c2-btn c2-btn-green" mat-button (click)="save(false)">
+            Salvar
+          </button>
+          <button class="c2-btn c2-btn-green" mat-button (click)="save(true)">
+            Salvar e Manter dados
+          </button>
         </div>
-
-        <label>
-          <span class="field">Observações de pagamento</span>
-          <textarea formControlName="note" placeholder="Descreva informações sobre o pagamento que podem ser relevantes para você."></textarea>
-        </label>
-
-        <label>
-          <span class="field">Informações Complementares</span>
-          <textarea formControlName="note" placeholder="Descreva outras informações que possam ser relevantes para você e seu cliente."></textarea>
-        </label>
-
-        <app-search-loading-unique [search]="searchUser"></app-search-loading-unique>
-      </form>
-
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save(false)">
-          Salvar
-        </button>
-        <button class="button-add-continue" mat-button (click)="save(true)">
-          Salvar e Manter dados
-        </button>
       </div>
     </div>
   </div>

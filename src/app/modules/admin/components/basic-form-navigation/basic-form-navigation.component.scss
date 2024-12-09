@@ -1,0 +1,32 @@
+.basic-form-navigation {
+  flex: 10%;
+  border-right: 1px solid #c9d3dd;
+  margin-right: 20px;
+  height: 100%;
+
+  ul {
+    padding: 10px 10px 10px 0;
+
+    li {
+      margin-bottom: 10px;
+      padding: 10px;
+
+      span {
+        padding: 10px;
+        border-radius: 15px;
+        cursor: pointer;
+        color: #333;
+
+        &:hover {
+          background: #f1f4f9;
+          color: #1b69c8;
+        }
+      }
+
+      .active {
+        background: #f1f4f9;
+        color: #1b69c8;
+      }
+    }
+  }
+}
