@@ -8,6 +8,7 @@ import { WidgetService } from 'src/app/shared/services/widget.service';
 import { FormControl } from "@angular/forms";
 import { ProductService } from 'src/app/shared/services/product.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-product-list',
@@ -29,6 +30,16 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Produtos',
+    description: 'Listagem de produtos',
+    button: {
+      text: 'Novo Produto',
+      routerLink: '/product/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private productService: ProductService,

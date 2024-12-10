@@ -1,243 +1,214 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Novo cadastro</h2>
-    <button class="button-back" mat-icon-button routerLink="/product">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
   <div class="page-content">
-    <div class="basic-form">
-      <form [formGroup]="myForm">
-        <mat-tab-group>
-          <mat-tab label="Dados do produto">
-            <ng-template mat-tab-label>
-              <mat-icon class="example-tab-icon">store</mat-icon>
-              Dados do produto
-            </ng-template>
-            <div class="basic-form-header" style="margin-top: 20px;">
-              <h3>Dados gerais</h3>
-            </div>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
 
-            <div class="photo">
-              <img onerror="this.src = 'assets/product-no.svg'" class="rounded" [src]="
-                    myForm.value.img_url
-                      ? myForm.value.img_url
-                      : productPhotoURL
-                  " />
-              <input type="file" value="upload" (change)="getFile($event)" style="width: initial;" id="photo"
-                    class="hide" />
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
 
-              <span class="rounded" (click)="startUpload()">
-                <mat-icon>edit</mat-icon>
-              </span>
-            </div>
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab label="Dados do produto">
 
-            <div class="label-group">
-              <label class="label-w100">
-                <span class="field">Nome</span>
-                <input formControlName="name" type="text" placeholder="Ex: Itaipava">
-              </label>
+              <div class="photo">
+                <img onerror="this.src = 'assets/product-no.svg'" class="rounded" [src]="
+                      myForm.value.img_url
+                        ? myForm.value.img_url
+                        : productPhotoURL
+                    " />
+                <input type="file" value="upload" (change)="getFile($event)" style="width: initial;" id="photo"
+                      class="hide" />
 
-              <label>
-                <span class="field">Valor</span>
-                <input formControlName="sale_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
-              </label>
-            </div>
-
-            <div class="basic-form-header">
-              <h3>Categorias vinculadas ao produto</h3>
-            </div>
-
-            <div class="label-group" style="margin-bottom: 10px; padding: 0 20px;">
-              <app-search-loading-chips class="label-w100" [search]="searchCategory"></app-search-loading-chips>
-            </div>
-          </mat-tab>
-
-          <mat-tab label="Dados de Shop" formGroupName="shop">
-            <ng-template mat-tab-label>
-              <mat-icon class="example-tab-icon">store</mat-icon>
-              Dados de Shop
-            </ng-template>
-
-            <div class="basic-form-header" style="margin-top: 20px;">
-              <h3>Delivery Shop</h3>
-            </div>
-
-            <div class="label-group">
-              <div class="label-group-check" style="min-width: 135px;">
-                <span class="title">Shop Delivery</span>
-                <div class="checks">
-                  <label class="check">
-                    <input type="checkbox" formControlName="active" (change)="setShopOn()">
-                    <span>Ativo no shop?</span>
-                  </label>
-                </div>
+                <span class="rounded" (click)="startUpload()">
+                  <mat-icon>edit</mat-icon>
+                </span>
               </div>
 
-              <label class="label-w100">
-                <span class="field">Nome no Shop</span>
-                <input formControlName="name" type="text" placeholder="Ex: Itaipava">
-              </label>
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Nome</span>
+                  <input formControlName="name" type="text" placeholder="Ex: Itaipava">
+                </label>
 
-              <label>
-                <span class="field">Valor Shop</span>
-                <input formControlName="sale_value" type="text" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL">
-              </label>
-            </div>
-
-            <div class="label-group">
-              <label class="label-w100">
-                <span class="field">Observações Shop</span>
-                <textarea formControlName="description"></textarea>
-              </label>
-            </div>
-
-            <div class="basic-form-header">
-              <h3>Opções de Venda</h3>
-            </div>
-
-            <div class="label-group">
-              <div class="label-group-check" style="min-width: 135px;">
-                <span class="title">Opção de Venda</span>
-                <div class="checks">
-                  <label class="check">
-                    <input type="checkbox" formControlName="active_minimum_sales_quantity">
-                    <span>Ativa Mínimo De quantidade na venda?</span>
-                  </label>
-                </div>
+                <label>
+                  <span class="field">Valor</span>
+                  <input formControlName="sale_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
               </div>
 
-              <label *ngIf="myForm.value.shop.active_minimum_sales_quantity">
-                <span class="field">Quantidade mínima de venda</span>
-                <input formControlName="minimum_sales_quantity" type="number">
-              </label>
-            </div>
+              <div class="basic-form-header">
+                <h3>Categorias vinculadas ao produto</h3>
+              </div>
 
-          </mat-tab>
+              <div class="label-group" style="margin-bottom: 10px; padding: 0 20px;">
+                <app-search-loading-chips class="label-w100" [search]="searchCategory"></app-search-loading-chips>
+              </div>
+            </mat-tab>
 
-          <mat-tab label="Complementos de Produto">
-            <ng-template mat-tab-label>
-              <mat-icon class="example-tab-icon">store</mat-icon>
-              Complementos de Produto
-            </ng-template>
+            <mat-tab label="Dados de Shop" formGroupName="shop">
+              <div class="label-group">
+                <div class="label-group-check" style="min-width: 135px;">
+                  <span class="title">Shop Delivery</span>
+                  <div class="checks">
+                    <label class="check">
+                      <input type="checkbox" formControlName="active" (change)="setShopOn()">
+                      <span>Ativo no shop?</span>
+                    </label>
+                  </div>
+                </div>
 
-            <div class="basic-form-header" style="margin-top: 20px;">
-              <h3>Complementos</h3>
-            </div>
+                <label class="label-w100">
+                  <span class="field">Nome no Shop</span>
+                  <input formControlName="name" type="text" placeholder="Ex: Itaipava">
+                </label>
 
-            <div class="shopping-budget">
-              <div class="shopping-budget-grid" style="border: none !important">
-                <ng-container formArrayName="complements">
-                  <div *ngFor="let complement of complements.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
-                    <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
-                      <li style="width: 55%">Nome</li>
-                      <li>Obrigatório</li>
-                      <li style="text-align: right">Mínimo</li>
-                      <li style="text-align: right">Máximo</li>
-                    </ul>
+                <label>
+                  <span class="field">Valor Shop</span>
+                  <input formControlName="sale_value" type="text" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL">
+                </label>
+              </div>
 
-                    <ng-container [formGroupName]="i">
-                      <div class="label-group">
-                        <label style="width: 55%">
-                          <span class="label-title">Nome</span>
-                          <input formControlName="name" type="text">
-                        </label>
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Observações Shop</span>
+                  <textarea formControlName="description"></textarea>
+                </label>
+              </div>
 
-                        <label>
-                          <span class="label-title">Obrigatório</span>
-                          <select formControlName="required">
-                            <option [value]="true">Sim</option>
-                            <option [value]="false">Não</option>
-                          </select>
-                        </label>
+              <div class="basic-form-header">
+                <h3>Opções de Venda</h3>
+              </div>
 
-                        <label>
-                          <span class="label-title">Mínimo</span>
-                          <input formControlName="minimum" type="number" style="text-align: right">
-                        </label>
+              <div class="label-group">
+                <div class="label-group-check" style="min-width: 135px;">
+                  <span class="title">Opção de Venda</span>
+                  <div class="checks">
+                    <label class="check">
+                      <input type="checkbox" formControlName="active_minimum_sales_quantity">
+                      <span>Ativa Mínimo De quantidade na venda?</span>
+                    </label>
+                  </div>
+                </div>
 
-                        <label>
-                          <span class="label-title">Máximo</span>
-                          <input formControlName="maximum" type="number" style="text-align: right">
-                        </label>
+                <label *ngIf="myForm.value.shop.active_minimum_sales_quantity">
+                  <span class="field">Quantidade mínima de venda</span>
+                  <input formControlName="minimum_sales_quantity" type="number">
+                </label>
+              </div>
 
-                        <button class="add-item" mat-icon-button (click)="removeComplement(i)">
-                          <mat-icon>clear</mat-icon>
-                        </button>
-                      </div>
+            </mat-tab>
 
-                      <div class="basic-form-header" style="padding: 0 20px;">
-                        <h3>Produtos</h3>
-                      </div>
+            <mat-tab label="Complementos de Produto">
 
-                      <div class="shopping-budget" style="padding: 0 20px;">
-                        <div class="shopping-budget-grid">
-                          <ul class="shopping-budget-grid-header">
-                            <li style="width: 25%">Produto</li>
-                            <li style="width: 40%">Descricao</li>
-                            <li style="text-align: right">Valor</li>
-                            <li style="text-align: right">Status</li>
-                          </ul>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+                  <ng-container formArrayName="complements">
+                    <div *ngFor="let complement of complements.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                      <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
+                        <li style="width: 55%">Nome</li>
+                        <li>Obrigatório</li>
+                        <li style="text-align: right">Mínimo</li>
+                        <li style="text-align: right">Máximo</li>
+                      </ul>
 
-                          <ng-container formArrayName="products">
-                            <div *ngFor="let product of getProdutsComplement(i).controls; index as p" class="shopping-budget-grid-list">
-                              <ng-container [formGroupName]="p">
-                              <div class="label-group">
-                                <app-search-loading-unique style="width: 25%" [search]="productsOutPut[i][p]" (eventEmit)="selectProduct($event, p, i)"></app-search-loading-unique>
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <label style="width: 55%">
+                            <span class="label-title">Nome</span>
+                            <input formControlName="name" type="text">
+                          </label>
 
-                                <label style="width: 40%">
-                                  <span class="label-title">Detalhes do item</span>
-                                  <input formControlName="description" type="text">
-                                </label>
+                          <label>
+                            <span class="label-title">Obrigatório</span>
+                            <select formControlName="required">
+                              <option [value]="true">Sim</option>
+                              <option [value]="false">Não</option>
+                            </select>
+                          </label>
 
-                                <label>
-                                  <span class="label-title">Valor</span>
-                                  <input formControlName="sale_value" type="text" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" style="text-align: right">
-                                </label>
+                          <label>
+                            <span class="label-title">Mínimo</span>
+                            <input formControlName="minimum" type="number" style="text-align: right">
+                          </label>
 
-                                <label>
-                                  <span class="label-title">Status</span>
-                                  <select formControlName="status">
-                                    <option [value]="true">Ativo</option>
-                                    <option [value]="false">Inativo</option>
-                                  </select>
-                                </label>
+                          <label>
+                            <span class="label-title">Máximo</span>
+                            <input formControlName="maximum" type="number" style="text-align: right">
+                          </label>
 
-                                <button class="add-item" mat-icon-button (click)="removeProduct(p, i)">
-                                  <mat-icon>clear</mat-icon>
-                                </button>
-                              </div>
-                              </ng-container>
-                            </div>
-                          </ng-container>
+                          <button class="add-item" mat-icon-button (click)="removeComplement(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
                         </div>
 
-                        <div class="shopping-budget-footer">
-                          <div class="amount-button-add">
-                            <button mat-button (click)="addProduct(null, i)">Adicionar mais um produto</button>
+                        <div class="basic-form-header" style="padding: 0 20px;">
+                          <h3>Produtos</h3>
+                        </div>
+
+                        <div class="shopping-budget" style="padding: 0 20px;">
+                          <div class="shopping-budget-grid">
+                            <ul class="shopping-budget-grid-header">
+                              <li style="width: 25%">Produto</li>
+                              <li style="width: 40%">Descricao</li>
+                              <li style="text-align: right">Valor</li>
+                              <li style="text-align: right">Status</li>
+                            </ul>
+
+                            <ng-container formArrayName="products">
+                              <div *ngFor="let product of getProdutsComplement(i).controls; index as p" class="shopping-budget-grid-list">
+                                <ng-container [formGroupName]="p">
+                                <div class="label-group">
+                                  <app-search-loading-unique style="width: 25%" [search]="productsOutPut[i][p]" (eventEmit)="selectProduct($event, p, i)"></app-search-loading-unique>
+
+                                  <label style="width: 40%">
+                                    <span class="label-title">Detalhes do item</span>
+                                    <input formControlName="description" type="text">
+                                  </label>
+
+                                  <label>
+                                    <span class="label-title">Valor</span>
+                                    <input formControlName="sale_value" type="text" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" style="text-align: right">
+                                  </label>
+
+                                  <label>
+                                    <span class="label-title">Status</span>
+                                    <select formControlName="status">
+                                      <option [value]="true">Ativo</option>
+                                      <option [value]="false">Inativo</option>
+                                    </select>
+                                  </label>
+
+                                  <button class="add-item" mat-icon-button (click)="removeProduct(p, i)">
+                                    <mat-icon>clear</mat-icon>
+                                  </button>
+                                </div>
+                                </ng-container>
+                              </div>
+                            </ng-container>
+                          </div>
+
+                          <div class="shopping-budget-footer">
+                            <div class="amount-button-add">
+                              <button mat-button (click)="addProduct(null, i)">Adicionar mais um produto</button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </ng-container>
-                  </div>
-                </ng-container>
-              </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
 
-              <div class="shopping-budget-footer">
-                <div class="amount-button-add">
-                  <button mat-button (click)="addComplement(null)">Adicionar mais um complemento</button>
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addComplement(null)">Adicionar mais um complemento</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </mat-tab>
-        </mat-tab-group>
-      </form>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
 
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
-          Salvar
-        </button>
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>
     </div>
   </div>

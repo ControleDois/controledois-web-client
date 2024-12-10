@@ -11,6 +11,9 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { SearchLoadingChips } from 'src/app/shared/widget/search-loading-chips/search-loading-chips.interface';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-product-form',
@@ -63,6 +66,36 @@ export class ProductFormComponent implements OnInit {
   public productPhoto: any;
   public productPhotoURL: any;
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Novo Produto`,
+    description: 'Adicione um novo produto ao sistema.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/product',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Informações Gerais', index: 0, icon: 'info' },
+      { text: 'Shop', index: 1, icon: 'info' },
+      { text: 'Complementos', index: 2, icon: 'shopping_cart' },
+    ],
+    selectedItem: 0
+  }
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      },
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private productService: ProductService,
@@ -72,6 +105,7 @@ export class ProductFormComponent implements OnInit {
     private storageService: StorageService,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Novo Produto' : 'Editar Produto';
     this.productsOutPut = [];
   }
 
