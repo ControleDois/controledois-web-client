@@ -261,14 +261,7 @@
           </mat-tab-group>
         </form>
 
-        <div class="basic-form-footer">
-          <button class="c2-btn c2-btn-green" mat-button (click)="save(false)">
-            Salvar
-          </button>
-          <button class="c2-btn c2-btn-green" mat-button (click)="save(true)">
-            Salvar e Manter dados
-          </button>
-        </div>
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>
     </div>
   </div>

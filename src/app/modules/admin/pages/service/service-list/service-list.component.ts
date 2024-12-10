@@ -8,6 +8,7 @@ import { ServiceService } from 'src/app/shared/services/service.service';
 import {WidgetService} from 'src/app/shared/services/widget.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { FormControl } from '@angular/forms';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-service-list',
@@ -32,6 +33,15 @@ export class ServiceListComponent implements OnInit, AfterViewInit {
 
   @Output() search = new FormControl('');
 
+  @Output() public pageHeader: PageHeader = {
+    title: 'Serviços',
+    description: 'Lista de serviços cadastrados no sistema',
+    button: {
+      text: 'Novo Serviço',
+      routerLink: '/service/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private serviceService: ServiceService,

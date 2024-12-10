@@ -84,7 +84,6 @@ export class DropboxService {
 
   listNfe(path: string): Observable<DropboxFile[]> {
     const fullPath = `/Backups/${path}/XMLS/NFe`;
-    console.log(fullPath);
     return this.listFiles(fullPath);
   }
 

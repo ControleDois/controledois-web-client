@@ -1,15 +1,33 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Cadastro de Ordens de Serviço</h2>
-    <button class="button-add" mat-button routerLink="/os/new">
-      Adicionar
-    </button>
-  </div>
-
   <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
       <app-search-date-month [date]="vDateFilter" (eventEmit)="load()"></app-search-date-month>
+    </div>
+
+    <div class="summary-header">
+      <article class="red" (click)="filterPendingBudget()" [style.border-top]="filterStatus === 0 ? '2px solid #FFC200' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 0 ? 1 : 0.4">
+        <span>Orçamento Pendente</span>
+        <h4><b style="color: #FFC200">{{getTotalPendingBudgetQtd()}}</b></h4>
+      </article>
+      <article class="orange" (click)="filterPendingService()" [style.border-top]="filterStatus === 1 ? '2px solid #F43E61' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 1 ? 1 : 0.4">
+        <span>Serviço Pendente</span>
+        <h4><b style="color: #F43E61">{{getTotalPendingServiceQtd()}}</b></h4>
+      </article>
+      <article class="content-icon plus green" (click)="filterRate()" [style.border-top]="filterStatus === 1 ? '2px solid #2687E9' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 1 ? 1 : 0.4">
+        <span>Em Andamento</span>
+        <h4><b style="color: #2687E9">{{getTotalRateQtd()}}</b></h4>
+      </article>
+      <article class="content-icon plus blue" (click)="filterCompleted()" [style.border-top]="filterStatus === 3 ? '2px solid #4AB858' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 3 ? 1 : 0.4">
+        <span>Concluido</span>
+        <h4><b style="color: #4AB858">{{getTotalCompletedQtd()}}</b></h4>
+      </article>
+      <article class="content-icon black" (click)="filterTotal()" [style.border-top]="filterStatus === 4 ? '2px solid #7A7A7F' : ''" [style.opacity]="filterStatus === 4 ? 1 : 0.4">
+        <span>Previsão</span>
+        <h4><b style="color: #7A7A7F">{{getTotalTotalQtd()}}</b></h4>
+      </article>
     </div>
 
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>

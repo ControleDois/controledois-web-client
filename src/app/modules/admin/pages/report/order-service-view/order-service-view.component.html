@@ -11,11 +11,11 @@
 
     <div class="description">
       <h1>{{auth.company?.people?.name}}</h1>
-      <p>{{auth.company?.people?.address}},
-        {{auth.company?.people?.address_number}},
-        {{auth.company?.people?.address_district}},
-        {{auth.company?.people?.address_city}}-{{auth.company?.people?.address_state}}
-        CEP: {{auth.company?.people?.zip_code}}</p>
+      <p>{{auth.company?.people?.address?.address}},
+        {{auth.company?.people?.address?.number}},
+        {{auth.company?.people?.address?.district}},
+        {{auth.company?.people?.address?.city}}-{{auth.company?.people?.address?.state}}
+        CEP: {{auth.company?.people?.address?.zip_code}}</p>
       <div>
         <p>{{auth.company?.people?.role == 0 ? 'CPF: ' : 'CNPJ: '}}{{auth.company.people.document | mask: auth.company?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </p>
         <p style="margin-left: 20px">Fone: {{auth.company.people.phone_commercial | mask: '(00) 00000-0000'}}</p>

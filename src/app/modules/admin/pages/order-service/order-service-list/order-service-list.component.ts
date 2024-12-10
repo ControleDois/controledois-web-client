@@ -16,7 +16,6 @@ import {
   debounceTime,
   distinctUntilChanged,
   finalize,
-  ignoreElements,
   map,
   tap,
 } from 'rxjs/operators';
@@ -29,12 +28,15 @@ import { OrderServiceViewComponent } from '../../report/order-service-view/order
 import { MatDialog } from '@angular/material/dialog';
 import html2pdf from 'html2pdf.js'
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-order-service-list',
   templateUrl: './order-service-list.component.html',
 })
 export class OrderServiceListComponent implements OnInit, AfterViewInit {
+  private orderServices: Array<any> = [];
+  public filterStatus = 4;
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
@@ -57,6 +59,16 @@ export class OrderServiceListComponent implements OnInit, AfterViewInit {
   @Output() search = new FormControl('');
   @ViewChild('priceListPDF', { static: true, read: ViewContainerRef })
   priceListPDF!: ViewContainerRef;
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Ordens de Serviço',
+    description: 'Listagem de ordens de serviço',
+    button: {
+      text: 'Nova Ordem de Serviço',
+      routerLink: '/os/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private osService: OsService,
@@ -102,6 +114,7 @@ export class OrderServiceListComponent implements OnInit, AfterViewInit {
       )
       .pipe(
         map((res) => {
+          this.orderServices = res.data;
           this.dataSource.data = res.data;
           this.tableLength = res.total;
         })
@@ -211,4 +224,51 @@ export class OrderServiceListComponent implements OnInit, AfterViewInit {
       .toPdf()
       .outputPdf('dataurlnewwindow');
   }
+
+  filterPendingBudget(): void {
+    this.filterStatus = 0;
+    this.dataSource.data = this.orderServices.filter(t => t.status === 0);
+  }
+
+  getTotalPendingBudgetQtd(): number {
+    return this.orderServices ? this.orderServices.filter(t => t.status === 0).reduce((acc) => acc + 1, 0) : 0;
+  }
+
+  filterPendingService(): void {
+    this.filterStatus = 1;
+    this.dataSource.data = this.orderServices.filter(t => t.status === 1);
+  }
+
+  getTotalPendingServiceQtd(): number {
+    return this.orderServices ? this.orderServices.filter(t => t.status === 1).reduce((acc) => acc + 1, 0) : 0;
+  }
+
+  filterRate(): void {
+    this.filterStatus = 2;
+    this.dataSource.data = this.orderServices.filter(t => t.status === 2);
+  }
+
+  getTotalRateQtd(): number {
+    return this.orderServices ? this.orderServices.filter(t => t.status === 2).reduce((acc) => acc + 1, 0) : 0;
+  }
+
+  filterCompleted(): void {
+    this.filterStatus = 3;
+    this.dataSource.data = this.orderServices.filter(t => t.status === 3);
+  }
+
+  getTotalCompletedQtd(): number {
+    return this.orderServices ? this.orderServices.filter(t => t.status === 3).reduce((acc) => acc + 1, 0) : 0;
+  }
+
+  filterTotal(): void {
+    this.filterStatus = 4;
+    this.dataSource.data = this.orderServices;
+  }
+
+  getTotalTotalQtd(): number {
+    return this.orderServices.length > 0 ? this.orderServices.filter(t => t)
+      .reduce((acc, t) => acc + 1, 0) : 0;
+  }
+
 }

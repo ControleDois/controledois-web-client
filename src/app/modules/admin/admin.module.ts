@@ -51,6 +51,7 @@ import { TaskFormComponent } from './pages/task/task-form/task-form.component';
 import { TaskListComponent } from './pages/task/task-list/task-list.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { BasicFormNavigationComponent } from './components/basic-form-navigation/basic-form-navigation.component';
+import { BasicFormButtonsComponent } from './components/basic-form-buttons/basic-form-buttons.component';
 
 const appName = 'CTrix';
 
@@ -309,7 +310,8 @@ const routes: Routes = [
     TaskFormComponent,
     TaskListComponent,
     PageHeaderComponent,
-    BasicFormNavigationComponent
+    BasicFormNavigationComponent,
+    BasicFormButtonsComponent,
   ],
   imports: [
     CommonModule,

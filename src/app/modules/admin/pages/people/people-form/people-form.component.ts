@@ -102,9 +102,6 @@ export class PeopleFormComponent implements OnInit {
       { text: 'Dados da Pessoa', index: 0, icon: 'info' },
       { text: 'Endereço', index: 1, icon: 'info' },
       { text: 'Contatos', index: 2, icon: 'contacts' },
-      { text: 'Chaves', index: 3, icon: 'vpn_key' },
-      { text: 'Backups', index: 4, icon: 'backup' },
-      { text: 'Observações', index: 5, icon: 'notes' },
     ],
     selectedItem: 0
   }
@@ -121,6 +118,11 @@ export class PeopleFormComponent implements OnInit {
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Novo Cliente' : 'Editar Cliente';
+    if (this.formId !== 'new') {
+      this.navigation.items.push({ text: 'Chaves', index: 3, icon: 'vpn_key' });
+      this.navigation.items.push({ text: 'Backups', index: 4, icon: 'backup' });
+    }
+    this.navigation.items.push({ text: 'Observações', index: 5, icon: 'folder' });
   }
 
   validateForm(): void {

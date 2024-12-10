@@ -12,6 +12,7 @@ import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-sale-form',
@@ -146,6 +147,23 @@ export class SaleFormComponent implements OnInit {
       { text: 'Observações', index: 3, icon: 'description' },
     ],
     selectedItem: 0
+  }
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(false),
+        class: 'c2-btn c2-btn-green',
+      },
+      {
+        text: 'Salvar e Continuar',
+        icon: 'save_as',
+        action: () => this.save(true),
+        class: 'c2-btn c2-btn-green',
+      },
+    ]
   }
 
   @Output() searchPeople: SearchLoadingUnique = {

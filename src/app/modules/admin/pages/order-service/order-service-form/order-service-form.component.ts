@@ -9,6 +9,9 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-order-service-form',
@@ -48,7 +51,7 @@ export class OrderServiceFormComponent implements OnInit {
 
   @Output() searchPeople: SearchLoadingUnique = {
     noTitle: false,
-    title: 'Cliente',
+    title: 'Cliente:',
     url: 'people',
     searchFieldOn: null,
     searchFieldOnCollum: 'name',
@@ -66,7 +69,7 @@ export class OrderServiceFormComponent implements OnInit {
 
   @Output() searchUser: SearchLoadingUnique = {
     noTitle: false,
-    title: 'Usuário Responsável',
+    title: 'Usuário Responsável:',
     url: 'people',
     searchFieldOn: null,
     searchFieldOnCollum: 'name',
@@ -87,6 +90,36 @@ export class OrderServiceFormComponent implements OnInit {
     {name: 'userId', validation: true, msg: 'Informe um Usuário!'},
   ];
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Nova Ordem de Serviço`,
+    description: 'Preencha os campos abaixo para criar uma nova ordem de serviço.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/os',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Informações Gerais', index: 0, icon: 'info' },
+      { text: 'Equipamento', index: 1, icon: 'info' },
+      { text: 'Observações', index: 2, icon: 'shopping_cart' },
+    ],
+    selectedItem: 0
+  }
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      },
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private osService: OsService,
@@ -96,6 +129,7 @@ export class OrderServiceFormComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Os' : 'Editar Os';
   }
 
   ngOnInit(): void {

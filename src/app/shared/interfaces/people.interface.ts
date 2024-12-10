@@ -1,3 +1,5 @@
+import { PeopleAddress } from "./people.address.interface";
+
 export interface People {
   id: string;
   company_id: string;
@@ -15,11 +17,5 @@ export interface People {
   phone_commercial: string;
   phone_cell: string;
   birth: string;
-  zip_code: string;
-  address: string;
-  address_number: string;
-  address_state: string;
-  address_city: string;
-  address_district: string;
-  address_complement: string;
+  address?: PeopleAddress;
 }

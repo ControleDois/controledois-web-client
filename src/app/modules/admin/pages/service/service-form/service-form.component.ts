@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { throwError } from 'rxjs';
@@ -6,6 +6,7 @@ import {catchError, finalize, map} from 'rxjs/operators';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { ServiceService } from 'src/app/shared/services/service.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-service-form',
@@ -27,6 +28,16 @@ export class ServiceFormComponent implements OnInit {
   });
 
   public kinds = [{ name: '⦿ Prestado', type: 0 }, { name: '⦿ Tomado', type: 1 }, { name: '⦿ Prestado e Tomado', type: 2 }];
+
+  @Output() public pageHeader: PageHeader = {
+    title: `Serviço`,
+    description: 'Cadastro de serviço',
+    button: {
+      text: 'Voltar',
+      routerLink: '/service',
+      icon: 'arrow_back',
+    },
+  };
 
   constructor(
     private activatedRoute: ActivatedRoute,
