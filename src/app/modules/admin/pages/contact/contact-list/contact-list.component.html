@@ -1,12 +1,11 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Contatos</h2>
-    <button class="button-add" mat-button routerLink="/contact/new">
-      Adicionar
-    </button>
-  </div>
-
   <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="page-search">
+      <app-search-simple [search]="search"></app-search-simple>
+    </div>
+
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Nome </th>

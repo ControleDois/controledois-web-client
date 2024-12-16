@@ -7,6 +7,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { ServiceService } from 'src/app/shared/services/service.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-service-form',
@@ -38,6 +39,17 @@ export class ServiceFormComponent implements OnInit {
       icon: 'arrow_back',
     },
   };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      },
+    ]
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,

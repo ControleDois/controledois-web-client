@@ -1,11 +1,14 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { ContactService } from 'src/app/shared/services/contact.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-contact-form',
@@ -29,6 +32,35 @@ export class ContactFormComponent implements OnInit {
     observation: new FormControl(''),
     is_group: new FormControl(false),
   });
+
+  @Output() public pageHeader: PageHeader = {
+    title: `Novo Contato`,
+    description: 'Adicione um novo contato ao sistema.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/contact',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Informações Gerais', index: 0, icon: 'info' },
+      { text: 'Observações', index: 1, icon: 'info' },
+    ],
+    selectedItem: 0
+  }
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      },
+    ]
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,

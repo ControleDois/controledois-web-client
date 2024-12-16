@@ -1,68 +1,62 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Novo cadastro</h2>
-    <button class="button-back" mat-icon-button routerLink="/contact">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
 
   <div class="page-content">
-    <div class="basic-form">
-      <div class="basic-form-header">
-        <h3>Dados gerais</h3>
-      </div>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
 
-      <form [formGroup]="myForm">
-        <div class="label-group">
-          <div class="label-group-check" style="min-width: 135px;">
-            <span class="title">Grupo</span>
-            <div class="checks">
-              <label class="check">
-                <input type="checkbox" formControlName="is_group" [disabled]="true">
-                <span>É um grupo?</span>
-              </label>
-            </div>
-          </div>
+        <div class="basic-form">
+          <app-page-header [header]="pageHeader"></app-page-header>
 
-          <label class="label-w50">
-            <span class="field">Nome</span>
-            <input formControlName="name" type="text">
-          </label>
+          <form [formGroup]="myForm">
+            <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+              <mat-tab>
+                <div class="label-group">
+                  <div class="label-group-check" style="min-width: 135px;">
+                    <span class="title">Grupo</span>
+                    <div class="checks">
+                      <label class="check">
+                        <input type="checkbox" formControlName="is_group" [disabled]="true">
+                        <span>É um grupo?</span>
+                      </label>
+                    </div>
+                  </div>
 
-          <label class="label-w50">
-            <span class="field">E-mail</span>
-            <input formControlName="email" type="email">
-          </label>
-        </div>
+                  <label class="label-w50">
+                    <span class="field">Nome</span>
+                    <input formControlName="name" type="text">
+                  </label>
 
-        <div class="label-group">
-          <label>
-            <span class="field">Telefone</span>
-            <input formControlName="phone" type="text">
-          </label>
+                  <label class="label-w50">
+                    <span class="field">E-mail</span>
+                    <input formControlName="email" type="email">
+                  </label>
+                </div>
 
-          <label>
-            <span class="field">Nascimento</span>
-            <input formControlName="birth" type="date">
-          </label>
-        </div>
+                <div class="label-group">
+                  <label>
+                    <span class="field">Telefone</span>
+                    <input formControlName="phone" type="text">
+                  </label>
 
-        <div class="basic-form-header">
-          <h3>Observações gerais</h3>
-        </div>
+                  <label>
+                    <span class="field">Nascimento</span>
+                    <input formControlName="birth" type="date">
+                  </label>
+                </div>
+              </mat-tab>
 
-        <div class="label-group">
-          <label class="label-w100">
-            <span class="field">Observações</span>
-            <textarea formControlName="observation"></textarea>
-          </label>
-        </div>
-      </form>
+              <mat-tab>
+                <div class="label-group">
+                  <label class="label-w100">
+                    <span class="field">Observações</span>
+                    <textarea formControlName="observation"></textarea>
+                  </label>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </form>
 
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
-          Salvar
-        </button>
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>
     </div>
   </div>

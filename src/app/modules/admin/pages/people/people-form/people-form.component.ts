@@ -15,6 +15,7 @@ import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-client-form',
@@ -70,6 +71,17 @@ export class PeopleFormComponent implements OnInit {
     },
   };
 
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
   public keys = this.myForm.get('keys') as FormArray;
 
   public contacts = this.myForm.get('contacts') as FormArray;
@@ -100,8 +112,9 @@ export class PeopleFormComponent implements OnInit {
   @Output() public navigation: BasicFormNavigation = {
     items: [
       { text: 'Dados da Pessoa', index: 0, icon: 'info' },
-      { text: 'Endereço', index: 1, icon: 'info' },
-      { text: 'Contatos', index: 2, icon: 'contacts' },
+      { text: 'Fiscal', index: 1, icon: 'info' },
+      { text: 'Endereço', index: 2, icon: 'info' },
+      { text: 'Contatos', index: 3, icon: 'contacts' },
     ],
     selectedItem: 0
   }
@@ -119,10 +132,10 @@ export class PeopleFormComponent implements OnInit {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Novo Cliente' : 'Editar Cliente';
     if (this.formId !== 'new') {
-      this.navigation.items.push({ text: 'Chaves', index: 3, icon: 'vpn_key' });
-      this.navigation.items.push({ text: 'Backups', index: 4, icon: 'backup' });
+      this.navigation.items.push({ text: 'Chaves', index: 4, icon: 'vpn_key' });
+      this.navigation.items.push({ text: 'Backups', index: 5, icon: 'backup' });
     }
-    this.navigation.items.push({ text: 'Observações', index: 5, icon: 'folder' });
+    this.navigation.items.push({ text: 'Observações', index: 6, icon: 'folder' });
   }
 
   validateForm(): void {

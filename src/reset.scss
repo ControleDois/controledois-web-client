@@ -190,28 +190,6 @@
       display: block;
       color: #575757;
 
-      .double-spans {
-        display: flex;
-        justify-content: space-between;
-
-        .field-right-search {
-          font-size: 12px;
-          color: #2687e9;
-          cursor: pointer;
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
-
-      span {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 0.875em;
-        font-weight: 400;
-      }
-
       input,
       select, textarea {
         font-size: 1em;
@@ -235,57 +213,30 @@
         }
       }
 
-      .errorValidation {
-        border: 1px solid #fd1b26;
-      }
-    }
+      .double-spans {
+        display: flex;
+        justify-content: space-between;
 
-    .label-search-loading {
-      position: relative;
+        .field-right-search {
+          font-size: 12px;
+          color: #2687e9;
+          cursor: pointer;
 
-      mat-chip {
-        button {
-          position: static;
-          border: none;
-          background: none;
-
-          mat-icon {
-            font-size: 18px;
-            height: 18px;
-            width: 18px;
+          &:hover {
+            text-decoration: underline;
           }
         }
       }
 
-      button {
-        position: absolute;
-        right: 0;
-        top: 23px;
+      span {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.875em;
+        font-weight: 400;
       }
 
-      .load_circle {
-        border: 5px solid #e3e3e3;
-        border-top: 5px solid #00aff0;
-        border-radius: 50%;
-        margin: auto;
-        width: 22px;
-        height: 22px;
-        -webkit-animation: spin 1.2s linear infinite;
-        -o-animation: spin 1.2s linear infinite;
-        animation: spin 1.2s linear infinite;
-        position: absolute;
-        right: 10px;
-        top: 32px;
-      }
-
-      @-webkit-keyframes spin {
-        0% { -webkit-transform: rotate(0deg); }
-        100% { -webkit-transform: rotate(360deg); }
-      }
-
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      .errorValidation {
+        border: 1px solid #fd1b26;
       }
     }
 
@@ -301,6 +252,55 @@
         color: #0484b3;
       }
     }
+  }
+}
+
+.label-search-loading {
+  position: relative;
+
+  mat-chip {
+    button {
+      position: static;
+      border: none;
+      background: none;
+
+      mat-icon {
+        font-size: 18px;
+        height: 18px;
+        width: 18px;
+      }
+    }
+  }
+
+  button {
+    position: absolute;
+    right: 0;
+    top: 23px;
+  }
+
+  .load_circle {
+    border: 5px solid #e3e3e3;
+    border-top: 5px solid #00aff0;
+    border-radius: 50%;
+    margin: auto;
+    width: 22px;
+    height: 22px;
+    -webkit-animation: spin 1.2s linear infinite;
+    -o-animation: spin 1.2s linear infinite;
+    animation: spin 1.2s linear infinite;
+    position: absolute;
+    right: 10px;
+    top: 32px;
+  }
+
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 }
 

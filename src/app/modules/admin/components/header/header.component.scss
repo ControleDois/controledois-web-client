@@ -6,7 +6,7 @@ header {
   align-items: center;
   position: fixed;
   top: 0;
-  z-index: 99999;
+  z-index: 1000;
 }
 
 .logo {
@@ -65,7 +65,7 @@ nav {
     ul {
       position: absolute;
       top: 50px;
-      z-index: 4999;
+      z-index: 999;
       width: 500px;
       display: none;
       background-color: #2687e9;
