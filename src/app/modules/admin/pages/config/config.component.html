@@ -1,350 +1,308 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Configuração</h2>
-    <button class="button-back" mat-icon-button routerLink="/dash">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
   <div class="page-content">
-    <div class="basic-form">
-    <form [formGroup]="myForm">
-      <mat-tab-group>
-        <mat-tab label="Dados da empresa" formGroupName="people">
-          <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">store</mat-icon>
-            Dados da empresa
-          </ng-template>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
 
-          <div class="basic-form-header" style="margin-top: 20px;">
-            <h3>Dados gerais</h3>
-          </div>
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
 
-          <div class="label-group">
-            <label class="label-w30">
-              <span class="field">Tipo de pessoa</span>
-              <select formControlName="people_type">
-                <option *ngFor="let role of peopleRole" [value]="role.type">{{ role.name }}
-                </option>
-              </select>
-            </label>
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab formGroupName="people">
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Tipo de pessoa</span>
+                  <select formControlName="people_type">
+                    <option *ngFor="let role of peopleRole" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
 
-            <label>
-              <div class="double-spans">
-                <span class="field">{{myForm.value.people.people_type == 0 ? 'CPF' : 'CNPJ'}}</span>
-                <span *ngIf="myForm.value.people.people_type != 0" class="field-right-search" (click)="getCNPJ()">Consultar CNPJ</span>
+                <label>
+                  <div class="double-spans">
+                    <span class="field">{{myForm.value.people.people_type == 0 ? 'CPF' : 'CNPJ'}}</span>
+                    <span *ngIf="myForm.value.people.people_type != 0" class="field-right-search" (click)="getCNPJ()">Consultar CNPJ</span>
+                  </div>
+                  <input [ngClass]="{'errorValidation': getValidation('document')}" formControlName="document" type="text"
+                    [mask]="myForm.value.people.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">{{myForm.value.people.people_type == 0 ? 'Nome' : 'Nome Fantasia'}}</span>
+                  <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Ex: Empresa fulano de tal">
+                </label>
               </div>
-              <input [ngClass]="{'errorValidation': getValidation('document')}" formControlName="document" type="text"
-                [mask]="myForm.value.people.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'">
-            </label>
 
-            <label class="label-w50">
-              <span class="field">{{myForm.value.people.people_type == 0 ? 'Nome' : 'Nome Fantasia'}}</span>
-              <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Ex: Empresa fulano de tal">
-            </label>
-          </div>
+              <div class="basic-form-header">
+                <h3>Informações adicionais</h3>
+              </div>
 
-          <div class="basic-form-header">
-            <h3>Informações adicionais</h3>
-          </div>
+              <div class="label-group">
+                <label *ngIf="myForm.value.people.people_type == 0">
+                  <span class="field">RG</span>
+                  <input [ngClass]="{'errorValidation': getValidation('general_record')}" formControlName="general_record" type="text">
+                </label>
 
-          <div class="label-group">
-            <label *ngIf="myForm.value.people.people_type == 0">
-              <span class="field">RG</span>
-              <input [ngClass]="{'errorValidation': getValidation('general_record')}" formControlName="general_record" type="text">
-            </label>
+                <label>
+                  <span class="field">{{myForm.value.people.people_type == 0 ? 'Nascimento' : 'Data abertura'}}</span>
+                  <input [ngClass]="{'errorValidation': getValidation('birth')}" formControlName="birth" type="date">
+                </label>
+              </div>
 
-            <label>
-              <span class="field">{{myForm.value.people.people_type == 0 ? 'Nascimento' : 'Data abertura'}}</span>
-              <input [ngClass]="{'errorValidation': getValidation('birth')}" formControlName="birth" type="date">
-            </label>
-          </div>
+              <div class="basic-form-header">
+                <h3>Informações fiscais</h3>
+              </div>
 
-          <div class="basic-form-header">
-            <h3>Informações fiscais</h3>
-          </div>
+              <div class="label-group" *ngIf="myForm.value.people.people_type == 1">
+                <label class="label-w50">
+                  <span class="field">Razão social</span>
+                  <input [ngClass]="{'errorValidation': getValidation('social_name')}" formControlName="social_name" type="text">
+                </label>
 
-          <div class="label-group" *ngIf="myForm.value.people.people_type == 1">
-            <label class="label-w50">
-              <span class="field">Razão social</span>
-              <input [ngClass]="{'errorValidation': getValidation('social_name')}" formControlName="social_name" type="text">
-            </label>
+                <label class="check">
+                  <input type="checkbox" formControlName="simple">
+                  <span>Optante pelo simples?</span>
+                </label>
+              </div>
 
-            <label class="check">
-              <input type="checkbox" formControlName="simple">
-              <span>Optante pelo simples?</span>
-            </label>
-          </div>
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Indicador de Inscrição Estadual</span>
+                  <select formControlName="state_registration_indicator">
+                    <option *ngFor="let state of stateRegistrationIndicator" [value]="state.type">{{ state.name }}
+                    </option>
+                  </select>
+                </label>
 
-          <div class="label-group">
-            <label class="label-w30">
-              <span class="field">Indicador de Inscrição Estadual</span>
-              <select formControlName="state_registration_indicator">
-                <option *ngFor="let state of stateRegistrationIndicator" [value]="state.type">{{ state.name }}
-                </option>
-              </select>
-            </label>
+                <label *ngIf="myForm.value.state_registration_indicator != 2">
+                  <span class="field">Inscrição Estadual</span>
+                  <input formControlName="state_registration" type="text">
+                </label>
 
-            <label *ngIf="myForm.value.state_registration_indicator != 2">
-              <span class="field">Inscrição Estadual</span>
-              <input formControlName="state_registration" type="text">
-            </label>
+                <label *ngIf="myForm.value.people.people_type == 1">
+                  <span class="field">Inscrição municipal</span>
+                  <input formControlName="municipal_registration" type="text">
+                </label>
 
-            <label *ngIf="myForm.value.people.people_type == 1">
-              <span class="field">Inscrição municipal</span>
-              <input formControlName="municipal_registration" type="text">
-            </label>
+                <label *ngIf="myForm.value.people.people_type == 1">
+                  <span class="field">Inscrição Suframa</span>
+                  <input formControlName="inscription_suframa" type="text">
+                </label>
+              </div>
 
-            <label *ngIf="myForm.value.people.people_type == 1">
-              <span class="field">Inscrição Suframa</span>
-              <input formControlName="inscription_suframa" type="text">
-            </label>
-          </div>
+              <div class="basic-form-header">
+                <h3>Endereço</h3>
+              </div>
 
-          <div class="basic-form-header">
-            <h3>Endereço</h3>
-          </div>
+              <div formGroupName="address">
+                <div class="label-group">
+                  <label>
+                    <div class="double-spans"><span class="field">CEP</span>
+                      <span class="field-right-search" (click)="getCEP()">Consultar CEP</span>
+                    </div>
+                    <input [ngClass]="{'errorValidation': getValidation('zip_code')}" formControlName="zip_code" type="text" mask="00000-000">
+                  </label>
 
-          <div formGroupName="address">
-            <div class="label-group">
-              <label>
-                <div class="double-spans"><span class="field">CEP</span>
-                  <span class="field-right-search" (click)="getCEP()">Consultar CEP</span>
+                  <label class="label-w50">
+                    <span class="field">Endereço</span>
+                    <input [ngClass]="{'errorValidation': getValidation('address')}" formControlName="address" type="text">
+                  </label>
+
+                  <label>
+                    <span class="field">Número</span>
+                    <input [ngClass]="{'errorValidation': getValidation('number')}" formControlName="number" type="text">
+                  </label>
                 </div>
-                <input [ngClass]="{'errorValidation': getValidation('zip_code')}" formControlName="zip_code" type="text" mask="00000-000">
-              </label>
 
-              <label class="label-w50">
-                <span class="field">Endereço</span>
-                <input [ngClass]="{'errorValidation': getValidation('address')}" formControlName="address" type="text">
-              </label>
+                <div class="label-group">
+                  <label>
+                    <span class="field">Estado</span>
+                    <input [ngClass]="{'errorValidation': getValidation('state')}" formControlName="state" type="text">
+                  </label>
 
-              <label>
-                <span class="field">Número</span>
-                <input [ngClass]="{'errorValidation': getValidation('number')}" formControlName="number" type="text">
-              </label>
-            </div>
+                  <label>
+                    <span class="field">Cidade</span>
+                    <input [ngClass]="{'errorValidation': getValidation('city')}" formControlName="city" type="text">
+                  </label>
 
-            <div class="label-group">
-              <label>
-                <span class="field">Estado</span>
-                <input [ngClass]="{'errorValidation': getValidation('state')}" formControlName="state" type="text">
-              </label>
+                  <label class="label-w30">
+                    <span class="field">Bairro</span>
+                    <input [ngClass]="{'errorValidation': getValidation('district')}" formControlName="district" type="text">
+                  </label>
 
-              <label>
-                <span class="field">Cidade</span>
-                <input [ngClass]="{'errorValidation': getValidation('city')}" formControlName="city" type="text">
-              </label>
-
-              <label class="label-w30">
-                <span class="field">Bairro</span>
-                <input [ngClass]="{'errorValidation': getValidation('district')}" formControlName="district" type="text">
-              </label>
-
-              <label class="label-w30">
-                <span class="field">Complemento</span>
-                <input formControlName="complement" type="text">
-              </label>
-            </div>
-          </div>
-        </mat-tab>
-
-        <mat-tab label="Configurações de venda">
-          <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">point_of_sale</mat-icon>
-            Configurações de venda
-          </ng-template>
-
-          <div class="basic-form-header" style="margin-top: 20px;">
-            <h3>Dados gerais</h3>
-          </div>
-
-          <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
-          <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
-          <app-search-loading-unique class="label-w50" [search]="searchBank"></app-search-loading-unique>
-        </mat-tab>
-
-        <mat-tab label="Shop">
-          <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">shopping_bag</mat-icon>
-            Shop
-          </ng-template>
-
-          <ng-container formGroupName="shop">
-            <div class="basic-form-header" style="margin-top: 20px;">
-              <h3>Dados gerais</h3>
-            </div>
-
-            <div class="label-group">
-              <div class="label-group-check" style="margin-bottom: 10px; min-width: 135px;">
-                <span class="title">Shop</span>
-                <div class="checks">
-                  <label class="check">
-                    <input type="checkbox" formControlName="is_active" >
-                    <span>Ativar shop?</span>
+                  <label class="label-w30">
+                    <span class="field">Complemento</span>
+                    <input formControlName="complement" type="text">
                   </label>
                 </div>
               </div>
+            </mat-tab>
 
-              <label>
-                <span class="field">Cor padrão</span>
-                <input formControlName="color_default" type="color" style="height: 40px;">
-              </label>
-            </div>
+            <mat-tab>
+              <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
+              <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
+              <app-search-loading-unique class="label-w50" [search]="searchBank"></app-search-loading-unique>
+            </mat-tab>
 
-            <div class="basic-form-header">
-              <h3>Categorias que aparecem no shop</h3>
-            </div>
-
-            <div class="label-group" style="margin-bottom: 10px; padding: 0 20px;">
-              <app-search-loading-chips class="label-w100" [search]="searchCategories"></app-search-loading-chips>
-            </div>
-
-            <div class="basic-form-header">
-              <h3>Acesso</h3>
-            </div>
-
-            <label class="label-w100">
-              <span class="field">Link URL</span>
-              <input formControlName="link_url" type="text">
-            </label>
-          </ng-container>
-        </mat-tab>
-
-        <mat-tab label="API Comunicação">
-          <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">settings_ethernet</mat-icon>
-            API Comunicação
-          </ng-template>
-
-          <div class="basic-form-header" style="margin-top: 20px;">
-            <h3>Dados gerais</h3>
-          </div>
-
-          <div class="label-group">
-            <label class="label-w100">
-              <span class="field">Token</span>
-              <input formControlName="token" type="text" readonly>
-            </label>
-          </div>
-
-          <div class="basic-form-header" style="margin-top: 20px;">
-            <h3>Dados de Dropbox</h3>
-          </div>
-
-          <div class="label-group">
-            <label class="label-w30">
-              <span class="field">Client Id</span>
-              <input formControlName="dropbox_client_id" type="text">
-            </label>
-
-            <label class="label-w30">
-              <span class="field">Client Secret</span>
-              <input formControlName="dropbox_client_secret" type="text">
-            </label>
-
-            <label class="label-w100">
-              <span class="field">Refresh Token</span>
-              <input formControlName="dropbox_refresh_token" type="text">
-            </label>
-          </div>
-
-          <div class="basic-form-header" style="margin-top: 20px;">
-            <h3>Dados de Firebase</h3>
-          </div>
-
-          <div class="label-group">
-            <label class="label-w50">
-              <span class="field">Api Key</span>
-              <input formControlName="firebase_api_key" type="text">
-            </label>
-
-            <label class="label-w50">
-              <span class="field">Auth Domain</span>
-              <input formControlName="firebase_auth_domain" type="text">
-            </label>
-
-            <label class="label-w30">
-              <span class="field">Project Id</span>
-              <input formControlName="firebase_project_id" type="text">
-            </label>
-          </div>
-
-          <div class="label-group">
-            <label class="label-w30">
-              <span class="field">Storage Bucket</span>
-              <input formControlName="firebase_storage_bucket" type="text">
-            </label>
-
-            <label class="label-w30">
-              <span class="field">Messaging Sender Id</span>
-              <input formControlName="firebase_messaging_sender_id" type="text">
-            </label>
-
-            <label class="label-w50">
-              <span class="field">App Id</span>
-              <input formControlName="firebase_app_id" type="text">
-            </label>
-          </div>
-
-          <div class="basic-form-header" style="margin-top: 20px;">
-            <h3>Conexão Whatsapp</h3>
-          </div>
-
-          <div class="shopping-budget">
-            <div class="shopping-budget-grid" style="border: none !important">
-              <ng-container formArrayName="whatsapps">
-                <div *ngFor="let whatsapp of whatsapps.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
-                  <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
-                    <li style="width: 50%">Nome</li>
-                    <li style="width: 30%">Número</li>
-                  </ul>
-
-                  <ng-container [formGroupName]="i">
-                    <div class="label-group">
-                      <label style="width: 50%">
-                        <span class="label-title">Nome</span>
-                        <input formControlName="name" type="text">
+            <mat-tab>
+              <ng-container formGroupName="shop">
+                <div class="label-group">
+                  <div class="label-group-check" style="margin-bottom: 10px; min-width: 135px;">
+                    <span class="title">Shop</span>
+                    <div class="checks">
+                      <label class="check">
+                        <input type="checkbox" formControlName="is_active" >
+                        <span>Ativar shop?</span>
                       </label>
+                    </div>
+                  </div>
 
-                      <label style="width: 30%">
-                        <span class="label-title">Número</span>
-                        <input formControlName="phone" type="text">
-                      </label>
+                  <label>
+                    <span class="field">Cor padrão</span>
+                    <input formControlName="color_default" type="color" style="height: 40px;">
+                  </label>
+                </div>
 
-                      <label>
-                        <button mat-icon-button (click)="connectWhatsapp(i)">
-                          <mat-icon>sensors</mat-icon>
-                        </button>
-                      </label>
+                <div class="basic-form-header">
+                  <h3>Categorias que aparecem no shop</h3>
+                </div>
 
-                      <button class="add-item" mat-icon-button (click)="removeWhatsapp(i)">
-                        <mat-icon>clear</mat-icon>
-                      </button>
+                <div class="label-group" style="margin-bottom: 10px; padding: 0 20px;">
+                  <app-search-loading-chips class="label-w100" [search]="searchCategories"></app-search-loading-chips>
+                </div>
+
+                <div class="basic-form-header">
+                  <h3>Acesso</h3>
+                </div>
+
+                <label class="label-w100">
+                  <span class="field">Link URL</span>
+                  <input formControlName="link_url" type="text">
+                </label>
+              </ng-container>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Token</span>
+                  <input formControlName="token" type="text" readonly>
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="margin-top: 20px;">
+                <h3>Dados de Dropbox</h3>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Client Id</span>
+                  <input formControlName="dropbox_client_id" type="text">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Client Secret</span>
+                  <input formControlName="dropbox_client_secret" type="text">
+                </label>
+
+                <label class="label-w100">
+                  <span class="field">Refresh Token</span>
+                  <input formControlName="dropbox_refresh_token" type="text">
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="margin-top: 20px;">
+                <h3>Dados de Firebase</h3>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Api Key</span>
+                  <input formControlName="firebase_api_key" type="text">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Auth Domain</span>
+                  <input formControlName="firebase_auth_domain" type="text">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Project Id</span>
+                  <input formControlName="firebase_project_id" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Storage Bucket</span>
+                  <input formControlName="firebase_storage_bucket" type="text">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Messaging Sender Id</span>
+                  <input formControlName="firebase_messaging_sender_id" type="text">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">App Id</span>
+                  <input formControlName="firebase_app_id" type="text">
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="margin-top: 20px;">
+                <h3>Conexão Whatsapp</h3>
+              </div>
+
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+                  <ng-container formArrayName="whatsapps">
+                    <div *ngFor="let whatsapp of whatsapps.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                      <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
+                        <li style="width: 50%">Nome</li>
+                        <li style="width: 30%">Número</li>
+                      </ul>
+
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <label style="width: 50%">
+                            <span class="label-title">Nome</span>
+                            <input formControlName="name" type="text">
+                          </label>
+
+                          <label style="width: 30%">
+                            <span class="label-title">Número</span>
+                            <input formControlName="phone" type="text">
+                          </label>
+
+                          <label>
+                            <button mat-icon-button (click)="connectWhatsapp(i)">
+                              <mat-icon>sensors</mat-icon>
+                            </button>
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removeWhatsapp(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
                     </div>
                   </ng-container>
                 </div>
-              </ng-container>
-            </div>
 
-            <div class="shopping-budget-footer">
-              <div class="amount-button-add">
-                <button mat-button (click)="addWhatsapp(null)">Adicionar outro número</button>
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addWhatsapp(null)">Adicionar outro número</button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-    </form>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
 
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
-          Salvar
-        </button>
+
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>
     </div>
-
-
   </div>
 </div>
 

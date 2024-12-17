@@ -16,6 +16,9 @@ import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogWhatsappConnectComponent } from 'src/app/shared/widget/dialog-whatsapp-connect/dialog-whatsapp-connect.component';
+import { PageHeader } from '../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../interfaces/basic-form-buttons.interface';
+import { BasicFormNavigation } from '../../interfaces/basic-form-navigation.interface';
 
 @Component({
   selector: 'app-config',
@@ -86,6 +89,37 @@ export class ConfigComponent implements OnInit {
     { name: '⦿ Contribuinte', type: 1 },
     { name: '⦿ Contribuinte isento', type: 2 },
   ];
+
+  @Output() public pageHeader: PageHeader = {
+    title: `Configurações`,
+    description: 'Configurações gerais do sistema.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/dash',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Dados da Empresa', index: 0, icon: 'info' },
+      { text: 'Config. Venda', index: 1, icon: 'info' },
+      { text: 'Shop', index: 2, icon: 'info' },
+      { text: 'Config. Api', index: 3, icon: 'contacts' },
+    ],
+    selectedItem: 0
+  }
 
   @Output() searchPeople: SearchLoadingUnique = {
     noTitle: false,

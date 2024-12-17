@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="page-content" style="padding: 0 !important;">
+    <div class="basic">
+
+      <div class="dialogs">
+        <app-search-simple [search]="search"></app-search-simple>
+
+        <ul class="list">
+          <li *ngFor="let dialog of dialogs" (click)="showDialog(dialog.id)">
+            <div class="avatar">
+              <img src="assets/avatar.jpg">
+            </div>
+
+            <div class="info">
+              <h2>{{dialog.contact.name}}</h2>
+              <p>{{ (dialog.messages.length > 0 ? maxBodyMessage(dialog.messages[0].body, 32) : '')}}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="chatOn" *ngIf="dialogSelected">
+        <div class="contact">
+          <div class="avatar">
+            <img src="assets/avatar.jpg">
+          </div>
+
+          <div class="info">
+            <h2>{{dialogSelected.contact.name}}</h2>
+            <p>Ultima mensagem as ...</p>
+          </div>
+        </div>
+
+        <div class="messages">
+          <ul>
+            <li *ngFor="let message of dialogSelected.messages" [ngClass]="{'message-left': message.from_me}">
+              <div class="line-dialog"></div>
+              <div class="avatar">
+                <img src="assets/avatar.jpg">
+              </div>
+
+              <div class="info">
+                <p>{{message.body}}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="send-message">
+          <button mat-icon-button>
+            <mat-icon>sentiment_satisfied</mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon>attach_file</mat-icon>
+          </button>
+          <textarea placeholder="Digite sua mensagem"></textarea>
+          <button mat-icon-button>
+            <mat-icon>send</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="ChatOff" *ngIf="!dialogSelected">
+
+      </div>
+    </div>
+  </div>
+</div>

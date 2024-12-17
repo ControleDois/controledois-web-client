@@ -52,6 +52,7 @@ import { TaskListComponent } from './pages/task/task-list/task-list.component';
 import { PageHeaderComponent } from './components/page-header/page-header.component';
 import { BasicFormNavigationComponent } from './components/basic-form-navigation/basic-form-navigation.component';
 import { BasicFormButtonsComponent } from './components/basic-form-buttons/basic-form-buttons.component';
+import { ChatComponent } from './pages/chat/chat.component';
 
 const appName = 'CTrix';
 
@@ -260,6 +261,11 @@ const routes: Routes = [
     path: 'task/:id',
     component: TaskFormComponent,
     data: { title: `Cadastro de Tarefas -  ${appName}`},
+  },
+  {
+    path: 'chat',
+    component: ChatComponent,
+    data: { title: `Chat -  ${appName}`},
   }
 ]
 
@@ -312,6 +318,7 @@ const routes: Routes = [
     PageHeaderComponent,
     BasicFormNavigationComponent,
     BasicFormButtonsComponent,
+    ChatComponent,
   ],
   imports: [
     CommonModule,
