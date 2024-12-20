@@ -1,11 +1,13 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { UserService } from 'src/app/shared/services/user.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-user-form',
@@ -25,6 +27,27 @@ export class UserFormComponent implements OnInit {
     password: new FormControl('', Validators.required),
   });
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Usuário`,
+    description: 'Cadastro de Usuário',
+    button: {
+      text: 'Voltar',
+      routerLink: '/user',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private userService: UserService,
@@ -33,6 +56,7 @@ export class UserFormComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Novo Usuário' : 'Editar Usuário';
   }
 
   ngOnInit(): void {

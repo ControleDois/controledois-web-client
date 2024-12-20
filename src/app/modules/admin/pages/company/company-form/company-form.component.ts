@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
@@ -7,6 +7,9 @@ import { CompanyService } from 'src/app/shared/services/company.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-company-form',
@@ -65,6 +68,37 @@ export class CompanyFormComponent implements OnInit {
     { name: 'name', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o nome' : 'É necessário informar o nome fantasia' },
   ];
 
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Dados da Empresa', index: 0, icon: 'info' },
+      { text: 'Fiscal', index: 1, icon: 'info' },
+      { text: 'Endereço', index: 2, icon: 'info' },
+      { text: 'Observação', index: 3, icon: 'contacts' },
+    ],
+    selectedItem: 0
+  }
+
+  @Output() public pageHeader: PageHeader = {
+    title: `Empresas`,
+    description: 'Cadastro de empresas',
+    button: {
+      text: 'Voltar',
+      routerLink: '/company',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private peopleService: CompanyService,
@@ -74,6 +108,7 @@ export class CompanyFormComponent implements OnInit {
     private dialogMessageService: DialogMessageService,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Empresa' : 'Editar Empresa';
   }
 
   validateForm(): void {

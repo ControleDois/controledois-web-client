@@ -1,17 +1,8 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Novo cadastro</h2>
-    <button class="button-back" mat-icon-button routerLink="/task">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
   <div class="page-content">
-    <div class="basic-form">
-      <div class="basic-form-header">
-        <h3>Dados gerais</h3>
-      </div>
+    <app-page-header [header]="pageHeader"></app-page-header>
 
+    <div class="basic-form">
       <form [formGroup]="myForm">
         <div class="label-group">
           <label class="label-w30">
@@ -41,16 +32,16 @@
           <textarea formControlName="description"></textarea>
         </label>
 
-        <!-- <section class="drag-files">
+        <section class="drag-files">
           <mat-icon>cloud_upload</mat-icon>
 
           <h3>Importe seus arquivos</h3>
           <p>Arraste ou clique para fazer upload</p>
 
           <input type="file" (change)="getFile($event)"/>
-        </section> -->
+        </section>
 
-        <!-- <section class="files">
+        <section class="files">
           <div *ngFor="let file of myForm.value.files as i" class="box done">
             <div class="icon">
               <mat-icon>insert_drive_file</mat-icon>
@@ -65,9 +56,9 @@
               <mat-icon>delete</mat-icon>
             </div>
           </div>
-        </section> -->
+        </section>
 
-        <!-- <section class="files">
+        <section class="files">
           <div *ngFor="let file of filesUpload as i" class="box done" >
             <div class="icon">
               <mat-icon>insert_drive_file</mat-icon>
@@ -82,14 +73,10 @@
               <mat-icon>delete</mat-icon>
             </div>
           </div>
-        </section> -->
+        </section>
       </form>
 
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
-          Salvar
-        </button>
-      </div>
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
     </div>
   </div>
 </div>

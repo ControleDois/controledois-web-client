@@ -6,6 +6,8 @@ import {throwError} from "rxjs";
 import { CostCenterService } from 'src/app/shared/services/cost-center.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-cost-center-form',
@@ -24,6 +26,27 @@ export class CostCenterFormComponent implements OnInit {
     name: new FormControl('', Validators.required),
   });
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Centro de custos`,
+    description: 'Cadastro de Centro de Custos',
+    button: {
+      text: 'Voltar',
+      routerLink: '/cost-center',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private costCenterService: CostCenterService,
@@ -31,6 +54,7 @@ export class CostCenterFormComponent implements OnInit {
     private router: Router,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Novo Centro de Custo' : 'Editar Centro de Custo';
   }
 
   ngOnInit(): void {

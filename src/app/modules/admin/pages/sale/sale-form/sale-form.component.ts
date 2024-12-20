@@ -335,6 +335,7 @@ export class SaleFormComponent implements OnInit {
         this.datePipe.transform(value.contract_date_finish, 'yyyy-MM-dd')
       );
       this.calcDateBilling();
+      this.changeNavigation(this.myForm.value.status);
     }
   }
 
@@ -500,7 +501,43 @@ export class SaleFormComponent implements OnInit {
     this.plots.push(control);
   }
 
+  changeNavigation(status: number) {
+    if (status == 3) {
+      this.navigation = {
+        items: [
+          { text: 'Informações Gerais', index: 0, icon: 'info' },
+          { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
+          { text: 'Pagamentos', index: 2, icon: 'payment' },
+          { text: 'Observações', index: 3, icon: 'description' },
+        ],
+        selectedItem: 0
+      }
+    } else {
+      this.navigation = {
+        items: [
+          { text: 'Informações Gerais', index: 0, icon: 'info' },
+          { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
+          { text: 'Observações', index: 3, icon: 'description' },
+        ],
+        selectedItem: 0
+      }
+    }
+  }
+
   changePortion(): void {
+    this.changeNavigation(this.myForm.value.status);
+
+    if (this.myForm.value.status == 3) {
+      this.plots.clear();
+      this.addPortion({
+        portion: 1,
+        form_payment: 9,
+        date_due: this.myForm.value.date_sale,
+        amount: parseFloat(this.myForm.value.net_total),
+        note: '',
+      });
+    }
+
     if (this.myForm.value.payment_terms > 0 && this.myForm.value.status == 3) {
       this.plots.clear();
       const portionCalc = this.libraryService.calcularParcelas(
@@ -519,15 +556,6 @@ export class SaleFormComponent implements OnInit {
           note: '',
         });
       }
-    } else if (this.myForm.value.status == 3) {
-      this.plots.clear();
-      this.addPortion({
-        portion: 1,
-        form_payment: 9,
-        date_due: this.myForm.value.date_sale,
-        amount: parseFloat(this.myForm.value.net_total),
-        note: '',
-      });
     }
   }
 

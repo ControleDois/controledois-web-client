@@ -12,9 +12,6 @@ import { NgxMaskModule } from 'ngx-mask';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
 import { CurrencyMaskConfig, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireStorageModule } from '@angular/fire/compat/storage';
-import { environment } from 'src/environments/environment';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "right",
@@ -40,15 +37,13 @@ registerLocaleData(ptBr);
     WidgetModule,
     NgxMaskModule.forRoot(),
     StoreModule.forRoot({}),
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireStorageModule
   ],
   providers: [
     AuthResolver,
     DatePipe,
     { provide: LOCALE_ID, useValue: 'pt' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
-    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig }
+    { provide: CURRENCY_MASK_CONFIG, useValue: CustomCurrencyMaskConfig },
   ],
   bootstrap: [AppComponent]
 })

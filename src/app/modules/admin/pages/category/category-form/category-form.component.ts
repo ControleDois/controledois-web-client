@@ -8,6 +8,8 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-category-form',
@@ -51,6 +53,27 @@ export class CategoryFormComponent implements OnInit {
     { name: 'name', validation: true, msg: 'É necessário informar o nome'},
   ];
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Categoria`,
+    description: 'Cadastro de Categoria',
+    button: {
+      text: 'Voltar',
+      routerLink: '/category',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private categoryService: CategoryService,
@@ -59,6 +82,7 @@ export class CategoryFormComponent implements OnInit {
     private router: Router,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Categoria' : 'Editar Categoria';
   }
 
   validateForm(): void {

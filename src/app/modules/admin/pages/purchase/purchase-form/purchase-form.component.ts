@@ -9,6 +9,9 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-purchase-form',
@@ -187,6 +190,42 @@ export class PurchaseFormComponent implements OnInit {
     paramsArray: []
   };
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Nova Compra`,
+    description: 'Preencha os campos para salvar a compra.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/purchase',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Informações Gerais', index: 0, icon: 'info' },
+      { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
+      { text: 'Observações', index: 3, icon: 'description' },
+    ],
+    selectedItem: 0
+  }
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(false),
+        class: 'c2-btn c2-btn-green',
+      },
+      {
+        text: 'Salvar e Continuar',
+        icon: 'save_as',
+        action: () => this.save(true),
+        class: 'c2-btn c2-btn-green',
+      },
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private purchaseService: PurchaseService,
@@ -196,6 +235,7 @@ export class PurchaseFormComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Compra' : 'Editar Compra';
     this.productsOutPut = [];
   }
 
@@ -262,6 +302,7 @@ export class PurchaseFormComponent implements OnInit {
       this.calcDateBilling();
 
       this.sumValues();
+      this.changeNavigation(this.myForm.value.status);
     }
   }
 
@@ -285,12 +326,13 @@ export class PurchaseFormComponent implements OnInit {
 
     this.validationFields.find((v) => v.name === 'products').validation =
       !!this.products.controls[0].value.product_id;
+
     this.searchUser.validation = !!this.myForm.value.userId;
     this.validationFields.find((v) => v.name === 'userId').validation =
       !!this.myForm.value.userId;
   }
 
-  save(): void {
+  save(continueForm: boolean): void {
     this.loadingFull.active = true;
 
     this.myForm.value.peopleId = this.searchPeople?.searchFieldOn?.id;
@@ -310,7 +352,9 @@ export class PurchaseFormComponent implements OnInit {
         }),
         map(() => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['purchase']);
+          if (!continueForm) {
+            this.router.navigate(['purchase']);
+          }
         })
       ).subscribe();
     } else {
@@ -356,8 +400,8 @@ export class PurchaseFormComponent implements OnInit {
       product_id: event.id,
       description: '',
       amount: '1',
-      cost_value: event.cost_value,
-      subtotal: event.cost_value
+      cost_value: event?.cost_value || 0,
+      subtotal: event?.cost_value || 0,
     });
 
     this.sumValues();
@@ -421,7 +465,43 @@ export class PurchaseFormComponent implements OnInit {
     this.plots.push(control);
   }
 
+  changeNavigation(status: number) {
+    if (status == 3) {
+      this.navigation = {
+        items: [
+          { text: 'Informações Gerais', index: 0, icon: 'info' },
+          { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
+          { text: 'Pagamentos', index: 2, icon: 'payment' },
+          { text: 'Observações', index: 3, icon: 'description' },
+        ],
+        selectedItem: this.navigation.selectedItem
+      }
+    } else {
+      this.navigation = {
+        items: [
+          { text: 'Informações Gerais', index: 0, icon: 'info' },
+          { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
+          { text: 'Observações', index: 3, icon: 'description' },
+        ],
+        selectedItem: this.navigation.selectedItem
+      }
+    }
+  }
+
   changePortion(): void {
+    this.changeNavigation(this.myForm.value.status);
+
+    if (this.myForm.value.status == 3) {
+      this.plots.clear();
+      this.addPortion({
+        portion: 1,
+        form_payment: 9,
+        date_due: this.myForm.value.date_sale,
+        amount: parseFloat(this.myForm.value.net_total),
+        note: ''
+      });
+    };
+
     if (this.myForm.value.payment_terms > 0 && this.myForm.value.status == 3) {
       this.plots.clear();
       const portionCalc = this.libraryService.calcularParcelas(this.myForm.value.payment_terms, this.myForm.value.date_sale);
@@ -435,16 +515,7 @@ export class PurchaseFormComponent implements OnInit {
           note: ''
         });
       }
-    } else if (this.myForm.value.status == 3) {
-      this.plots.clear();
-      this.addPortion({
-        portion: 1,
-        form_payment: 9,
-        date_due: this.myForm.value.date_sale,
-        amount: parseFloat(this.myForm.value.net_total),
-        note: ''
-      });
-    }
+    };
   }
 
   calcValidityContract(): void {

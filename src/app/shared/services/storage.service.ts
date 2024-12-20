@@ -37,9 +37,10 @@ export class StorageService {
 
   getList(name: string): any {
     let localStorageItem = localStorage.getItem(name);
-    const list = localStorageItem
+
+    let list = localStorageItem
       ? JSON.parse(EncryptService.decrypt(localStorageItem))
-      : null;
+      : [];
 
     return list;
   }

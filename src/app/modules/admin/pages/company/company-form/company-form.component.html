@@ -1,179 +1,164 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Novo cadastro</h2>
-    <button class="button-back" mat-icon-button routerLink="/company">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
   <div class="page-content">
-    <div class="basic-form">
-      <div class="basic-form-header">
-        <h3>Dados gerais</h3>
-      </div>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
 
-      <form [formGroup]="myForm">
-        <div class="label-group">
-          <label class="label-w30">
-            <span class="field">Tipo de pessoa</span>
-            <select formControlName="people_type">
-              <option *ngFor="let role of peopleRole" [value]="role.type">{{ role.name }}
-              </option>
-            </select>
-          </label>
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
 
-          <label>
-            <div class="double-spans">
-              <span class="field">{{myForm.value.people_type === 0 ? 'CPF *' : 'CNPJ *'}}</span>
-              <span *ngIf="myForm.value.people_type === '1'" class="field-right-search" (click)="getCNPJ()">Consultar CNPJ</span>
-            </div>
-            <input [ngClass]="{'errorValidation': getValidation('document')}" formControlName="document" type="text"
-              [mask]="myForm.value.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'">
-          </label>
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Tipo de pessoa</span>
+                  <select formControlName="people_type">
+                    <option *ngFor="let role of peopleRole" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
 
-          <label class="label-w50">
-            <span class="field">{{myForm.value.people_type == 0 ? 'Nome *' : 'Nome Fantasia *'}}</span>
-            <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Ex: Empresa fulano de tal">
-          </label>
-        </div>
+                <label>
+                  <div class="double-spans">
+                    <span class="field">{{myForm.value.people_type === 0 ? 'CPF *' : 'CNPJ *'}}</span>
+                    <span *ngIf="myForm.value.people_type === '1'" class="field-right-search" (click)="getCNPJ()">Consultar CNPJ</span>
+                  </div>
+                  <input [ngClass]="{'errorValidation': getValidation('document')}" formControlName="document" type="text"
+                    [mask]="myForm.value.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'">
+                </label>
 
-        <div class="basic-form-header">
-          <h3>Informações adicionais</h3>
-        </div>
-
-        <div class="label-group">
-          <label class="label-w50">
-            <span class="field">E-mail principal</span>
-            <input formControlName="email" type="email">
-          </label>
-
-          <label>
-            <span class="field">Telefone comercial</span>
-            <input formControlName="phone_commercial" type="text">
-          </label>
-
-          <label>
-            <span class="field">Telefone celular</span>
-            <input formControlName="phone_cell" type="text">
-          </label>
-
-          <label>
-            <span class="field">{{myForm.value.people_type == 0 ? 'Nascimento' : 'Data abertura'}}</span>
-            <input formControlName="birth" type="date">
-          </label>
-        </div>
-
-        <div class="label-group">
-          <label *ngIf="myForm.value.people_type == 0">
-            <span class="field">RG</span>
-            <input formControlName="general_record" type="text">
-          </label>
-        </div>
-
-        <div class="basic-form-header">
-          <h3>Informações fiscais</h3>
-        </div>
-
-        <div class="label-group" *ngIf="myForm.value.people_type == 1">
-          <label class="label-w50">
-            <span class="field">Razão social</span>
-            <input formControlName="social_name" type="text">
-          </label>
-
-          <label class="check">
-            <input type="checkbox" formControlName="simple">
-            <span>Optante pelo simples?</span>
-          </label>
-        </div>
-
-        <div class="label-group">
-          <label class="label-w30">
-            <span class="field">Indicador de Inscrição Estadual</span>
-            <select formControlName="state_registration_indicator">
-              <option *ngFor="let state of stateRegistrationIndicator" [value]="state.type">{{ state.name }}
-              </option>
-            </select>
-          </label>
-
-          <label *ngIf="myForm.value.state_registration_indicator != 2">
-            <span class="field">Inscrição Estadual</span>
-            <input formControlName="state_registration" type="text">
-          </label>
-
-          <label *ngIf="myForm.value.people_type == 1">
-            <span class="field">Inscrição municipal</span>
-            <input formControlName="municipal_registration" type="text">
-          </label>
-
-          <label *ngIf="myForm.value.people_type == 1">
-            <span class="field">Inscrição Suframa</span>
-            <input formControlName="inscription_suframa" type="text">
-          </label>
-        </div>
-
-        <div class="basic-form-header">
-          <h3>Endereço</h3>
-        </div>
-
-        <div formGroupName="address">
-          <div class="label-group">
-            <label>
-              <div class="double-spans"><span class="field">CEP</span>
-                <span class="field-right-search" (click)="getCEP()">Consultar CEP</span>
+                <label class="label-w50">
+                  <span class="field">{{myForm.value.people_type == 0 ? 'Nome *' : 'Nome Fantasia *'}}</span>
+                  <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Ex: Empresa fulano de tal">
+                </label>
               </div>
-              <input formControlName="zip_code" type="text" mask="00000-000">
-            </label>
 
-            <label class="label-w50">
-              <span class="field">Endereço</span>
-              <input formControlName="address" type="text">
-            </label>
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">E-mail principal</span>
+                  <input formControlName="email" type="email">
+                </label>
 
-            <label>
-              <span class="field">Número</span>
-              <input formControlName="number" type="text">
-            </label>
-          </div>
+                <label>
+                  <span class="field">Telefone comercial</span>
+                  <input formControlName="phone_commercial" type="text">
+                </label>
 
-          <div class="label-group">
-            <label>
-              <span class="field">Estado</span>
-              <input formControlName="state" type="text">
-            </label>
+                <label>
+                  <span class="field">Telefone celular</span>
+                  <input formControlName="phone_cell" type="text">
+                </label>
 
-            <label>
-              <span class="field">Cidade</span>
-              <input formControlName="city" type="text">
-            </label>
+                <label>
+                  <span class="field">{{myForm.value.people_type == 0 ? 'Nascimento' : 'Data abertura'}}</span>
+                  <input formControlName="birth" type="date">
+                </label>
+              </div>
+            </mat-tab>
 
-            <label class="label-w30">
-              <span class="field">Bairro</span>
-              <input formControlName="district" type="text">
-            </label>
+            <mat-tab>
+              <div class="label-group">
+                <label *ngIf="myForm.value.people_type == 0">
+                  <span class="field">RG</span>
+                  <input formControlName="general_record" type="text">
+                </label>
+              </div>
 
-            <label class="label-w30">
-              <span class="field">Complemento</span>
-              <input formControlName="complement" type="text">
-            </label>
-          </div>
-        </div>
+              <div class="label-group" *ngIf="myForm.value.people_type == 1">
+                <label class="label-w50">
+                  <span class="field">Razão social</span>
+                  <input formControlName="social_name" type="text">
+                </label>
 
-        <div class="basic-form-header">
-          <h3>Observações gerais</h3>
-        </div>
+                <label class="check">
+                  <input type="checkbox" formControlName="simple">
+                  <span>Optante pelo simples?</span>
+                </label>
+              </div>
 
-        <div class="label-group">
-          <label class="label-w100">
-            <span class="field">Observações</span>
-            <textarea formControlName="note"></textarea>
-          </label>
-        </div>
-      </form>
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Indicador de Inscrição Estadual</span>
+                  <select formControlName="state_registration_indicator">
+                    <option *ngFor="let state of stateRegistrationIndicator" [value]="state.type">{{ state.name }}
+                    </option>
+                  </select>
+                </label>
 
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
-          Salvar
-        </button>
+                <label *ngIf="myForm.value.state_registration_indicator != 2">
+                  <span class="field">Inscrição Estadual</span>
+                  <input formControlName="state_registration" type="text">
+                </label>
+
+                <label *ngIf="myForm.value.people_type == 1">
+                  <span class="field">Inscrição municipal</span>
+                  <input formControlName="municipal_registration" type="text">
+                </label>
+
+                <label *ngIf="myForm.value.people_type == 1">
+                  <span class="field">Inscrição Suframa</span>
+                  <input formControlName="inscription_suframa" type="text">
+                </label>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div formGroupName="address">
+                <div class="label-group">
+                  <label>
+                    <div class="double-spans"><span class="field">CEP</span>
+                      <span class="field-right-search" (click)="getCEP()">Consultar CEP</span>
+                    </div>
+                    <input formControlName="zip_code" type="text" mask="00000-000">
+                  </label>
+
+                  <label class="label-w50">
+                    <span class="field">Endereço</span>
+                    <input formControlName="address" type="text">
+                  </label>
+
+                  <label>
+                    <span class="field">Número</span>
+                    <input formControlName="number" type="text">
+                  </label>
+                </div>
+
+                <div class="label-group">
+                  <label>
+                    <span class="field">Estado</span>
+                    <input formControlName="state" type="text">
+                  </label>
+
+                  <label>
+                    <span class="field">Cidade</span>
+                    <input formControlName="city" type="text">
+                  </label>
+
+                  <label class="label-w30">
+                    <span class="field">Bairro</span>
+                    <input formControlName="district" type="text">
+                  </label>
+
+                  <label class="label-w30">
+                    <span class="field">Complemento</span>
+                    <input formControlName="complement" type="text">
+                  </label>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Observações</span>
+                  <textarea formControlName="note"></textarea>
+                </label>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>
     </div>
   </div>

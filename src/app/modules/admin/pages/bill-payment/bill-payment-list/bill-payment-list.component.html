@@ -1,12 +1,7 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Contas a pagar</h2>
-    <button class="button-add" mat-button routerLink="/bill-payment/new">
-      Adicionar
-    </button>
-  </div>
-
   <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
     <div class="page-search">
       <app-search-simple [search]="search" (keyup)="applyFilter($event)"></app-search-simple>
       <app-search-date-month [date]="vDateFilter" (eventEmit)="load()"></app-search-date-month>
@@ -110,6 +105,8 @@
         <td class="mat-cell" colspan="4">Nenhum resultado encontrado</td>
       </tr>
     </table>
+
+    <mat-paginator [length]="tableLength" [pageSizeOptions]="[10, 50, 100]" showFirstLastButtons></mat-paginator>
 
     <div class="summary">
       <article>

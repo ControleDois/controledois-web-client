@@ -1,17 +1,8 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Novo cadastro</h2>
-    <button class="button-back" mat-icon-button routerLink="/bank">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
   <div class="page-content">
-    <div class="basic-form">
-      <div class="basic-form-header">
-        <h3>Dados gerais</h3>
-      </div>
+    <app-page-header [header]="pageHeader"></app-page-header>
 
+    <div class="basic-form">
       <form [formGroup]="myForm">
         <div class="label-group">
           <label class="label-w100">
@@ -31,11 +22,7 @@
         </div>
       </form>
 
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
-          Salvar
-        </button>
-      </div>
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
     </div>
   </div>
 </div>

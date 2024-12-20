@@ -1,122 +1,117 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Novo cadastro</h2>
-    <button class="button-back" mat-icon-button routerLink="/bill-receivement">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-
   <div class="page-content">
-    <div class="basic-form">
-      <div class="basic-form-header">
-        <h3>Dados gerais</h3>
-      </div>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
 
-      <form [formGroup]="myForm">
-        <div class="label-group">
-          <label class="label-w30">
-            <span class="field">Forma de Recebimento</span>
-            <select formControlName="form_payment">
-              <option *ngFor="let payment of formPaymentList" [value]="payment.type">{{ payment.name }}
-              </option>
-            </select>
-          </label>
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
 
-          <label class="label-w50">
-            <span class="field">Descrição / Nome</span>
-            <input formControlName="name" type="text">
-          </label>
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Forma de Recebimento</span>
+                  <select formControlName="form_payment">
+                    <option *ngFor="let payment of formPaymentList" [value]="payment.type">{{ payment.name }}
+                    </option>
+                  </select>
+                </label>
 
-          <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
-        </div>
+                <label class="label-w50">
+                  <span class="field">Descrição / Nome</span>
+                  <input formControlName="name" type="text">
+                </label>
 
-        <div class="label-group">
-          <app-search-loading-unique class="label-w50" [search]="searchBank"></app-search-loading-unique>
+                <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
+              </div>
 
-          <label class="label-w30">
-            <span class="field">Data competência</span>
-            <input formControlName="date_competence" type="date">
-          </label>
+              <div class="label-group">
+                <app-search-loading-unique class="label-w50" [search]="searchBank"></app-search-loading-unique>
 
-          <label class="label-w30">
-            <span class="field">Data vencimento</span>
-            <input formControlName="date_due" type="date">
-          </label>
+                <label class="label-w30">
+                  <span class="field">Data competência</span>
+                  <input formControlName="date_competence" type="date">
+                </label>
 
-          <label class="label-w30">
-            <span class="field">Valor</span>
-            <input formControlName="amount" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
-          </label>
-        </div>
+                <label class="label-w30">
+                  <span class="field">Data vencimento</span>
+                  <input formControlName="date_due" type="date">
+                </label>
 
-        <div class="basic-form-header"></div>
+                <label class="label-w30">
+                  <span class="field">Valor</span>
+                  <input formControlName="amount" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
+                </label>
+              </div>
+            </mat-tab>
 
-        <div class="label-group">
-          <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
-          <app-search-loading-unique class="label-w50" [search]="searchCost"></app-search-loading-unique>
-        </div>
+            <mat-tab>
+              <div class="label-group">
+                <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
+                <app-search-loading-unique class="label-w50" [search]="searchCost"></app-search-loading-unique>
+              </div>
 
-        <label>
-          <span class="field">Observação</span>
-          <textarea formControlName="note" type="text" (keyup)="sumValues()"></textarea>
-        </label>
+              <label>
+                <span class="field">Observação</span>
+                <textarea formControlName="note" type="text" (keyup)="sumValues()"></textarea>
+              </label>
+            </mat-tab>
 
-        <div class="basic-form-header"></div>
+            <mat-tab>
+              <div class="label-group">
+                <label class="check">
+                  <input type="checkbox" formControlName="repeat">
+                  <span>Repetir?</span>
+                </label>
 
-        <div class="label-group">
-          <label class="check">
-            <input type="checkbox" formControlName="repeat">
-            <span>Repetir?</span>
-          </label>
+                <label class="label-w30" *ngIf="myForm.value.repeat">
+                  <span class="field">Periodo</span>
+                  <select formControlName="repeat_period">
+                    <option *ngFor="let period of repeatPeriods" [value]="period.type">{{ period.name }}
+                    </option>
+                  </select>
+                </label>
 
-          <label class="label-w30" *ngIf="myForm.value.repeat">
-            <span class="field">Periodo</span>
-            <select formControlName="repeat_period">
-              <option *ngFor="let period of repeatPeriods" [value]="period.type">{{ period.name }}
-              </option>
-            </select>
-          </label>
+                <label class="label-w30" *ngIf="myForm.value.repeat">
+                  <span class="field">Ocorrências / Vezes</span>
+                  <input formControlName="repeat_occurrences" type="number">
+                </label>
+              </div>
 
-          <label class="label-w30" *ngIf="myForm.value.repeat">
-            <span class="field">Ocorrências / Vezes</span>
-            <input formControlName="repeat_occurrences" type="number">
-          </label>
-        </div>
+              <div class="basic-form-header"></div>
 
-        <div class="basic-form-header"></div>
+              <div class="label-group">
+                <label class="check">
+                  <input type="checkbox" formControlName="status" (change)="sumValues()">
+                  <span>Recebido?</span>
+                </label>
 
-        <div class="label-group">
-          <label class="check">
-            <input type="checkbox" formControlName="status" (change)="sumValues()">
-            <span>Recebido?</span>
-          </label>
+                <label class="label-w30" *ngIf="myForm.value.status">
+                  <span class="field">Data recebimento</span>
+                  <input formControlName="date_received" type="date">
+                </label>
 
-          <label class="label-w30" *ngIf="myForm.value.status">
-            <span class="field">Data recebimento</span>
-            <input formControlName="date_received" type="date">
-          </label>
+                <label class="label-w30" *ngIf="myForm.value.status">
+                  <span class="field">Descontos / Taxas</span>
+                  <input formControlName="discount" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
+                </label>
 
-          <label class="label-w30" *ngIf="myForm.value.status">
-            <span class="field">Descontos / Taxas</span>
-            <input formControlName="discount" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
-          </label>
+                <label class="label-w30" *ngIf="myForm.value.status">
+                  <span class="field">Juros / Multa</span>
+                  <input formControlName="fees" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
+                </label>
 
-          <label class="label-w30" *ngIf="myForm.value.status">
-            <span class="field">Juros / Multa</span>
-            <input formControlName="fees" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
-          </label>
+                <label class="label-w30" *ngIf="myForm.value.status">
+                  <span class="field">Valor recebido</span>
+                  <input formControlName="bill_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
+                </label>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
 
-          <label class="label-w30" *ngIf="myForm.value.status">
-            <span class="field">Valor recebido</span>
-            <input formControlName="bill_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text" (keyup)="sumValues()">
-          </label>
-        </div>
-      </form>
-
-      <div class="basic-form-footer">
-        <button class="button-add" mat-button (click)="save()">
-          Salvar
-        </button>
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>
     </div>
   </div>

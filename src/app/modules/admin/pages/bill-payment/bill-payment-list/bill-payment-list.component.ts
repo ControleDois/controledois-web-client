@@ -1,8 +1,8 @@
-import {Component, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort} from "@angular/material/sort";
-import {throwError} from "rxjs";
-import {catchError, debounceTime, distinctUntilChanged, finalize, map} from "rxjs/operators";
+import {merge, throwError} from "rxjs";
+import {catchError, debounceTime, distinctUntilChanged, finalize, map, tap} from "rxjs/operators";
 import {SelectionModel} from "@angular/cdk/collections";
 import {FormControl} from "@angular/forms";
 import {DatePipe} from "@angular/common";
@@ -12,12 +12,14 @@ import { LibraryService } from 'src/app/shared/services/library.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-bill-payment-list',
   templateUrl: './bill-payment-list.component.html',
 })
-export class BillPaymentListComponent implements OnInit {
+export class BillPaymentListComponent implements OnInit, AfterViewInit {
   private bills: Array<any> = [];
   public filterStatus = 0;
   public loadingFull: LoadingFull = {
@@ -36,6 +38,9 @@ export class BillPaymentListComponent implements OnInit {
   ];
   public dataSource = new MatTableDataSource<any>();
   public selection = new SelectionModel<any>(true, []);
+  public tableLength!: number;
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
   @ViewChild(MatSort)
   public sort!: MatSort;
 
@@ -62,6 +67,16 @@ export class BillPaymentListComponent implements OnInit {
     { name: '⦿ Vale Refeição', type: 16 },
   ];
 
+  @Output() public pageHeader: PageHeader = {
+    title: 'Contas a Pagar',
+    description: 'Listagem de contas a pagar',
+    button: {
+      text: 'Nova conta',
+      routerLink: '/bill-payment/new',
+      icon: 'add',
+    },
+  };
+
   constructor(
     private billPaymentService: BillPaymentService,
     private widGetService: WidgetService,
@@ -73,6 +88,16 @@ export class BillPaymentListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.search.valueChanges
+    .pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      map(() => {
+        this.load();
+      })
+    )
+    .subscribe();
+
     this.load();
     this.dataSource.filterPredicate = (data, filter: string) => {
       return data.date_due.toLowerCase().includes(filter) ||
@@ -85,6 +110,13 @@ export class BillPaymentListComponent implements OnInit {
     };
   }
 
+  ngAfterViewInit(): void {
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(tap(() => this.load()))
+      .subscribe();
+  }
+
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -94,11 +126,15 @@ export class BillPaymentListComponent implements OnInit {
     this.bills = this.storageService.getList(`listPaymentBills`);
     this.dataSource.data = this.bills;
 
-    this.billPaymentService.index('', this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd')).pipe(
+    this.billPaymentService.index(this.search.value ? this.search.value : '',
+      this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), 'date_sale', 'date_sale',
+      this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.storageService.setList(`listPaymentBills`, res.data);
         this.bills = res.data;
         this.dataSource.data = res.data;
+        this.tableLength = res.meta.total;
       })
     ).subscribe();
   }

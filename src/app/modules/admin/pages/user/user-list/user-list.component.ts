@@ -7,6 +7,7 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, t
 import { UserService } from 'src/app/shared/services/user.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-user-list',
@@ -25,6 +26,16 @@ export class UserListComponent implements OnInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Usuários',
+    description: 'Listagem de usuários cadastrados no sistema',
+    button: {
+      text: 'Novo usuário',
+      routerLink: '/user/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private userService: UserService,
@@ -54,10 +65,12 @@ export class UserListComponent implements OnInit {
   }
 
   load(): void {
-    this.userService.index(this.search.value ? this.search.value : '').pipe(
+    this.userService.index(this.search.value ? this.search.value : '',
+      'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.dataSource.data = res.data;
-        this.tableLength = res.total;
+        this.tableLength = res.meta.total;
       })
     ).subscribe();
   }

@@ -9,6 +9,9 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-bill-payment-form',
@@ -147,6 +150,36 @@ export class BillPaymentFormComponent implements OnInit {
     paramsArray: []
   };
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Nova Conta a Pagar`,
+    description: 'Preencha os campos para adicionar uma nova conta a pagar.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/bill-payment',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Informações Gerais', index: 0, icon: 'info' },
+      { text: 'Fornecedor e Obs', index: 1, icon: 'shopping_cart' },
+      { text: 'Pagamentos', index: 2, icon: 'payment' },
+    ],
+    selectedItem: 0
+  }
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(false),
+        class: 'c2-btn c2-btn-green',
+      },
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private billPaymentService: BillPaymentService,
@@ -156,6 +189,7 @@ export class BillPaymentFormComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Novo Pagamento' : 'Editar Pagamento';
   }
 
   ngOnInit(): void {
@@ -205,7 +239,7 @@ export class BillPaymentFormComponent implements OnInit {
     this.validationFields.find(v => v.name === 'bank_account_id').validation = !!this.myForm.value.bank_account_id;
   }
 
-  save(): void {
+  save(continueForm: boolean): void {
     this.loadingFull.active = true;
 
     this.myForm.value.category_id = this.searchCategory?.searchFieldOn?.id;
@@ -225,7 +259,9 @@ export class BillPaymentFormComponent implements OnInit {
         }),
         map(() => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['bill-payment']);
+          if (!continueForm) {
+            this.router.navigate(['bill-payment']);
+          }
         })
       ).subscribe();
     } else {

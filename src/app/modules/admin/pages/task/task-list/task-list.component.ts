@@ -8,6 +8,7 @@ import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { TaskService } from 'src/app/shared/services/task.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-task-list',
@@ -37,6 +38,16 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     { name: '⦿ Finalizado', type: 3 },
     { name: '⦿ Cancelado', type: 4 },
   ];
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Tarefas',
+    description: 'Listagem de tarefas',
+    button: {
+      text: 'Nova tarefa',
+      routerLink: '/task/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private taskService: TaskService,

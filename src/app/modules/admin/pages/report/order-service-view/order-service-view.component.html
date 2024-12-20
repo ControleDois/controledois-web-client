@@ -10,14 +10,14 @@
     </div>-->
 
     <div class="description">
-      <h1>{{auth.company?.people?.name}}</h1>
-      <p>{{auth.company?.people?.address?.address}},
-        {{auth.company?.people?.address?.number}},
-        {{auth.company?.people?.address?.district}},
-        {{auth.company?.people?.address?.city}}-{{auth.company?.people?.address?.state}}
-        CEP: {{auth.company?.people?.address?.zip_code}}</p>
+      <h1>{{auth.company.people.name || '...'}}</h1>
+      <p>{{auth.company.people.address?.address || ''}},
+        {{auth.company.people.address?.number || ''}},
+        {{auth.company.people.address?.district || ''}},
+        {{auth.company.people.address?.city || ''}}-{{auth.company.people.address?.state || ''}}
+        CEP: {{auth.company.people.address?.zip_code || ''}}</p>
       <div>
-        <p>{{auth.company?.people?.role == 0 ? 'CPF: ' : 'CNPJ: '}}{{auth.company.people.document | mask: auth.company?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </p>
+        <p>{{auth.company.people.role == 0 ? 'CPF: ' : 'CNPJ: '}}{{auth.company.people.document | mask: auth.company.people.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </p>
         <p style="margin-left: 20px">Fone: {{auth.company.people.phone_commercial | mask: '(00) 00000-0000'}}</p>
       </div>
     </div>
@@ -25,16 +25,16 @@
 
   <section class="people">
     <div class="namePhone">
-      <p>{{os?.people?.name}}</p>
-      <p>{{os?.people?.phone_commercial ? (os?.people?.phone_commercial | mask: os?.people?.phone_commercial.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000') : ''}}</p>
+      <p>{{os.people.name}}</p>
+      <p>{{os.people.phone_commercial ? (os.people.phone_commercial | mask: os.people.phone_commercial.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000') : ''}}</p>
     </div>
 
     <div class="documentEmail">
-      <p style="opacity: 0.8">CNPJ: {{os?.people?.document | mask: os?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} IE: {{os?.people?.ie}}</p>
-      <p>{{os?.people?.email}}</p>
+      <p style="opacity: 0.8">CNPJ: {{os.people.document | mask: os.people.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} IE: {{os?.people?.ie}}</p>
+      <p>{{os.people.email}}</p>
     </div>
 
-    <p style="margin-top: 5px">{{os?.people?.address}}, {{os?.people?.address_number}} - {{os?.people?.address_complement}} - {{os?.people?.address_district}} - {{os?.people?.address_city}} - {{os?.people?.address_state}} - CEP: {{os?.people?.zip_code}}</p>
+    <p style="margin-top: 5px">{{os.people.address}}, {{os.people.address_number}} - {{os.people.address_complement}} - {{os.people.address_district}} - {{os.people.address_city}} - {{os.people.address_state}} - CEP: {{os.people.zip_code}}</p>
   </section>
 
   <section class="problem">

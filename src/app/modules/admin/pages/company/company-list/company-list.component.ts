@@ -9,6 +9,8 @@ import { CompanyService } from 'src/app/shared/services/company.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { FirebaseService } from 'src/app/shared/services/firebase.service';
 
 @Component({
   selector: 'app-company-list',
@@ -28,11 +30,22 @@ export class CompanyListComponent implements OnInit {
   public sort!: MatSort;
   @Output() search = new FormControl('');
 
+  @Output() public pageHeader: PageHeader = {
+    title: 'Empresas',
+    description: 'Empresas vinculadas a seu usuário',
+    button: {
+      text: 'Nova Empresa',
+      routerLink: '/company/new',
+      icon: 'add',
+    },
+  };
+
   constructor(
     private companyService: CompanyService,
     private storageService: StorageService,
     private router: Router,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private firebaseService: FirebaseService
   ) {
    }
 
@@ -58,10 +71,12 @@ export class CompanyListComponent implements OnInit {
   }
 
   load(): void {
-    this.companyService.index(this.search.value ? this.search.value : '').pipe(
+    this.companyService.index(this.search.value ? this.search.value : '',
+      'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.dataSource.data = res.data;
-        this.tableLength = res.total;
+        this.tableLength = res.meta.total;
       })
     ).subscribe();
   }
@@ -78,6 +93,7 @@ export class CompanyListComponent implements OnInit {
           const auth = this.storageService.getAuth();
           auth.company = res;
           this.storageService.setAuth(auth);
+          this.firebaseService.startFirebase();
           this.notificationService.success('Empresa selecionada com sucesso');
           this.router.navigate(['dash']);
         })

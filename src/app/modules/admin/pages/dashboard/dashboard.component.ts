@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { DashboardService } from 'src/app/shared/services/dashboard.service';
-import { Chart, CategoryScale, BarController, BarElement, PointElement, LinearScale, Title, Legend, Tooltip} from 'chart.js'
+import { Chart, CategoryScale, BarController, BarElement, PointElement, LinearScale, Title, Legend, Tooltip, DoughnutController, ArcElement} from 'chart.js'
 import { StorageService } from 'src/app/shared/services/storage.service';
 
 @Component({
@@ -11,6 +11,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 })
 export class DashboardComponent implements OnInit {
   @ViewChild("meuCanvas", { static: true }) elemento: ElementRef | any;
+  @ViewChild("chartBackups", { static: true }) chartBackups: ElementRef | any;
 
   public receviementToday = 0;
   public receviementRemaining = 0;
@@ -22,12 +23,30 @@ export class DashboardComponent implements OnInit {
 
   public banks: Array<any> = [];
   public cashFlow: Array<any> = [];
+  public backups = {
+    all: 0,
+    on: 0,
+    alert: 0,
+    off: 0,
+    error: 0
+  }
 
   constructor(
     private dashboardService: DashboardService,
     private storageService: StorageService,
   ) {
-    Chart.register(CategoryScale, BarController, BarElement, PointElement, LinearScale, Title, Legend, Tooltip);
+    Chart.register(
+      CategoryScale,
+      BarController,
+      BarElement,
+      PointElement,
+      LinearScale,
+      Title,
+      Legend,
+      Tooltip,
+      DoughnutController,
+      ArcElement
+    );
    }
 
   ngOnInit(): void {
@@ -77,6 +96,41 @@ export class DashboardComponent implements OnInit {
         this.showCharts();
       })
     ).subscribe();
+
+    this.dashboardService.backups().pipe(
+      map(res => {
+        this.backups = res;
+        if (this.backups.all > 0) {
+          this.showBackups();
+        }
+      })
+    ).subscribe();
+
+  }
+
+  showBackups() {
+    new Chart(this.chartBackups.nativeElement, {
+      type: 'doughnut',
+      data: {
+        labels: ['Todos', 'Operacional', 'Alerta', 'Inoperante', 'Erro'],
+        datasets: [
+          {
+            data: [this.backups.all, this.backups.on, this.backups.alert, this.backups.off, this.backups.error],
+            backgroundColor: ['#3ba9eee5', '#97fda4', '#f5d678c2', '#fb859c', '#607D8B'],
+            borderColor: ['#1587ce', '#4AB858', '#FFC107', '#F43E61', '#607D8B'],
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        }
+      },
+    });
   }
 
   showCharts() {

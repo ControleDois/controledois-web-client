@@ -4,6 +4,7 @@
 
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
+      <app-select-option-simple [option]="optionfilterPeopleSelect" [optionsType]="optionsfilterPeople"></app-select-option-simple>
     </div>
 
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>

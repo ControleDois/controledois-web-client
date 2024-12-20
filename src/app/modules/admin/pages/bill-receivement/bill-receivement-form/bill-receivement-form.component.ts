@@ -9,6 +9,9 @@ import { BillReceivementService } from 'src/app/shared/services/bill-receivement
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-bill-receivement-form',
@@ -147,6 +150,36 @@ export class BillReceivementFormComponent implements OnInit {
     paramsArray: []
   };
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Nova Conta a Receber`,
+    description: 'Preencha os campos para adicionar uma nova conta a receber.',
+    button: {
+      text: 'Voltar',
+      routerLink: '/bill-receivement',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Informações Gerais', index: 0, icon: 'info' },
+      { text: 'Cliente e Obs', index: 1, icon: 'shopping_cart' },
+      { text: 'Pagamentos', index: 2, icon: 'payment' },
+    ],
+    selectedItem: 0
+  }
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private billReceivementService: BillReceivementService,
@@ -156,6 +189,7 @@ export class BillReceivementFormComponent implements OnInit {
     private datePipe: DatePipe
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Novo Recebimento' : 'Editar Recebimento';
   }
 
   ngOnInit(): void {

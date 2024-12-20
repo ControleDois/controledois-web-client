@@ -23,4 +23,8 @@ export class DashboardService {
   cashFlow(): Observable<any> {
     return this.apiService.on('cashFlow', '', 'get-token');
   }
+
+  backups(): Observable<any> {
+    return this.apiService.on('backups', '', 'get-token');
+  }
 }

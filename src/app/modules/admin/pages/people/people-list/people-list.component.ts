@@ -29,14 +29,25 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
   @Output() search = new FormControl('');
 
   @Output() public pageHeader: PageHeader = {
-    title: 'Clientes',
-    description: 'Listagem de clientes cadastrados no sistema',
+    title: 'Pessoas',
+    description: 'Listagem de pessoas cadastrados no sistema',
     button: {
-      text: 'Novo Cliente',
+      text: 'Nova pessoa',
       routerLink: '/people/new',
       icon: 'add',
     },
   };
+
+  @Output() optionfilterPeopleSelect = new FormControl(-1);
+
+  public optionsfilterPeople = [
+    { name: '⦿ Todos', type: -1 },
+    { name: '⦿ Usuários', type: 0 },
+    { name: '⦿ Empresa', type: 1 },
+    { name: '⦿ Cliente', type: 2 },
+    { name: '⦿ Fornecedor', type: 3 },
+    { name: '⦿ Transportadora', type: 4 },
+  ];
 
   constructor(
     private peopleService: PeopleService,
@@ -46,6 +57,16 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.search.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        map(() => {
+          this.load();
+        })
+      )
+      .subscribe();
+
+    this.optionfilterPeopleSelect.valueChanges
       .pipe(
         debounceTime(400),
         distinctUntilChanged(),
@@ -66,10 +87,15 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
   }
 
   load(): void {
+    let paramRoles = {};
+    if (this.optionfilterPeopleSelect.value !== -1) {
+      paramRoles = {param: 'roles', value: `{${this.optionfilterPeopleSelect.value}}`};
+    }
+
     this.peopleService.index(this.search.value ? this.search.value : '',
     'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
     this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10', [
-      { param: 'roles', value: '{2}' }
+      paramRoles
     ]).pipe(
       map(res => {
         this.dataSource.data = res.data;

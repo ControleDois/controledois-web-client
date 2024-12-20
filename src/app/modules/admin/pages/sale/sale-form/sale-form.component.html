@@ -1,6 +1,5 @@
 <div class="container">
   <div class="page-content">
-
     <div class="basic">
       <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
 
@@ -10,10 +9,6 @@
         <form [formGroup]="myForm">
           <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
             <mat-tab>
-              <div class="basic-form-header">
-                <h3>Dados gerais</h3>
-              </div>
-
               <div class="label-group">
                 <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
 
@@ -91,10 +86,6 @@
             </mat-tab>
 
             <mat-tab>
-              <div class="basic-form-header">
-                <h3>Produtos</h3>
-              </div>
-
               <div class="shopping-budget">
                 <div class="shopping-budget-grid">
                   <ul class="shopping-budget-grid-header">
@@ -183,10 +174,6 @@
             </mat-tab>
 
             <mat-tab>
-              <div class="basic-form-header">
-                <h3>Pagamentos</h3>
-              </div>
-
               <div class="label-group" *ngIf="!myForm.value.is_contract && myForm.value.status === 3">
                 <app-search-loading-unique class="label-w30" [search]="searchBank"></app-search-loading-unique>
 
@@ -241,11 +228,7 @@
               </div>
             </mat-tab>
 
-            <mat-tab >
-              <div class="basic-form-header">
-                <h3>Observações</h3>
-              </div>
-
+            <mat-tab>
               <label>
                 <span class="field">Observações de pagamento</span>
                 <textarea formControlName="note" placeholder="Descreva informações sobre o pagamento que podem ser relevantes para você."></textarea>

@@ -306,9 +306,6 @@ export class ConfigComponent implements OnInit {
 
     this.validateForm();
 
-    console.log(this.myForm.value);
-    console.log(this.validationFields.filter((v) => v.validation === false));
-
     if (this.validationFields.filter((v) => v.validation === false).length > 0) {
       this.dialogMessageService.openDialog({
         icon: 'priority_high',

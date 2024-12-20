@@ -327,6 +327,6 @@ const routes: Routes = [
     WidgetModule,
     NgxMaskModule.forRoot(),
     CurrencyMaskModule,
-  ]
+  ],
 })
 export class AdminModule { }

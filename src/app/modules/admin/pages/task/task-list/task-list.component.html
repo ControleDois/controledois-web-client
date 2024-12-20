@@ -1,12 +1,7 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Cadastro de tarefas</h2>
-    <button class="button-add" mat-button routerLink="/task/new">
-      Adicionar
-    </button>
-  </div>
-
   <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
       <app-select-option-simple [option]="optionSelect" [optionsType]="statusType"></app-select-option-simple>

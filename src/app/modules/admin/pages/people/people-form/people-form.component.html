@@ -44,6 +44,36 @@
                   <input formControlName="birth" type="date">
                 </label>
               </div>
+
+              <div class="label-group-check" style="width: 450px;">
+                <span class="title">Tipo de pessoa</span>
+                <div class="checks">
+                  <label class="check">
+                    <input type="checkbox" disabled [checked]="roleActive(0)">
+                    <span>Usuário</span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" disabled [checked]="roleActive(1)">
+                    <span>Empresa</span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" [checked]="roleActive(2)" (change)="onRoleChange(2, $event)">
+                    <span>Cliente</span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" [checked]="roleActive(3)" (change)="onRoleChange(3, $event)">
+                    <span>Fornecedor</span>
+                  </label>
+
+                  <label class="check">
+                    <input type="checkbox" [checked]="roleActive(4)" (change)="onRoleChange(4, $event)">
+                    <span>Transportadora</span>
+                  </label>
+                </div>
+              </div>
             </mat-tab>
 
             <mat-tab>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {catchError, finalize, map} from "rxjs/operators";
@@ -7,6 +7,8 @@ import { BankService } from 'src/app/shared/services/bank.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { DatePipe } from '@angular/common';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 
 @Component({
   selector: 'app-bank-form',
@@ -29,6 +31,27 @@ export class BankFormComponent implements OnInit {
     )
   });
 
+  @Output() public pageHeader: PageHeader = {
+    title: `Contas Bancárias`,
+    description: 'Cadastro de Contas Bancárias',
+    button: {
+      text: 'Voltar',
+      routerLink: '/bank',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private bankService: BankService,
@@ -37,6 +60,7 @@ export class BankFormComponent implements OnInit {
     private datePipe: DatePipe,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Conta' : 'Editar Conta';
   }
 
   ngOnInit(): void {

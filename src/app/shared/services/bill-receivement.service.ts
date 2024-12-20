@@ -14,13 +14,15 @@ export class BillReceivementService {
   ) {
   }
 
-  index(search: string, date: any, sorteBy?: string, orderBy?: string): Observable<any> {
+  index(search: string, date: any, sorteBy?: string, orderBy?: string, page?: string, limit?: string): Observable<any> {
     const params = new HttpParams()
       .set('role', '1')
       .set('search', search)
       .set('date', date)
       .set('sortedBy', sorteBy || 'date_competence')
-      .set('orderBy', orderBy || 'date_competence');
+      .set('orderBy', orderBy || 'date_competence')
+      .set('page', page || '1')
+      .set('limit', limit || '10');
 
     return this.apiService.on(this.resource, '', 'get-token-params', params);
   }

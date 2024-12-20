@@ -62,8 +62,8 @@ export class PeopleFormComponent implements OnInit {
   });
 
   @Output() public pageHeader: PageHeader = {
-    title: `Cliente`,
-    description: 'Cadastro de cliente',
+    title: `Pessoas`,
+    description: 'Cadastro de pessoas',
     button: {
       text: 'Voltar',
       routerLink: '/people',
@@ -130,7 +130,7 @@ export class PeopleFormComponent implements OnInit {
     private dropboxService: DropboxService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
-    this.pageHeader.title = this.formId === 'new' ? 'Novo Cliente' : 'Editar Cliente';
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Pessoa' : 'Editar Pessoa';
     if (this.formId !== 'new') {
       this.navigation.items.push({ text: 'Chaves', index: 4, icon: 'vpn_key' });
       this.navigation.items.push({ text: 'Backups', index: 5, icon: 'backup' });
@@ -488,5 +488,29 @@ export class PeopleFormComponent implements OnInit {
         this.loadingFull.active = false;
       }
     );
+  }
+
+  roleActive(role: number): boolean {
+    //Verificar se existe o role no array
+    return this.myForm.value.roles.includes(role);
+  }
+
+  onRoleChange(role: number, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+
+    if (checkbox.checked) {
+      // Adicionar o role se não existir
+      if (!this.myForm.value.roles.includes(role)) {
+        this.myForm.value.roles.push(role);
+      }
+    } else {
+      // Verificar se pode remover o role
+      if (this.myForm.value.roles.length > 1) {
+        this.myForm.value.roles = this.myForm.value.roles.filter(item => item !== role);
+      } else {
+        // Se for o único role, impedir desmarcar
+        checkbox.checked = true;
+      }
+    }
   }
 }

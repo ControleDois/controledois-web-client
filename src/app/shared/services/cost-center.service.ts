@@ -13,7 +13,7 @@ export class CostCenterService {
     private apiService: ApiService
   ) { }
 
-  index(search: string, sorteBy?: string, orderBy?: string, page?: number, limit?: number): Observable<any> {
+  index(search: string, sorteBy?: string, orderBy?: string, page?: string, limit?: string): Observable<any> {
     const params = new HttpParams()
       .set('search', search)
       .set('sortedBy', sorteBy || 'name')

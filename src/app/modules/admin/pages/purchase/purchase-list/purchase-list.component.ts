@@ -13,6 +13,8 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SaleProofViewComponent } from '../../report/sale-proof-view/sale-proof-view.component';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-purchase-list',
@@ -36,10 +38,24 @@ export class PurchaseListComponent implements OnInit {
   ];
   public dataSource = new MatTableDataSource<any>();
   public selection = new SelectionModel<any>(true, []);
+
+  public tableLength!: number;
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
   @ViewChild(MatSort)
   public sort!: MatSort;
   public vDateFilter = new Date();
   @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Compras e Orçamentos',
+    description: 'Listagem de compras e orçamentos realizados.',
+    button: {
+      text: 'Nova compra',
+      routerLink: '/purchase/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private purchaseService: PurchaseService,
@@ -69,11 +85,15 @@ export class PurchaseListComponent implements OnInit {
     this.purchases = this.storageService.getList(`listPurchases`);
     this.dataSource.data = this.purchases;
 
-    this.purchaseService.index(this.search.value ? this.search.value : '', this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd')).pipe(
+    this.purchaseService.index(this.search.value ? this.search.value : '',
+      this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), 'date_sale', 'date_sale',
+      this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.storageService.setList(`listPurchases`, res.data);
         this.purchases = res.data;
         this.dataSource.data = res.data;
+        this.tableLength = res.meta.total;
       })
     ).subscribe();
   }
@@ -147,60 +167,60 @@ export class PurchaseListComponent implements OnInit {
 
   filterAmountRefused(): void {
     this.filterStatus = 2;
-    this.dataSource.data = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 2) : [];
+    this.dataSource.data = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 2) : [];
   }
 
   getTotalAmountRefusedQtd(): number {
-    return this.purchases.length > 0 ? this.purchases.filter(t => t.status === 2).reduce((acc) => acc + 1, 0) : 0;
+    return this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 2).reduce((acc) => acc + 1, 0) : 0;
   }
 
   getTotalAmountRefused(): string {
-    const total = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 2)
+    const total = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 2)
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
 
   filterAmountBudget(): void {
     this.filterStatus = 0;
-    this.dataSource.data = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 0) : [];
+    this.dataSource.data = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 0) : [];
   }
 
   getTotalAmountBudgetQtd(): number {
-    return this.purchases.length > 0 ? this.purchases.filter(t => t.status === 0).reduce((acc) => acc + 1, 0) : 0;
+    return this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 0).reduce((acc) => acc + 1, 0) : 0;
   }
 
   getTotalAmountBudget(): string {
-    const total = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 0)
+    const total = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 0)
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
 
   filterAmountAccepted(): void {
     this.filterStatus = 1;
-    this.dataSource.data = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 1) : [];
+    this.dataSource.data = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 1) : [];
   }
 
   getTotalAmountAcceptedQtd(): number {
-    return this.purchases.length > 0 ? this.purchases.filter(t => t.status === 1).reduce((acc) => acc + 1, 0) : 0;
+    return this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 1).reduce((acc) => acc + 1, 0) : 0;
   }
 
   getTotalAmountAccepted(): string {
-    const total = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 1)
+    const total = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 1)
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
 
   filterAmountSale(): void {
     this.filterStatus = 3;
-    this.dataSource.data = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 3) : [];
+    this.dataSource.data = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 3) : [];
   }
 
   getTotalAmountSaleQtd(): number {
-    return this.purchases.length > 0 ? this.purchases.filter(t => t.status === 3).reduce((acc) => acc + 1, 0) : 0;
+    return this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 3).reduce((acc) => acc + 1, 0) : 0;
   }
 
   getTotalAmountSale(): string {
-    const total = this.purchases.length > 0 ? this.purchases.filter(t => t.status === 3)
+    const total = this.purchases?.length > 0 ? this.purchases.filter(t => t.status === 3)
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
@@ -211,26 +231,26 @@ export class PurchaseListComponent implements OnInit {
   }
 
   getTotalAmountTotalQtd(): number {
-    return this.purchases.length > 0 ? this.purchases.filter(t => t.status !== 2).reduce((acc) => acc + 1, 0) : 0;
+    return this.purchases?.length > 0 ? this.purchases.filter(t => t.status !== 2).reduce((acc) => acc + 1, 0) : 0;
   }
 
   getTotal(): string {
-    const total = this.purchases.length > 0 ? this.purchases.filter(t => t.status !== 2)
+    const total = this.purchases?.length > 0 ? this.purchases.filter(t => t.status !== 2)
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
 
   getTotalSale(): string {
-    return this.purchases.length > 0 ? this.purchases.filter(t => t)
+    return this.purchases?.length > 0 ? this.purchases.filter(t => t)
       .reduce((acc, t) => acc + 1, 0) : 0;
   }
 
   getTotalSaleSelected(): number {
-    return this.selection.selected.length;
+    return this.selection.selected?.length;
   }
 
   getSumTotalSaleSelected(): string {
-    const total = this.purchases.length > 0 ? this.dataSource.data.filter(t => this.selection.isSelected(t))
+    const total = this.purchases?.length > 0 ? this.dataSource.data.filter(t => this.selection.isSelected(t))
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }

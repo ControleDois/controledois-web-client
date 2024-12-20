@@ -1,12 +1,14 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, Output, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {merge, throwError} from "rxjs";
-import {catchError, finalize, map, tap} from "rxjs/operators";
+import {catchError, debounceTime, distinctUntilChanged, finalize, map, tap} from "rxjs/operators";
 import { BankService } from 'src/app/shared/services/bank.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-bank-list',
@@ -28,6 +30,17 @@ export class BankListComponent implements OnInit, AfterViewInit {
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   public sort!: MatSort;
+  @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Contas bancárias',
+    description: 'Listagem de contas cadastradas no sistema',
+    button: {
+      text: 'Nova conta',
+      routerLink: '/bank/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private bankService: BankService,
@@ -36,6 +49,16 @@ export class BankListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.search.valueChanges
+    .pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      map(() => {
+        this.load();
+      })
+    )
+    .subscribe();
+
     this.load();
   }
 
@@ -47,10 +70,12 @@ export class BankListComponent implements OnInit, AfterViewInit {
   }
 
   load(): void {
-    this.bankService.index('').pipe(
+    this.bankService.index(this.search.value ? this.search.value : '',
+      'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.dataSource.data = res.data;
-        this.tableLength = res.total;
+        this.tableLength = res.meta.total;
       })
     ).subscribe();
   }
