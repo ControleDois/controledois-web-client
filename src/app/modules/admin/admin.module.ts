@@ -55,7 +55,7 @@ import { BasicFormButtonsComponent } from './components/basic-form-buttons/basic
 import { ChatComponent } from './pages/chat/chat.component';
 import { BackupsModalComponent } from './pages/modals/backups-modal/backups-modal.component';
 
-const appName = 'CTrix';
+const appName = 'Siace';
 
 const routes: Routes = [
   {
