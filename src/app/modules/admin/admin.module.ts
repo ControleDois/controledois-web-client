@@ -53,6 +53,7 @@ import { PageHeaderComponent } from './components/page-header/page-header.compon
 import { BasicFormNavigationComponent } from './components/basic-form-navigation/basic-form-navigation.component';
 import { BasicFormButtonsComponent } from './components/basic-form-buttons/basic-form-buttons.component';
 import { ChatComponent } from './pages/chat/chat.component';
+import { BackupsModalComponent } from './pages/modals/backups-modal/backups-modal.component';
 
 const appName = 'CTrix';
 
@@ -319,6 +320,7 @@ const routes: Routes = [
     BasicFormNavigationComponent,
     BasicFormButtonsComponent,
     ChatComponent,
+    BackupsModalComponent,
   ],
   imports: [
     CommonModule,

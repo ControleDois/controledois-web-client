@@ -22,9 +22,10 @@
       </div>
     </div>
 
-    <div class="card" *ngIf="backups.all > 0">
-      <div class="card-header" style="display: flex; justify-content: space-between">
+    <div class="card" [ngStyle]="{ display: backups.all > 0 ? 'block' : 'none'}">
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
         <h4>Backups</h4>
+        <button mat-icon-button (click)="showBackupsModel()"><mat-icon>find_in_page</mat-icon></button>
       </div>
       <div class="backups">
         <canvas #chartBackups></canvas>

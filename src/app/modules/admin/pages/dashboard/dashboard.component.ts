@@ -3,6 +3,8 @@ import { map } from 'rxjs';
 import { DashboardService } from 'src/app/shared/services/dashboard.service';
 import { Chart, CategoryScale, BarController, BarElement, PointElement, LinearScale, Title, Legend, Tooltip, DoughnutController, ArcElement} from 'chart.js'
 import { StorageService } from 'src/app/shared/services/storage.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { BackupsModalComponent } from '../modals/backups-modal/backups-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,6 +36,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService,
     private storageService: StorageService,
+    private dialog: MatDialog,
   ) {
     Chart.register(
       CategoryScale,
@@ -178,5 +181,14 @@ export class DashboardComponent implements OnInit {
   getTotalBanks(): string {
     const total = this.banks.reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.total) || 0), 0);
     return parseFloat(total).toFixed(2);
+  }
+
+  showBackupsModel(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '920px';
+    dialogConfig.maxHeight = '550px';
+    this.dialog.open(BackupsModalComponent, dialogConfig);
   }
 }

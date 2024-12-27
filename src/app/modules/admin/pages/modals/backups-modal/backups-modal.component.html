@@ -1,0 +1,60 @@
+<div class="container" style="padding: 0; margin: 0;">
+  <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="page-search">
+      <app-search-simple [search]="search"></app-search-simple>
+    </div>
+
+    <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="document">
+        <th mat-header-cell *matHeaderCellDef> Documento </th>
+        <td mat-cell *matCellDef="let element"> {{element.document | mask: element.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="status-active"
+               [style.color]="getStatusColor(element)"
+               [style.background]="getStatusColorBack(element)">
+            {{getStatusBackup(element)}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <div class="table-actions" [matMenuTriggerFor]="actions">
+            <span>Ações</span>
+            <mat-icon>keyboard_arrow_down</mat-icon>
+          </div>
+          <mat-menu #actions="matMenu">
+            <button mat-menu-item>
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item>
+              <span>Remover</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">Nenhum resultado encontrado</td>
+      </tr>
+    </table>
+
+    <mat-paginator [length]="tableLength" [pageSizeOptions]="[5]" showFirstLastButtons></mat-paginator>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>
