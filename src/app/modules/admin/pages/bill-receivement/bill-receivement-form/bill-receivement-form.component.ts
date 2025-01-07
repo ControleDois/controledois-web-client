@@ -55,11 +55,11 @@ export class BillReceivementFormComponent implements OnInit {
   public repeatPeriods = [
     { name: '⦿ Diariamente', type: 0 },
     { name: '⦿ Semanalmente', type: 1 },
-    { name: '⦿ Mensalmente', type: 3 },
-    { name: '⦿ Bimestralmente', type: 4 },
-    { name: '⦿ Trimestralmente', type: 5 },
-    { name: '⦿ Semestralmente', type: 6 },
-    { name: '⦿ Anualmente', type: 7 },
+    { name: '⦿ Mensalmente', type: 2 },
+    { name: '⦿ Bimestralmente', type: 3 },
+    { name: '⦿ Trimestralmente', type: 4 },
+    { name: '⦿ Semestralmente', type: 5 },
+    { name: '⦿ Anualmente', type: 6 },
   ];
 
   public formPaymentList = [
