@@ -1,6 +1,6 @@
 <header>
   <div class="logo">
-    <h1>CTrix</h1>
+    <h1>ControleDois</h1>
   </div>
 
   <nav [ngClass]="{'nav-on': menuMobileOn}">
@@ -134,6 +134,15 @@
   </nav>
 
   <ul class="ul-config">
+    <li class="toggle">
+      <div class="toogle-theme">
+        <span>{{ auth.theme ? 'Modo escuro' : 'Modo claro'}}</span>
+        <div (click)="toggle()">
+          <mat-icon [ngClass]="{'active': !auth.theme}">light_mode</mat-icon>
+          <mat-icon [ngClass]="{'active': auth.theme}">dark_mode</mat-icon>
+        </div>
+      </div>
+    </li>
     <li class="ul-config-li">
       <a>
         <mat-icon>person</mat-icon>

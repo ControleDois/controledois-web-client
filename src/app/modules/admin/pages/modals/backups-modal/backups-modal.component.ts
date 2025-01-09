@@ -10,6 +10,7 @@ import { WidgetService } from 'src/app/shared/services/widget.service';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, tap, throwError } from 'rxjs';
 import { PeopleService } from 'src/app/shared/services/people.service';
 import { N } from 'chart.js/dist/chunks/helpers.core';
+import { LibraryService } from 'src/app/shared/services/library.service';
 
 @Component({
   selector: 'app-backups-modal',
@@ -25,8 +26,9 @@ export class BackupsModalComponent implements OnInit {
   public displayedColumns: string[] = [
     'name',
     'document',
-    'status',
-    'actions'
+    'db',
+    'nfe',
+    'nfce'
   ];
   public dataSource = new MatTableDataSource<any>();
   public tableLength!: number;
@@ -44,6 +46,7 @@ export class BackupsModalComponent implements OnInit {
   constructor(
     private peopleService: PeopleService,
     private widGetService: WidgetService,
+    public libraryService: LibraryService,
   ) {
   }
 
@@ -81,8 +84,14 @@ export class BackupsModalComponent implements OnInit {
     ).subscribe();
   }
 
-  getStatusBackup(status: number): string {
-    switch (status) {
+  getStatusBackup(element: any, role: number): string {
+    const backup = element.backups.find((backup) => backup.role === role);
+
+    if (!backup) {
+      return 'Não Config'
+    }
+
+    switch (backup.status) {
       case 0:
         return 'Operacional';
       case 1:
@@ -96,8 +105,14 @@ export class BackupsModalComponent implements OnInit {
     }
   }
 
-  getStatusColor(status: number): string {
-    switch (status) {
+  getStatusColor(element: any, role: number): string {
+    const backup = element.backups.find((backup) => backup.role === role);
+
+    if (!backup) {
+      return '#F43E61';
+    }
+
+    switch (backup.status) {
       case 0:
         return '#4ab858';
       case 1:
@@ -111,8 +126,14 @@ export class BackupsModalComponent implements OnInit {
     }
   }
 
-  getStatusColorBack(status: number): string {
-    switch (status) {
+  getStatusColorBack(element: any, role: number): string {
+    const backup = element.backups.find((backup) => backup.role === role);
+
+    if (!backup) {
+      return '#FCD9E0';
+    }
+
+    switch (backup.status) {
       case 0:
         return '#ddf1de';
       case 1:

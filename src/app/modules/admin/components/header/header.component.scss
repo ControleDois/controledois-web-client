@@ -1,7 +1,8 @@
 header {
   min-height: 50px;
   width: 100%;
-  background-color: #2687e9;
+  background-color: var(--header-bg);
+  border-bottom: 1px solid var(--overlay-border);
   display: flex;
   align-items: center;
   position: fixed;
@@ -16,10 +17,6 @@ header {
 
   h1 {
     color: #fff;
-
-    i {
-      color: #395a7a;
-    }
   }
 }
 
@@ -41,10 +38,10 @@ nav {
 
     &:hover {
       border-color: #fff;
-      background-color: #2074ca;
+      background-color: var(--overlay-bg-hover);
 
       ul {
-        background-color: #2074ca;
+        background-color: var(--overlay-bg-hover);
         display: block;
       }
     }
@@ -78,7 +75,7 @@ nav {
         position: absolute;
         width: 1px;
         height: 100vh;
-        background: #59a8f0;
+        background: var(--overlay-bg-hover-2);
         left: 250px;
       }
 
@@ -90,7 +87,7 @@ nav {
         li {
           span {
             padding: 10px 15px;
-            color: #b7cdfd;
+            color: var(--overlay-bg-hover-2);
             text-transform: uppercase;
             font-weight: 600;
             display: block;
@@ -102,7 +99,7 @@ nav {
             color: #fff;
 
             &:hover {
-              background-color: #59a8f0;
+              background-color: var(--primary-color);
             }
           }
         }
@@ -124,22 +121,60 @@ nav {
    max-width: 33.333333%;
    padding: 0 10px;
    box-sizing: border-box;
-   text-align: right;
+   display: flex;
+   justify-content: end;
 
    .ul-config-li {
      position: relative;
    }
 
+   .toggle {
+      display: flex;
+      align-items: center;
+
+    .toogle-theme {
+      display: flex;
+      color: #fff;
+      align-items: center;
+
+      span {
+        margin-right: 10px;
+      }
+
+      div {
+        display: flex;
+        border: 1px solid var(--overlay-border);
+        padding: 5px;
+        border-radius: 10px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--overlay-bg-hover);
+        }
+
+        .active {
+          background-color: var(--primary-color);
+        }
+
+        mat-icon {
+          padding: 3px;
+          font-size: 18px;
+          border-radius: 10px;
+        }
+      }
+    }
+  }
+
    ul {
-     max-width: 250px;
-     right: 0;
-     top: 48px !important;
+      max-width: 250px;
+      right: 0;
+      top: 48px !important;
 
      li {
        text-align: left;
        span {
          padding: 10px 15px;
-         color: #b7cdfd;
+         color: var(--overlay-bg-hover-2);
          text-transform: uppercase;
          font-weight: 600;
          display: block;
@@ -151,7 +186,7 @@ nav {
          color: #fff;
 
          &:hover {
-           background-color: #59a8f0;
+           background-color: var(--primary-color);
          }
        }
      }

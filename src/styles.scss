@@ -7,7 +7,30 @@
 
 :root {
   --primary-color: #25a7f8;
+  --background-color: #f1f4f9;
+  --header-bg: #2687e9;
+  --overlay-bg: #fff;
+  --overlay-border: #C9D3DD;
+  --overlay-bg-hover: #2074ca;
+  --overlay-bg-hover-2: #b7cdfd;
+  --overlay-shadow: rgb(201 211 221 / 40%);
   --color-green: #4AB858;
+  --color-primary-font: #666;
+  --overlay-bg-hover-sidenav: rgb(232 240 248);
+}
+
+.dark-theme {
+  --primary-color: #25a7f8;
+  --background-color: #181818;
+  --header-bg: #292929;
+  --overlay-bg: #292929;
+  --overlay-border: #474747;
+  --overlay-bg-hover: #353535;
+  --overlay-bg-hover-2: #b7cdfd;
+  --overlay-shadow: rgb(201 211 221 / 1%);
+  --color-green: #4AB858;
+  --color-primary-font: #fff;
+  --overlay-bg-hover-sidenav: #353535;
 }
 
 * {
@@ -21,7 +44,7 @@
 html,
 body {
   font-family: "Product Sans";
-  background-color: #f1f4f9;
+  background-color: var(--background-color);
 }
 
 ul {

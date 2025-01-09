@@ -54,8 +54,9 @@ import { BasicFormNavigationComponent } from './components/basic-form-navigation
 import { BasicFormButtonsComponent } from './components/basic-form-buttons/basic-form-buttons.component';
 import { ChatComponent } from './pages/chat/chat.component';
 import { BackupsModalComponent } from './pages/modals/backups-modal/backups-modal.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 
-const appName = 'CTrix';
+const appName = 'ControleDois';
 
 const routes: Routes = [
   {
@@ -321,6 +322,7 @@ const routes: Routes = [
     BasicFormButtonsComponent,
     ChatComponent,
     BackupsModalComponent,
+    SidenavComponent,
   ],
   imports: [
     CommonModule,

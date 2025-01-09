@@ -9,7 +9,7 @@
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Nome </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        <td mat-cell *matCellDef="let element"> {{libraryService.getMaxString(element.name, 25)}} </td>
       </ng-container>
 
       <ng-container matColumnDef="document">
@@ -17,18 +17,40 @@
         <td mat-cell *matCellDef="let element"> {{element.document | mask: element.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
+      <ng-container matColumnDef="db">
+        <th mat-header-cell *matHeaderCellDef> Banco </th>
         <td mat-cell *matCellDef="let element">
           <div class="status-active"
-               [style.color]="getStatusColor(element)"
-               [style.background]="getStatusColorBack(element)">
-            {{getStatusBackup(element)}}
+               [style.color]="getStatusColor(element, 1)"
+               [style.background]="getStatusColorBack(element, 1)">
+            {{getStatusBackup(element, 1)}}
           </div>
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="actions">
+      <ng-container matColumnDef="nfe">
+        <th mat-header-cell *matHeaderCellDef> NFe </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="status-active"
+               [style.color]="getStatusColor(element, 2)"
+               [style.background]="getStatusColorBack(element, 2)">
+            {{getStatusBackup(element, 2)}}
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nfce">
+        <th mat-header-cell *matHeaderCellDef> NFCe </th>
+        <td mat-cell *matCellDef="let element">
+          <div class="status-active"
+               [style.color]="getStatusColor(element, 3)"
+               [style.background]="getStatusColorBack(element, 3)">
+            {{getStatusBackup(element, 3)}}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <div class="table-actions" [matMenuTriggerFor]="actions">
@@ -44,7 +66,7 @@
             </button>
           </mat-menu>
         </td>
-      </ng-container>
+      </ng-container> -->
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

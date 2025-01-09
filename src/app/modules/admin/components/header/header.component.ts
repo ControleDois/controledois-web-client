@@ -37,6 +37,7 @@ export class HeaderComponent implements OnInit {
     private router: Router
   ) {
     this.auth = this.storageService.getAuth();
+    document.body.classList.toggle('dark-theme', this.auth.theme);
   }
 
   ngOnInit(): void {
@@ -45,5 +46,12 @@ export class HeaderComponent implements OnInit {
   logout(): void {
     this.storageService.clear();
     this.router.navigate(['/auth/signin']);
+  }
+
+  toggle(): void {
+    document.body.classList.toggle('dark-theme', !this.auth.theme);
+
+    this.auth.theme = !this.auth.theme;
+    this.storageService.setAuth(this.auth);
   }
 }
