@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
@@ -8,6 +8,9 @@ import { DialogMessageService } from 'src/app/shared/services/dialog-message.ser
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { NFeService } from 'src/app/shared/services/nfe.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-nfe-form',
@@ -213,6 +216,36 @@ export class NfeFormComponent implements OnInit {
     { name: 'document', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o CPF' : 'É necessário informar o CNPJ' },
     { name: 'name', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o nome' : 'É necessário informar o nome fantasia' },
   ];
+
+  @Output() public pageHeader: PageHeader = {
+    title: `NFe`,
+    description: 'Cadastro de nfes',
+    button: {
+      text: 'Voltar',
+      routerLink: '/nfe',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+      }
+    ]
+  }
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Dados da NFe', index: 0, icon: 'info' },
+      { text: 'Produtos', index: 1, icon: 'info' },
+      { text: 'Outros', index: 2, icon: 'info' },
+    ],
+    selectedItem: 0
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,

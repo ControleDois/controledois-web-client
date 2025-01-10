@@ -7,6 +7,7 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, t
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { NFeService } from 'src/app/shared/services/nfe.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-nfe-list',
@@ -17,7 +18,14 @@ export class NfeListComponent implements OnInit {
     active: false,
     message: 'Aguarde, carregando...'
   }
-  public displayedColumns: string[] = ['serie', 'numero', 'actions'];
+  public displayedColumns: string[] = [
+    'number',
+    'social_name',
+    'value',
+    'data',
+    'status',
+    'actions'
+  ];
   public dataSource = new MatTableDataSource<any>();
   public tableLength!: number;
   @ViewChild(MatPaginator)
@@ -25,6 +33,16 @@ export class NfeListComponent implements OnInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'NFes',
+    description: 'Listagem de Nfe cadastrados no sistema.',
+    button: {
+      text: 'Novo NFe',
+      routerLink: '/nfe/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private nfeService: NFeService,

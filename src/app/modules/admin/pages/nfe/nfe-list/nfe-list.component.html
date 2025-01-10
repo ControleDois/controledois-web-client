@@ -1,25 +1,35 @@
 <div class="container">
-  <div class="page-header">
-    <h2>Cadastro de NFe</h2>
-    <button class="button-add" mat-button routerLink="/nfe/new">
-      Adicionar
-    </button>
-  </div>
-
   <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
     </div>
 
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="serie">
-        <th mat-header-cell *matHeaderCellDef> Série </th>
-        <td mat-cell *matCellDef="let element"> {{element.serie}} </td>
+      <ng-container matColumnDef="number">
+        <th mat-header-cell *matHeaderCellDef> N° nfe </th>
+        <td mat-cell *matCellDef="let element"> {{element.number}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="numero">
-        <th mat-header-cell *matHeaderCellDef> Número </th>
-        <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+      <ng-container matColumnDef="social_name">
+        <th mat-header-cell *matHeaderCellDef> Razão social </th>
+        <td mat-cell *matCellDef="let element"> {{element.social_name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef> Valor da nota </th>
+        <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef> Data da Emissão </th>
+        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status</th>
+        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
