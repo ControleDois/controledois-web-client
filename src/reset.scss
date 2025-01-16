@@ -1,6 +1,7 @@
 
 .container {
   padding: 0 15px;
+  margin-bottom: 100px;
 }
 
 .page-content {
@@ -62,6 +63,10 @@
 .basic {
   display: flex;
   justify-content: space-between;
+}
+
+option {
+  white-space: pre-wrap; /* Respeita espaços e quebras de linha */
 }
 
 .basic-form {

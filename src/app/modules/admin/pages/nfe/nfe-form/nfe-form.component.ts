@@ -11,6 +11,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 
 @Component({
   selector: 'app-nfe-form',
@@ -216,6 +217,24 @@ export class NfeFormComponent implements OnInit {
     { name: 'document', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o CPF' : 'É necessário informar o CNPJ' },
     { name: 'name', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o nome' : 'É necessário informar o nome fantasia' },
   ];
+
+  @Output() searchPeople: SearchLoadingUnique = {
+    noTitle: false,
+    title: 'Cliente',
+    url: 'people',
+    searchFieldOn: null,
+    searchFieldOnCollum: 'name',
+    sortedBy: 'name',
+    orderBy: 'name',
+    searchField: new FormControl(''),
+    validation: true,
+    paramsArray: [
+      {
+        param: 'roles',
+        value: '{2}'
+      }
+    ],
+  };
 
   @Output() public pageHeader: PageHeader = {
     title: `NFe`,

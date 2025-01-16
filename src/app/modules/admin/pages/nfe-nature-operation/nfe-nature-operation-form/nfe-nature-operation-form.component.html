@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <label>
+          <span class="field">Nome</span>
+          <input formControlName="description" type="text">
+        </label>
+
+        <div class="label-group">
+          <label class="label-w30">
+            <span class="field">Finalidade</span>
+            <select formControlName="finality">
+              <option *ngFor="let finality of selectFinality" [value]="finality.type">{{ finality.name }}</option>
+            </select>
+          </label>
+
+          <label>
+            <span class="field">CFOP Estadual</span>
+            <input formControlName="cfop_state" type="text" maxlength="4">
+          </label>
+
+          <label>
+            <span class="field">CFOP Interestadual</span>
+            <input formControlName="cfop_interstate" type="text" maxlength="4">
+          </label>
+        </div>
+
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

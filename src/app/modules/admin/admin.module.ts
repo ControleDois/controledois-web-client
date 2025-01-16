@@ -55,6 +55,12 @@ import { BasicFormButtonsComponent } from './components/basic-form-buttons/basic
 import { ChatComponent } from './pages/chat/chat.component';
 import { BackupsModalComponent } from './pages/modals/backups-modal/backups-modal.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { NfeNatureOperationListComponent } from './pages/nfe-nature-operation/nfe-nature-operation-list/nfe-nature-operation-list.component';
+import { NfeNatureOperationFormComponent } from './pages/nfe-nature-operation/nfe-nature-operation-form/nfe-nature-operation-form.component';
+import { NfeTaxationListComponent } from './pages/nfe-taxation/nfe-taxation-list/nfe-taxation-list.component';
+import { NfeTaxationFormComponent } from './pages/nfe-taxation/nfe-taxation-form/nfe-taxation-form.component';
+import { NfeTaxationRuleFormComponent } from './pages/nfe-taxation-rule/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
+import { NfeTaxationRuleListComponent } from './pages/nfe-taxation-rule/nfe-taxation-rule-list/nfe-taxation-rule-list.component';
 
 const appName = 'ControleDois';
 
@@ -268,7 +274,37 @@ const routes: Routes = [
     path: 'chat',
     component: ChatComponent,
     data: { title: `Chat -  ${appName}`},
-  }
+  },
+  {
+    path: 'nfe-nature-operation',
+    component: NfeNatureOperationListComponent,
+    data: { title: `Natureza de Operação -  ${appName}`},
+  },
+  {
+    path: 'nfe-nature-operation/:id',
+    component: NfeNatureOperationFormComponent,
+    data: { title: `Cadastro de Natureza de Operação -  ${appName}`},
+  },
+  {
+    path: 'nfe-taxation',
+    component: NfeTaxationListComponent,
+    data: { title: `Tributação -  ${appName}`},
+  },
+  {
+    path: 'nfe-taxation/:id',
+    component: NfeTaxationFormComponent,
+    data: { title: `Cadastro de Tributação -  ${appName}`},
+  },
+  {
+    path: 'nfe-taxation-rule',
+    component: NfeTaxationRuleListComponent,
+    data: { title: `Regra de Tributação -  ${appName}`},
+  },
+  {
+    path: 'nfe-taxation-rule/:id',
+    component: NfeTaxationRuleFormComponent,
+    data: { title: `Cadastro de Regra de Tributação -  ${appName}`},
+  },
 ]
 
 @NgModule({
@@ -323,6 +359,12 @@ const routes: Routes = [
     ChatComponent,
     BackupsModalComponent,
     SidenavComponent,
+    NfeNatureOperationListComponent,
+    NfeNatureOperationFormComponent,
+    NfeTaxationListComponent,
+    NfeTaxationFormComponent,
+    NfeTaxationRuleFormComponent,
+    NfeTaxationRuleListComponent,
   ],
   imports: [
     CommonModule,

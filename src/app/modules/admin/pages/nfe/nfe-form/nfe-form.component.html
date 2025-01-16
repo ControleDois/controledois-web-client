@@ -10,69 +10,18 @@
           <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
             <mat-tab>
               <div class="label-group">
-                <label class="label">
-                  <span class="field">Série</span>
-                  <input  formControlName="serie" type="text">
-                </label>
-
-                <label class="label">
-                  <span class="field">Número</span>
-                  <input  formControlName="numero" type="text">
-                </label>
-
-                <label class="label-w50">
-                  <span class="field">Natureza da Operação</span>
-                  <input formControlName="natureza_operacao" type="text">
-                </label>
+                <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
               </div>
-
-              <div class="label-group">
-                <label class="label">
-                  <span class="field">Data de Emissão</span>
-                  <input formControlName="data_emissao" type="date">
-                </label>
-
-                <label class="label">
-                  <span class="field">Data de Saída</span>
-                  <input formControlName="data_entrada_saida" type="date">
-                </label>
-
-                <label class="label-w50">
-                  <span class="field">Tipo de Nota</span>
-                  <select formControlName="tipo_documento">
-                    <option value="0">Nota de entrada</option>
-                    <option value="1">Nota de saída</option>
-                  </select>
-                </label>
-              </div>
-
-              <div class="basic-form-header">
-                <h3>Informações adicionais</h3>
-              </div>
-
 
             </mat-tab>
 
-            <mat-tab label="Chaves Liberadas" *ngIf="myForm.value.id !== 0">
-              <ng-template mat-tab-label>
-                <mat-icon class="example-tab-icon">key</mat-icon>
-                Chaves Liberadas
-              </ng-template>
-
-              <div class="basic-form-header" style="margin-top: 20px;">
-                <h3>Chaves</h3>
-              </div>
-
+            <mat-tab>
 
             </mat-tab>
           </mat-tab-group>
         </form>
 
-        <div class="basic-form-footer">
-          <button class="button-add" mat-button (click)="save()">
-            Salvar
-          </button>
-        </div>
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>
     </div>
   </div>
