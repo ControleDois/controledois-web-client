@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
@@ -9,6 +9,8 @@ import { TaskService } from 'src/app/shared/services/task.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 import { FirebaseService } from 'src/app/shared/services/firebase.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { Auth } from 'src/app/shared/interfaces/auth.interface';
 
 @Component({
   selector: 'app-task-form',
@@ -29,6 +31,7 @@ export class TaskFormComponent implements OnInit {
     status: new FormControl(0),
     priority: new FormControl(0),
     files: new FormControl(''),
+    users: new FormArray([]),
   });
 
   public filesUpload: Array<any> = [];
@@ -73,15 +76,19 @@ export class TaskFormComponent implements OnInit {
     ]
   }
 
+  private auth: Auth;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private taskService: TaskService,
     private notificationService: NotificationService,
     private router: Router,
     private firebaseService: FirebaseService,
+    private storageService: StorageService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Tarefa' : 'Editar Tarefa';
+    this.auth = this.storageService.getAuth();
   }
 
   ngOnInit(): void {
@@ -117,6 +124,24 @@ export class TaskFormComponent implements OnInit {
 
   save(): void {
     this.loadingFull.active = true;
+
+    if (this.formId !== 'new') {
+      const isCreator = this.myForm.value.users.filter((user) => user.id === this.auth.user.people.id).length > 0;
+
+      if (!isCreator) {
+        this.myForm.value.users.push({
+          userId: this.auth.user.people.id,
+          roles: [2]
+        })
+      }
+    } else {
+      this.myForm.value.users = [
+        {
+          userId: this.auth.user.people.id,
+          roles: [0]
+        }
+      ]
+    }
 
     this.validateForm();
 

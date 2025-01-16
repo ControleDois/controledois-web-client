@@ -21,7 +21,7 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     message: 'Aguarde, carregando...'
   }
 
-  public displayedColumns: string[] = ['title', 'status', 'actions'];
+  public displayedColumns: string[] = ['user', 'title', 'status', 'actions'];
   public dataSource = new MatTableDataSource<any>();
   public tableLength!: number;
   @ViewChild(MatPaginator)
@@ -186,5 +186,11 @@ export class TaskListComponent implements OnInit, AfterViewInit {
       default:
         return '#ddf1de';
     }
+  }
+
+  getUserCreate(users: any): string {
+    const user = users.find((user) => user.roles = [0]);
+
+    return user ? user.name : '';
   }
 }
