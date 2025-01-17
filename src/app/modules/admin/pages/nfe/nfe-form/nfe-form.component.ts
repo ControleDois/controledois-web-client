@@ -28,183 +28,46 @@ export class NfeFormComponent implements OnInit {
   public myForm: FormGroup = new FormGroup({
     id: new FormControl(0),
     company_id: new FormControl(''),
-    natureza_operacao: new FormControl('', Validators.required),
-    serie: new FormControl(),
-    numero: new FormControl(),
-    data_emissao: new FormControl(Validators.required),
-    data_entrada_saida: new FormControl(Validators.required),
-    tipo_documento: new FormControl(0, Validators.required),
-    local_destino: new FormControl(1, Validators.required),
-    municipio_prestacao: new FormControl(''),
-    finalidade_emissao: new FormControl(1, Validators.required),
-    consumidor_final: new FormControl(1, Validators.required),
-    presenca_comprador: new FormControl(1, Validators.required),
+    indicador_pagamento: new FormControl(0),
     indicador_intermediario: new FormControl(0),
-    cnpj_emitente: new FormControl('', Validators.required),
-    cpf_emitente: new FormControl('', Validators.required),
-    nome_emitente: new FormControl(''),
-    nome_fantasia_emitente: new FormControl(''),
-    logradouro_emitente: new FormControl(''),
-    numero_emitente: new FormControl(''),
-    complemento_emitente: new FormControl(''),
-    bairro_emitente: new FormControl(''),
-    municipio_emitente: new FormControl(''),
-    uf_emitente: new FormControl(''),
-    cep_emitente: new FormControl(''),
-    telefone_emitente: new FormControl(''),
-    inscricao_estadual_emitente: new FormControl('', Validators.required),
-    inscricao_estadual_st_emitente: new FormControl(''),
-    inscricao_municipal_emitente: new FormControl(''),
-    cnae_fiscal_emitente: new FormControl(''),
-    regime_tributario_emitente: new FormControl(1),
-    cnpj_destinatario: new FormControl(''),
-    cpf_destinatario: new FormControl(''),
-    id_estrangeiro_destinatario: new FormControl(''),
-    nome_destinatario: new FormControl('', Validators.required),
-    logradouro_destinatario: new FormControl('', Validators.required),
-    numero_destinatario: new FormControl('', Validators.required),
-    complemento_destinatario: new FormControl(''),
-    bairro_destinatario: new FormControl('', Validators.required),
-    codigo_municipio_destinatario: new FormControl(''),
-    municipio_destinatario: new FormControl('', Validators.required),
-    uf_destinatario: new FormControl('', Validators.required),
-    cep_destinatario: new FormControl(''),
-    codigo_pais_destinatario: new FormControl('1058'),
-    pais_destinatario: new FormControl('BRASIL'),
-    telefone_destinatario: new FormControl(''),
-    indicador_inscricao_estadual_destinatario: new FormControl(1, Validators.required),
-    inscricao_estadual_destinatario: new FormControl(''),
-    inscricao_suframa_destinatario: new FormControl(''),
-    inscricao_municipal_destinatario: new FormControl(''),
-    email_destinatario: new FormControl(''),
-    cnpj_retirada: new FormControl(''),
-    cpf_retirada: new FormControl(''),
-    nome_retirada: new FormControl(''),
-    logradouro_retirada: new FormControl(''),
-    numero_retirada: new FormControl(''),
-    complemento_retirada: new FormControl(''),
-    bairro_retirada: new FormControl(''),
-    codigo_municipio_retirada: new FormControl(''),
-    municipio_retirada: new FormControl(''),
-    uf_retirada: new FormControl(''),
-    cep_retirada: new FormControl(''),
-    codigo_pais_retirada: new FormControl('1058'),
-    pais_retirada: new FormControl('BRASIL'),
-    telefone_retirada: new FormControl(''),
-    email_retirada: new FormControl(''),
-    inscricao_estadual_retirada: new FormControl(''),
-    cnpj_entrega: new FormControl(''),
-    cpf_entrega: new FormControl(''),
-    nome_entrega: new FormControl(''),
-    logradouro_entrega: new FormControl(''),
-    numero_entrega: new FormControl(''),
-    complemento_entrega: new FormControl(''),
-    bairro_entrega: new FormControl(''),
-    codigo_municipio_entrega: new FormControl(''),
-    municipio_entrega: new FormControl(''),
-    uf_entrega: new FormControl(''),
-    cep_entrega: new FormControl(''),
-    codigo_pais_entrega: new FormControl('1058'),
-    pais_entrega: new FormControl('BRASIL'),
-    telefone_entrega: new FormControl(''),
-    email_entrega: new FormControl(''),
-    inscricao_estadual_entrega: new FormControl(''),
-    icms_base_calculo: new FormControl(0),
-    icms_valor_total: new FormControl(0),
-    icms_valor_total_desonerado: new FormControl(0),
-    fcp_valor_total_desonerado: new FormControl(0),
-    fcp_valor_total_uf_destino: new FormControl(0),
-    icms_valor_total_uf_destino: new FormControl(0),
-    icms_valor_total_uf_remetente: new FormControl(0),
-    fcp_valor_total: new FormControl(0),
-    icms_base_calculo_st: new FormControl(0),
-    icms_valor_total_st: new FormControl(0),
-    fcp_valor_total_st: new FormControl(0),
-    fcp_valor_total_retido_st: new FormControl(0),
-    icms_base_calculo_mono: new FormControl(0),
-    icms_valor_mono: new FormControl(0),
-    icms_base_calculo_mono_retencao: new FormControl(0),
-    icms_valor_mono_retencao: new FormControl(0),
-    icms_base_calculo_mono_retido: new FormControl(0),
-    icms_valor_mono_retido: new FormControl(0),
-    valor_produtos: new FormControl(0, Validators.required),
-    valor_frete: new FormControl(0, Validators.required),
-    valor_seguro: new FormControl(0, Validators.required),
-    valor_desconto: new FormControl(0, Validators.required),
-    valor_total_ii: new FormControl(0, Validators.required),
-    valor_ipi: new FormControl(0, Validators.required),
-    valor_ipi_devolvido: new FormControl(0, Validators.required),
-    valor_pis: new FormControl(0, Validators.required),
-    valor_cofins: new FormControl(0, Validators.required),
-    valor_outras_despesas: new FormControl(0, Validators.required),
-    valor_total: new FormControl(0, Validators.required),
-    valor_total_tributos: new FormControl(0),
-    valor_total_servicos: new FormControl(0),
-    issqn_base_calculo: new FormControl(0),
-    issqn_valor_total: new FormControl(0),
-    valor_pis_servicos: new FormControl(0),
-    valor_cofins_servicos: new FormControl(0),
-    data_prestacao_servico: new FormControl(),
-    issqn_valor_total_deducao: new FormControl(0),
-    issqn_valor_total_outras_retencoes: new FormControl(0),
-    issqn_valor_total_desconto_incondicionado: new FormControl(0),
-    issqn_valor_total_desconto_condicionado: new FormControl(0),
-    issqn_valor_total_retencao: new FormControl(0),
-    codigo_regime_especial_tributacao: new FormControl(),
-    pis_valor_retido: new FormControl(0),
-    cofins_valor_retido: new FormControl(0),
-    csll_valor_retido: new FormControl(0),
-    csll_base_calculo: new FormControl(0),
-    irrf_base_calculo: new FormControl(0),
-    irrf_valor_retido: new FormControl(0),
-    prev_social_base_calculo: new FormControl(0),
-    prev_social_valor_retido: new FormControl(0),
-    modalidade_frete: new FormControl(0, Validators.required),
-    cnpj_transportador: new FormControl(''),
-    cpf_transportador: new FormControl(''),
-    nome_transportador: new FormControl(''),
-    inscricao_estadual_transportador: new FormControl(''),
-    endereco_transportador: new FormControl(''),
-    municipio_transportador: new FormControl(''),
-    uf_transportador: new FormControl(''),
-    transporte_icms_servico: new FormControl(0),
-    transporte_icms_base_calculo: new FormControl(0),
-    transporte_icms_aliquota: new FormControl(0),
-    transporte_icms_valor: new FormControl(0),
-    transporte_icms_cfop: new FormControl(0),
-    transporte_icms_codigo_municipio: new FormControl(0),
-    veiculo_placa: new FormControl(''),
-    veiculo_uf: new FormControl(''),
-    veiculo_rntc: new FormControl(''),
-    veiculo_indentificacao_vagao: new FormControl(''),
-    veiculo_identificacao_balsa: new FormControl(''),
-    numero_fatura: new FormControl(''),
-    valor_original_fatura: new FormControl(0),
-    valor_desconto_fatura: new FormControl(0),
-    valor_liquido_fatura: new FormControl(0),
-    valor_troco: new FormControl(0),
-    cnpj_intermediario: new FormControl(''),
-    id_intermediario: new FormControl(''),
-    informacoes_adicionais_fisco: new FormControl(''),
-    informacoes_adicionais_contribuinte: new FormControl(''),
-    n_a: new FormControl(''),
-    nota_empenho_compra: new FormControl(''),
-    pedido_compra: new FormControl(''),
-    contrato_compra: new FormControl(''),
-    uf_local_embarque: new FormControl(''),
-    local_embarque: new FormControl(''),
-    local_despacacho: new FormControl(''),
-    cnpj_responsavel_tecnico: new FormControl(''),
-    contato_responsavel_tecnico: new FormControl(''),
-    email_responsavel_tecnico: new FormControl(''),
-    telefone_responsavel_tecnico: new FormControl(''),
+    forma_pagamento: new FormControl('01'),
+    amount: new FormControl(0),
+    products: new FormArray([]),
   });
 
   public keys = this.myForm.get('keys') as FormArray;
 
-  public peopleRole = [
-    { name: '⦿ Física', type: 0 },
-    { name: '⦿ Juridíca', type: 1 },
+  public indicadorPagamento = [
+    { name: '⦿ Pagamento à Vista', type: 0 },
+    { name: '⦿ Pagamento a Prazo', type: 1 },
+  ];
+
+  public indicadorIntermediario = [
+    { name: '⦿ (valor default) Operação sem intermediador (em site ou plataforma própria)', type: 0 },
+    { name: '⦿ Operação em site ou plataforma de terceiros (intermediadores/marketplace)', type: 1 },
+  ]
+
+  public formaPagamento = [
+    { name: '⦿ 01 - Dinheiro', type: '01' },
+    { name: '⦿ 02 - Cheque', type: '02' },
+    { name: '⦿ 03 - Cartão de Crédito', type: '03' },
+    { name: '⦿ 04 - Cartão de Débito', type: '04' },
+    { name: '⦿ 05 - Cartão da Loja (Private Label)', type: '05' },
+    { name: '⦿ 10 - Vale Alimentação', type: '10' },
+    { name: '⦿ 11 - Vale Refeição', type: '11' },
+    { name: '⦿ 12 - Vale Presente', type: '12' },
+    { name: '⦿ 13 - Vale Combustível', type: '13' },
+    { name: '⦿ 14 - Duplicata Mercantil', type: '14' },
+    { name: '⦿ 15 - Boleto Bancário', type: '15' },
+    { name: '⦿ 16 - Depósito Bancário', type: '16' },
+    { name: '⦿ 17 - Pagamento Instantâneo (PIX) – Dinâmico', type: '17' },
+    { name: '⦿ 18 - Transferência bancária, Carteira Digital', type: '18' },
+    { name: '⦿ 19 - Programa de fidelidade, Cashback, Crédito Virtual', type: '19' },
+    { name: '⦿ 20 - Pagamento Instantâneo (PIX) – Estático', type: '20' },
+    { name: '⦿ 21 - Crédito em Loja', type: '21' },
+    { name: '⦿ 22 - Pagamento Eletrônico não Informado - falha de hardware do sistema emissor', type: '22' },
+    { name: '⦿ 90 - Sem pagamento', type: '90' },
+    { name: '⦿ 99 - Outros', type: '99' }
   ];
 
   public stateRegistrationIndicator = [
@@ -234,6 +97,19 @@ export class NfeFormComponent implements OnInit {
         value: '{2}'
       }
     ],
+  };
+
+  @Output() searchNatureOperation: SearchLoadingUnique = {
+    noTitle: false,
+    title: 'Natureza da Operação',
+    url: 'nfe-nature-operation',
+    searchFieldOn: null,
+    searchFieldOnCollum: 'description',
+    sortedBy: 'description',
+    orderBy: 'description',
+    searchField: new FormControl(''),
+    validation: true,
+    paramsArray: [],
   };
 
   @Output() public pageHeader: PageHeader = {
@@ -266,6 +142,9 @@ export class NfeFormComponent implements OnInit {
     selectedItem: 0
   }
 
+  public products = this.myForm.get('products') as FormArray;
+  @Output() public productsOutPut: Array<SearchLoadingUnique>;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private nfeService: NFeService,
@@ -276,6 +155,7 @@ export class NfeFormComponent implements OnInit {
     private libraryService: LibraryService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
+    this.productsOutPut = [];
   }
 
   validateForm(): void {
@@ -364,5 +244,68 @@ export class NfeFormComponent implements OnInit {
 
   getValidation(name: string): boolean {
     return !this.validationFields.find((v) => v.name === name).validation;
+  }
+
+  addProduct(value: any): void {
+    const control = new FormGroup({
+      product_id: new FormControl(value?.product?.id || null),
+      description: new FormControl(value?.description || ''),
+      amount: new FormControl(value?.amount || 0),
+      cost_value: new FormControl(value?.sale_value || 0),
+      subtotal: new FormControl(value?.subtotal || 0),
+    });
+
+    this.products.push(control);
+    this.productsOutPut.push({
+      noTitle: true,
+      title: 'produto',
+      url: 'product',
+      searchFieldOn: value?.product || null,
+      searchFieldOnCollum: 'name',
+      sortedBy: 'name',
+      orderBy: 'name',
+      searchField: new FormControl(''),
+      validation: true,
+      paramsArray: [],
+    });
+  }
+
+  removeProduct(index: any): void {
+    this.products.controls.splice(index, 1);
+    this.productsOutPut.splice(index, 1);
+    this.sumValues();
+  }
+
+  selectProduct(event: any, i: any): void {
+    this.products.at(i).setValue({
+      product_id: event.id,
+      description: '',
+      amount: '1',
+      cost_value: event.sale_value,
+      subtotal: event.sale_value,
+    });
+
+    this.sumValues();
+  }
+
+  sumProductDetails(i: any): void {
+    this.products.at(i).setValue({
+      product_id: this.products.at(i).value.product_id,
+      description: this.products.at(i).value.description,
+      amount: this.products.at(i).value.amount,
+      cost_value: this.products.at(i).value.cost_value,
+      subtotal:
+        this.products.at(i).value.amount * this.products.at(i).value.cost_value,
+    });
+
+    this.sumValues();
+  }
+
+  sumValues(): void {
+    this.myForm.controls['amount'].setValue(
+      this.products.controls.reduce((sum, product) => {
+        return sum + parseFloat(product.value.subtotal);
+      }, 0)
+    );
   }
 }

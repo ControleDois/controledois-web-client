@@ -59,8 +59,7 @@ import { NfeNatureOperationListComponent } from './pages/nfe-nature-operation/nf
 import { NfeNatureOperationFormComponent } from './pages/nfe-nature-operation/nfe-nature-operation-form/nfe-nature-operation-form.component';
 import { NfeTaxationListComponent } from './pages/nfe-taxation/nfe-taxation-list/nfe-taxation-list.component';
 import { NfeTaxationFormComponent } from './pages/nfe-taxation/nfe-taxation-form/nfe-taxation-form.component';
-import { NfeTaxationRuleFormComponent } from './pages/nfe-taxation-rule/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
-import { NfeTaxationRuleListComponent } from './pages/nfe-taxation-rule/nfe-taxation-rule-list/nfe-taxation-rule-list.component';
+import { NfeTaxationRuleFormComponent } from './pages/modals/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
 
 const appName = 'ControleDois';
 
@@ -295,16 +294,6 @@ const routes: Routes = [
     component: NfeTaxationFormComponent,
     data: { title: `Cadastro de Tributação -  ${appName}`},
   },
-  {
-    path: 'nfe-taxation-rule',
-    component: NfeTaxationRuleListComponent,
-    data: { title: `Regra de Tributação -  ${appName}`},
-  },
-  {
-    path: 'nfe-taxation-rule/:id',
-    component: NfeTaxationRuleFormComponent,
-    data: { title: `Cadastro de Regra de Tributação -  ${appName}`},
-  },
 ]
 
 @NgModule({
@@ -364,7 +353,6 @@ const routes: Routes = [
     NfeTaxationListComponent,
     NfeTaxationFormComponent,
     NfeTaxationRuleFormComponent,
-    NfeTaxationRuleListComponent,
   ],
   imports: [
     CommonModule,

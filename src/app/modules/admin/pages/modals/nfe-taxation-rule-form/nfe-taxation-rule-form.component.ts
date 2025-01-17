@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
@@ -12,10 +12,24 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-nfe-taxation-rule-form',
   templateUrl: './nfe-taxation-rule-form.component.html',
+  styles: [
+    `
+      ::ng-deep {
+        .mat-dialog-container {
+          padding: 0;
+        }
+
+        .mat-tab-label {
+          width: 100% !important;
+        }
+      }
+    `
+  ]
 })
 export class NfeTaxationRuleFormComponent implements OnInit {
   private formId: string;
@@ -122,44 +136,6 @@ export class NfeTaxationRuleFormComponent implements OnInit {
   @Output() public pageHeader: PageHeader = {
     title: `Regra de Tributação`,
     description: 'Cadastro de Regra de Tributação',
-    button: {
-      text: 'Voltar',
-      routerLink: '/nfe-taxation-rule',
-      icon: 'arrow_back',
-    },
-  };
-
-  @Output() public navigationButtons: BasicFormButtons = {
-    buttons: [
-      {
-        text: 'Salvar',
-        icon: 'save',
-        action: () => this.save(),
-        class: 'c2-btn c2-btn-green',
-      }
-    ]
-  }
-
-  @Output() public navigation: BasicFormNavigation = {
-    items: [
-      { text: 'Dados Da Regra', index: 0, icon: 'info' },
-      { text: 'Cliente Revenda', index: 1, icon: 'info' },
-      { text: 'Cliente Consumidor Final', index: 2, icon: 'info' },
-    ],
-    selectedItem: 0
-  }
-
-  @Output() searchTaxation: SearchLoadingUnique = {
-    noTitle: false,
-    title: 'Tributação',
-    url: 'nfe-taxation',
-    searchFieldOn: null,
-    searchFieldOnCollum: 'name',
-    sortedBy: 'name',
-    orderBy: 'name',
-    searchField: new FormControl(''),
-    validation: true,
-    paramsArray: [],
   };
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -388,13 +364,14 @@ export class NfeTaxationRuleFormComponent implements OnInit {
 
   @ViewChild('stateInput') stateInput!: ElementRef<HTMLInputElement>;
 
+  readonly dialogRef = inject(MatDialogRef<NfeTaxationRuleFormComponent>);
   constructor(
-    private activatedRoute: ActivatedRoute,
     private nfeTaxationRuleService: NFeTaxationRuleService,
     private notificationService: NotificationService,
     private router: Router,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.formId = this.activatedRoute.snapshot.params['id'];
+    this.formId = this.data.taxation_rule_id;
     this.pageHeader.title = this.formId === 'new' ? 'Nova Regra de Tributação' : 'Editar Regra de Tributação';
 
     this.filteredStates = this.stateCtrl.valueChanges.pipe(
@@ -440,7 +417,7 @@ export class NfeTaxationRuleFormComponent implements OnInit {
         finalize(() => this.loadingFull.active = false),
         catchError((error) => {
           this.notificationService.warn('Dados não encontrados...');
-          this.router.navigate(['nfe-taxation-rule']);
+          this.dialogRef.close();
           return throwError(error);
         }),
         map((res) => {
@@ -452,9 +429,6 @@ export class NfeTaxationRuleFormComponent implements OnInit {
 
   setForm(value: any): void {
     if (value) {
-      this.searchTaxation.searchFieldOn = value.nfeTaxationRule || null;
-      this.searchTaxation.searchField.setValue(value.nfeTaxationRule?.name || '');
-
       this.states = value.states.map((state) => {
         return this.allStates.find((fState) => fState.uf === state)
       })
@@ -466,7 +440,7 @@ export class NfeTaxationRuleFormComponent implements OnInit {
   save(): void {
     this.loadingFull.active = true;
 
-    this.myForm.value.nfe_taxation_id = this.searchTaxation?.searchFieldOn?.id;
+    this.myForm.value.nfe_taxation_id = this.data.taxation_id;
     this.myForm.value.states = this.states.map((state) => state.uf);
 
     this.nfeTaxationRuleService.save(this.formId, this.myForm.value).pipe(
@@ -477,7 +451,7 @@ export class NfeTaxationRuleFormComponent implements OnInit {
       }),
       map(() => {
         this.notificationService.success('Salvo com sucesso.');
-        this.router.navigate(['nfe-taxation-rule']);
+        this.dialogRef.close();
       })
     ).subscribe();
   }

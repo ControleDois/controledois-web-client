@@ -14,19 +14,9 @@ export class NFeTaxationRuleService {
   ) {
   }
 
-  index(search: string, sorteBy?: string, orderBy?: string, page?: string, limit?: string, paramsArray?: any): Observable<any> {
+  index(taxationId: string): Observable<any> {
     let params = new HttpParams()
-      .set('search', search)
-      .set('sortedBy', sorteBy || 'name')
-      .set('orderBy', orderBy || 'name')
-      .set('page', page || '1')
-      .set('limit', limit || '10');
-
-    if (paramsArray && paramsArray.length > 0) {
-      for (const data of paramsArray) {
-        params = params.set(data.param, data.value);
-      }
-    }
+      .set('taxationId', taxationId)
 
     return this.apiService.on(this.resource, '', 'get-token-params', params);
   }

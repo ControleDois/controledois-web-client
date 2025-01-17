@@ -7,13 +7,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NFeTaxationService } from 'src/app/shared/services/nfe-taxation.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { catchError, finalize, map, throwError } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
+import { NFeTaxationRuleService } from 'src/app/shared/services/nfe-taxation-rule.service';
+import { WidgetService } from 'src/app/shared/services/widget.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { NfeTaxationRuleFormComponent } from '../../modals/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
 
 @Component({
   selector: 'app-nfe-taxation-form',
   templateUrl: './nfe-taxation-form.component.html',
 })
 export class NfeTaxationFormComponent implements OnInit {
-  private formId: string;
+  public formId: string;
 
   public loadingFull: LoadingFull = {
     active: false,
@@ -47,11 +52,23 @@ export class NfeTaxationFormComponent implements OnInit {
     ]
   }
 
+  public displayedColumns: string[] = [
+    'states',
+    'resale',
+    'final_consumer',
+    'actions'
+  ];
+
+  public dataSource = new MatTableDataSource<any>();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private nfeTaxationService: NFeTaxationService,
     private notificationService: NotificationService,
+    private nfeTaxationRuleService: NFeTaxationRuleService,
+    private widGetService: WidgetService,
     private router: Router,
+    private dialog: MatDialog,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Tributação' : 'Editar Tributação';
@@ -77,7 +94,17 @@ export class NfeTaxationFormComponent implements OnInit {
   setForm(value: any): void {
     if (value) {
       this.myForm.patchValue(value);
+
+      this.loadRules(this.formId);
     }
+  }
+
+  loadRules(id: string): void {
+    this.nfeTaxationRuleService.index(id).pipe(
+      map(res => {
+        this.dataSource.data = res;
+      })
+    ).subscribe();
   }
 
   save(): void {
@@ -95,4 +122,35 @@ export class NfeTaxationFormComponent implements OnInit {
     ).subscribe();
   }
 
+  showRule(id: string): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '920px';
+    dialogConfig.maxHeight = '550px';
+    dialogConfig.data = {
+      taxation_id: this.formId,
+      taxation_rule_id: id || 'new'
+    };
+    this.dialog.open(NfeTaxationRuleFormComponent, dialogConfig);
+  }
+
+  deleteRule(id: string): void {
+    this.widGetService.modalQuestion({
+      deleted: true
+    }).afterClosed().subscribe(res => {
+      if (res === true) {
+        this.loadingFull.active = true;
+        this.nfeTaxationRuleService.destroy(id).pipe(
+          finalize(() => this.loadingFull.active = false),
+          catchError((error) => {
+            return throwError(error);
+          }),
+          map(() => {
+            this.loadRules(this.formId);
+          })
+        ).subscribe();
+      }
+    });
+  }
 }
