@@ -90,9 +90,16 @@
                   </select>
                 </label>
 
-                <label>
+                <label class="label-w30">
                   <select formControlName="forma_pagamento">
                     <option *ngFor="let indicador of formaPagamento" [value]="indicador.type">{{ indicador.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <label class="label-w30">
+                  <select formControlName="presenca_comprador">
+                    <option *ngFor="let comprador of presencaComprador" [value]="comprador.type">{{ comprador.name }}
                     </option>
                   </select>
                 </label>

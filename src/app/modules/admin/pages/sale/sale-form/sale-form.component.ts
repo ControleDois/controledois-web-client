@@ -414,7 +414,7 @@ export class SaleFormComponent implements OnInit {
     this.products.push(control);
     this.productsOutPut.push({
       noTitle: true,
-      title: 'Usuário',
+      title: '',
       url: 'product',
       searchFieldOn: value?.product || null,
       searchFieldOnCollum: 'name',

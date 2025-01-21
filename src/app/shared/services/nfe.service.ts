@@ -14,19 +14,14 @@ export class NFeService {
   ) {
   }
 
-  index(search: string, sorteBy?: string, orderBy?: string, page?: string, limit?: string, paramsArray?: any): Observable<any> {
+  index(search: string, date: any, sorteBy?: string, orderBy?: string, page?: string, limit?: string): Observable<any> {
     let params = new HttpParams()
       .set('search', search)
-      .set('sortedBy', sorteBy || 'name')
-      .set('orderBy', orderBy || 'name')
+      .set('date', date)
+      .set('sortedBy', sorteBy || 'id')
+      .set('orderBy', orderBy || 'id')
       .set('page', page || '1')
       .set('limit', limit || '10');
-
-    if (paramsArray && paramsArray.length > 0) {
-      for (const data of paramsArray) {
-        params = params.set(data.param, data.value);
-      }
-    }
 
     return this.apiService.on(this.resource, '', 'get-token-params', params);
   }

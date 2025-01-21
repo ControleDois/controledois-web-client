@@ -29,10 +29,20 @@ export class ProductFormComponent implements OnInit {
   public myForm: FormGroup = new FormGroup({
     id: new FormControl(0),
     company_id: new FormControl(0),
+    ncm_id: new FormControl('', Validators.required),
+    nfe_taxation_id: new FormControl('', Validators.required),
     role: new FormControl(0, Validators.required),
     name: new FormControl('', Validators.required),
     sale_value: new FormControl('', Validators.required),
     description: new FormControl(''),
+    barcode: new FormControl(''),
+    unit: new FormControl(''),
+    icms_origin: new FormControl(0),
+    gross_weighy: new FormControl(''),
+    fuel_anp: new FormControl(''),
+    code_cest: new FormControl(''),
+    cfop_state: new FormControl(''),
+    cfop_interstate: new FormControl(''),
     img_path: new FormControl(''),
     img_url: new FormControl(''),
     shop: new FormGroup({
@@ -96,6 +106,84 @@ export class ProductFormComponent implements OnInit {
     ]
   }
 
+  public listIcmsOrigem = [
+    { name: '0 - Nacional', type: 0 },
+    { name: '1 - Estrangeira (importação direta)', type: 1 },
+    { name: '2 - Estrangeira (adquirida no mercado interno)', type: 2 },
+    { name: '3 - Nacional com mais de 40% de conteúdo estrangeiro', type: 3 },
+    { name: '4 - Nacional produzida através de processos produtivos básicos', type: 4 },
+    { name: '5 - Nacional com menos de 40% de conteúdo estrangeiro', type: 5 },
+    { name: '6 - Estrangeira (importação direta) sem produto nacional similar', type: 6 },
+    { name: '7 - Estrangeira (adquirida no mercado interno) sem produto nacional similar', type: 7 },
+    { name: '8 - Nacional, mercadoria ou bem com conteúdo de importação superior a 70%', type: 8 },
+  ];
+
+  public listUnit = [
+    { name: '⦿ CA - Caixa', type: 'CA' },
+    { name: '⦿ CX - Caixa Grande', type: 'CX' },
+    { name: '⦿ UN - Unidade', type: 'UN' },
+    { name: '⦿ KG - Quilograma', type: 'KG' },
+    { name: '⦿ LT - Litro', type: 'LT' },
+    { name: '⦿ ML - Mililitro', type: 'ML' },
+    { name: '⦿ MT - Metro', type: 'MT' },
+    { name: '⦿ M2 - Metro Quadrado', type: 'M2' },
+    { name: '⦿ M3 - Metro Cúbico', type: 'M3' },
+    { name: '⦿ PC - Peça', type: 'PC' },
+    { name: '⦿ PT - Pacote', type: 'PT' },
+    { name: '⦿ CXA - Caixa com 10 unidades', type: 'CXA' },
+    { name: '⦿ DZ - Dúzia', type: 'DZ' },
+    { name: '⦿ GR - Grama', type: 'GR' },
+    { name: '⦿ CM - Centímetro', type: 'CM' },
+    { name: '⦿ MM - Milímetro', type: 'MM' },
+    { name: '⦿ PAR - Par', type: 'PAR' },
+    { name: '⦿ MIL - Milheiro', type: 'MIL' },
+    { name: '⦿ TON - Tonelada', type: 'TON' },
+    { name: '⦿ GAL - Galão', type: 'GAL' },
+    { name: '⦿ BD - Barril', type: 'BD' },
+    { name: '⦿ AM - Ampola', type: 'AM' },
+    { name: '⦿ FR - Frasco', type: 'FR' },
+    { name: '⦿ BL - Bloco', type: 'BL' },
+    { name: '⦿ SC - Saco', type: 'SC' },
+    { name: '⦿ RL - Rolo', type: 'RL' },
+    { name: '⦿ FT - Fardo', type: 'FT' },
+    { name: '⦿ CP - Copo', type: 'CP' },
+    { name: '⦿ PF - Pacote Fechado', type: 'PF' },
+    { name: '⦿ TM - Tambor', type: 'TM' },
+    { name: '⦿ HB - Hábito (customizado)', type: 'HB' },
+    { name: '⦿ CJ - Conjunto', type: 'CJ' },
+    { name: '⦿ CD - Cento', type: 'CD' },
+    { name: '⦿ TP - Tipo', type: 'TP' },
+    { name: '⦿ TO - Toalha', type: 'TO' },
+    { name: '⦿ ES - Estojo', type: 'ES' },
+    { name: '⦿ PE - Pente', type: 'PE' },
+  ];
+
+  @Output() searchNCM: SearchLoadingUnique = {
+    noTitle: false,
+    title: 'NCM',
+    url: 'ncm',
+    searchFieldOn: null,
+    searchFieldOnCollum: 'code',
+    sortedBy: 'description',
+    orderBy: 'description',
+    searchField: new FormControl(''),
+    validation: true,
+    paramsArray: [],
+  };
+
+  @Output() searchTaxation: SearchLoadingUnique = {
+    noTitle: false,
+    title: 'Grupo de Tributação',
+    url: 'nfe-taxation',
+    searchFieldOn: null,
+    searchFieldOnCollum: 'name',
+    sortedBy: 'name',
+    orderBy: 'name',
+    searchField: new FormControl(''),
+    validation: true,
+    paramsArray: [],
+  };
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private productService: ProductService,
@@ -143,11 +231,20 @@ export class ProductFormComponent implements OnInit {
           index += 1;
         }
       }
+
+      this.searchTaxation.searchFieldOn = value.taxation;
+      this.searchTaxation.searchField.setValue(value.taxation.name);
+
+      this.searchNCM.searchFieldOn = value.ncm;
+      this.searchNCM.searchField.setValue(value.ncm.code);
     }
   }
 
   async save() {
     this.loadingFull.active = true;
+
+    this.myForm.value.ncm_id = this.searchNCM?.searchFieldOn?.id;
+    this.myForm.value.nfe_taxation_id = this.searchTaxation?.searchFieldOn?.id;
 
     if (!this.myForm.value.img_url) {
       await this.uploadPhoto();

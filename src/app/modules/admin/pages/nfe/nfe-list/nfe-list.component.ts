@@ -8,6 +8,7 @@ import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { NFeService } from 'src/app/shared/services/nfe.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-nfe-list',
@@ -33,6 +34,7 @@ export class NfeListComponent implements OnInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
+  public vDateFilter = new Date();
 
   @Output() public pageHeader: PageHeader = {
     title: 'NFes',
@@ -46,7 +48,8 @@ export class NfeListComponent implements OnInit {
 
   constructor(
     private nfeService: NFeService,
-    private widGetService: WidgetService
+    private widGetService: WidgetService,
+    private datePipe: DatePipe,
   ) {
    }
 
@@ -73,10 +76,9 @@ export class NfeListComponent implements OnInit {
 
   load(): void {
     this.nfeService.index(this.search.value ? this.search.value : '',
-    'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
-    this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10', [
-      { param: 'roles', value: '{2}' }
-    ]).pipe(
+      this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), 'data_emissao', 'data_emissao',
+      this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
+      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.dataSource.data = res.data;
         this.tableLength = res.meta.total;

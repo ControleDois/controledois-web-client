@@ -28,9 +28,12 @@ export class NfeFormComponent implements OnInit {
   public myForm: FormGroup = new FormGroup({
     id: new FormControl(0),
     company_id: new FormControl(''),
+    peopleId: new FormControl(''),
+    nfeNatureOperationId: new FormControl(''),
     indicador_pagamento: new FormControl(0),
     indicador_intermediario: new FormControl(0),
     forma_pagamento: new FormControl('01'),
+    presenca_comprador: new FormControl(1),
     amount: new FormControl(0),
     products: new FormArray([]),
   });
@@ -76,9 +79,18 @@ export class NfeFormComponent implements OnInit {
     { name: '⦿ Contribuinte isento', type: 2 },
   ];
 
+  public presencaComprador = [
+    { name: '⦿ Não se aplica', type: 0 },
+    { name: '⦿ Operação presencial', type: 1 },
+    { name: '⦿ Operação não presencial, pela Internet', type: 2 },
+    { name: '⦿ Operação não presencial, Teleatendimento', type: 3},
+    { name: '⦿ NFC-e em operação com entrega em domicílio', type: 4 },
+    { name: '⦿ Operação presencial, fora do estabelecimento', type: 5 },
+    { name: '⦿ Operação não presencial, outros', type: 9 },
+  ];
+
   public validationFields: Array<any> = [
-    { name: 'document', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o CPF' : 'É necessário informar o CNPJ' },
-    { name: 'name', validation: true, msg: this.myForm.value.people_type === 0 ? 'É necessário informar o nome' : 'É necessário informar o nome fantasia' },
+
   ];
 
   @Output() searchPeople: SearchLoadingUnique = {
@@ -159,8 +171,7 @@ export class NfeFormComponent implements OnInit {
   }
 
   validateForm(): void {
-    this.validationFields.find((v) => v.name === 'name').validation = !!this.myForm.value.name;
-    this.validationFields.find((v) => v.name === 'document').validation = !!this.myForm.value.document;
+
   }
 
   ngOnInit(): void {
@@ -182,63 +193,47 @@ export class NfeFormComponent implements OnInit {
 
   setForm(value: any): void {
     if (value) {
-      this.myForm.patchValue(value);
-      this.myForm.controls['birth'].setValue(this.datePipe.transform(value.birth, 'yyyy-MM-dd'));
-
-      if (value.keys && value.keys.length > 0) {
-        for (const key of value.keys) {
-          //
+      if (value.products && value.products.length > 0) {
+        for (const product of value.products) {
+          this.addProduct(product);
         }
       }
+
+      this.searchPeople.searchFieldOn = value.people;
+      this.searchPeople.searchField.setValue(value.people.name);
+
+      this.searchNatureOperation.searchFieldOn = value.natureOperation;
+      this.searchNatureOperation.searchField.setValue(value.natureOperation.name);
+
+      this.myForm.patchValue(value);
     }
   }
 
   save(): void {
+    this.loadingFull.active = true;
+
+    this.myForm.value.peopleId = this.searchPeople?.searchFieldOn?.id;
+    this.myForm.value.nfeNatureOperationId = this.searchNatureOperation?.searchFieldOn?.id;
+
     this.validateForm();
 
     if (this.myForm.valid) {
-      this.loadingFull.active = true;
       this.nfeService.save(this.formId, this.myForm.value).pipe(
         finalize(() => this.loadingFull.active = false),
-        catchError((res) => {
-          let title = 'Atenção';
-            let message = 'Ocorreu um erro ao realizar o cadastro, tente novamente mais tarde.';
-            let message_next = '';
-
-            if (res?.error?.errors?.[0]?.field === 'document') {
-              title = this.myForm.value.people_type === 0 ? 'Campo CPF' : 'Campo CNPJ';
-              message = res.error.errors[0].message;
-              message_next = 'Para cadastrar um CPF, é necessário que ele tenha 11 dígitos. Para cadastrar um CNPJ, é necessário que ele tenha 14 dígitos. Caso o CPF ou CNPJ esteja correto, talvez a empresa já esteja cadastrada em nossa base de dados.';
-            }
-
-            if (res?.error?.errors?.[0]?.field === 'name') {
-              title = this.myForm.value.people_type === 0 ? 'Campo Nome' : 'Campo Nome Fantasia';
-              message = res.error.errors[0].message;
-              message_next = 'É essecial que o nome do cliente seja informado. Sempre valide se o cliente que você está cadastrando já não está em nossa base de dados.';
-            }
-
-            this.dialogMessageService.openDialog({
-              icon: 'pan_tool',
-              iconColor: '#ff5959',
-              title: title,
-              message: message,
-              message_next: message_next,
-            });
-          return throwError(res);
+        catchError((error) => {
+          this.notificationService.warn(error.error);
+          return throwError(error);
         }),
         map(() => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['people']);
+          this.router.navigate(['nfe']);
         })
       ).subscribe();
     } else {
-      this.dialogMessageService.openDialog({
-        icon: 'priority_high',
-        iconColor: '#ff5959',
-        title: 'Campos inválidos',
-        message: 'Existem campos inválidos, verifique se todos os campos estão preenchidos corretamente.',
-        message_next: 'Todos os campos são obrigatórios, verifique se todos os campos estão preenchidos corretamente.',
-      });
+      this.loadingFull.active = false;
+      this.notificationService.error(
+        this.validationFields.filter((v) => v.validation === false)[0].msg
+      );
     }
   }
 
