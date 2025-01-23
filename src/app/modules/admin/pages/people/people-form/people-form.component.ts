@@ -95,7 +95,7 @@ export class PeopleFormComponent implements OnInit {
   ];
 
   public stateRegistrationIndicator = [
-    { name: '⦿ Não contribuinte', type: 0 },
+    { name: '⦿ Não contribuinte', type: 9 },
     { name: '⦿ Contribuinte', type: 1 },
     { name: '⦿ Contribuinte isento', type: 2 },
   ];

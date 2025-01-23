@@ -193,8 +193,9 @@ export class NfeFormComponent implements OnInit {
 
   setForm(value: any): void {
     if (value) {
-      if (value.products && value.products.length > 0) {
-        for (const product of value.products) {
+      if (value.itens && value.itens.length > 0) {
+        for (const product of value.itens) {
+          console.log(product)
           this.addProduct(product);
         }
       }
@@ -203,7 +204,7 @@ export class NfeFormComponent implements OnInit {
       this.searchPeople.searchField.setValue(value.people.name);
 
       this.searchNatureOperation.searchFieldOn = value.natureOperation;
-      this.searchNatureOperation.searchField.setValue(value.natureOperation.name);
+      this.searchNatureOperation.searchField.setValue(value.natureOperation.description);
 
       this.myForm.patchValue(value);
     }
@@ -243,11 +244,11 @@ export class NfeFormComponent implements OnInit {
 
   addProduct(value: any): void {
     const control = new FormGroup({
-      product_id: new FormControl(value?.product?.id || null),
-      description: new FormControl(value?.description || ''),
-      amount: new FormControl(value?.amount || 0),
-      cost_value: new FormControl(value?.sale_value || 0),
-      subtotal: new FormControl(value?.subtotal || 0),
+      product_id: new FormControl(value?.product_id || null),
+      description: new FormControl(value?.descricao || ''),
+      amount: new FormControl(value?.quantidade_comercial || 0),
+      cost_value: new FormControl(value?.valor_unitario_comercial || 0),
+      subtotal: new FormControl((value?.quantidade_comercial * value?.valor_unitario_comercial) || 0),
     });
 
     this.products.push(control);

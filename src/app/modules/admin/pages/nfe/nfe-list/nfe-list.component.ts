@@ -9,6 +9,8 @@ import { NFeService } from 'src/app/shared/services/nfe.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { DatePipe } from '@angular/common';
+import { LibraryService } from 'src/app/shared/services/library.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-nfe-list',
@@ -50,6 +52,8 @@ export class NfeListComponent implements OnInit {
     private nfeService: NFeService,
     private widGetService: WidgetService,
     private datePipe: DatePipe,
+    private notificationService: NotificationService,
+    public libraryService: LibraryService
   ) {
    }
 
@@ -103,5 +107,86 @@ export class NfeListComponent implements OnInit {
         ).subscribe();
       }
     });
+  }
+
+  getStatus(status: number): string {
+    switch (status) {
+      case 0:
+        return 'Aguardando envio';
+      case 1:
+        return 'Em processo';
+      case 2:
+        return 'Emitida';
+      case 3:
+        return 'Error';
+      default:
+        return 'Error'
+    }
+  }
+
+  getStatusColor(status: number): string {
+    switch (status) {
+      case 0:
+        return '#B98E00';
+      case 1:
+        return '#4ab858';
+      case 2:
+        return '#F43E61';
+      case 3:
+        return '#2687E9';
+      default:
+        return '#2687E9'
+    }
+  }
+
+  getStatusColorBack(status: number): string {
+    switch (status) {
+      case 0:
+        return '#FFF4CE';
+      case 1:
+        return '#ddf1de';
+      case 2:
+        return '#FCD9E0';
+      case 3:
+        return '#DBE6FE';
+      default:
+        return '#DBE6FE'
+    }
+  }
+
+  send(id: string): void {
+    this.loadingFull.active = true;
+    this.nfeService.send(id).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        console.log(error)
+        this.notificationService.warn('Dados não encontrados...');
+        return throwError(error);
+      }),
+      map((res) => {
+        console.log(res)
+        this.notificationService.warn(res.mensagem);
+      })
+    ).subscribe();
+  }
+
+  searchStatus(id: string): void {
+    this.loadingFull.active = true;
+    this.nfeService.searchStatus(id).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        console.log(error)
+        this.notificationService.warn('Dados não encontrados...');
+        return throwError(error);
+      }),
+      map((res) => {
+        console.log(res)
+        this.notificationService.warn(res.mensagem);
+      })
+    ).subscribe();
+  }
+
+  showLink(link: string): void {
+    window.open(link, '_blank');
   }
 }

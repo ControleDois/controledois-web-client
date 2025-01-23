@@ -45,4 +45,12 @@ export class NFeService {
   save(id: string, body: Object): Observable<any> {
     return id === 'new' ? this.store(body) : this.update(id, body);
   }
+
+  send(id: string): Observable<any> {
+    return this.apiService.on(`${this.resource}/send/${id}`, '', 'post-token');
+  }
+
+  searchStatus(id: string): Observable<any> {
+    return this.apiService.on(`${this.resource}/status/${id}`, '', 'get-token');
+  }
 }
