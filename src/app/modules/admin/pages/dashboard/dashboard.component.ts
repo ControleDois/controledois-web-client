@@ -33,6 +33,9 @@ export class DashboardComponent implements OnInit {
     error: 0
   }
 
+  private appChartBackup: any;
+  public activeRole = '1';
+
   constructor(
     private dashboardService: DashboardService,
     private storageService: StorageService,
@@ -100,7 +103,7 @@ export class DashboardComponent implements OnInit {
       })
     ).subscribe();
 
-    this.dashboardService.backups().pipe(
+    this.dashboardService.backups('1').pipe(
       map(res => {
         this.backups = res;
         if (this.backups.all > 0) {
@@ -111,8 +114,22 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  loadBackups(role: string): void {
+    this.activeRole = role;
+    this.dashboardService.backups(role).pipe(
+      map(res => {
+        this.backups = res;
+        this.showBackups();
+      })
+    ).subscribe();
+  }
+
   showBackups() {
-    new Chart(this.chartBackups.nativeElement, {
+    if (this.appChartBackup) {
+      this.appChartBackup.destroy();
+    }
+
+    this.appChartBackup = new Chart(this.chartBackups.nativeElement, {
       type: 'doughnut',
       data: {
         labels: ['Todos', 'Operacional', 'Alerta', 'Inoperante', 'Erro'],

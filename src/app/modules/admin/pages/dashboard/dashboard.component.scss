@@ -126,6 +126,28 @@
   justify-content: center;
 }
 
+.backup-roles {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+
+  p {
+    margin-right: 20px;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  .active {
+    color: var(--primary-color) !important;
+    text-decoration: underline;
+  }
+}
+
 @media (max-width: 62em) {
   .bill {
     display: block;

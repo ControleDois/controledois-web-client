@@ -24,7 +24,10 @@ export class DashboardService {
     return this.apiService.on('cashFlow', '', 'get-token');
   }
 
-  backups(): Observable<any> {
-    return this.apiService.on('backups', '', 'get-token');
+  backups(role: string): Observable<any> {
+    let params = new HttpParams()
+      .set('role', role)
+
+    return this.apiService.on('backups', '','get-token-params', params);
   }
 }

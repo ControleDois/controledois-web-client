@@ -30,6 +30,11 @@
       <div class="backups">
         <canvas #chartBackups></canvas>
       </div>
+      <div class="backup-roles">
+        <p [ngClass]="{'active': activeRole === '1'}" (click)="loadBackups('1')">DB</p>
+        <p [ngClass]="{'active': activeRole === '2'}" (click)="loadBackups('2')">NFe</p>
+        <p [ngClass]="{'active': activeRole === '3'}" (click)="loadBackups('3')">NFCe</p>
+      </div>
     </div>
 
     <div class="card" style="margin-top: 20px;">
