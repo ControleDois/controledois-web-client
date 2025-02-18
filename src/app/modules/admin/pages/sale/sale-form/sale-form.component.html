@@ -109,12 +109,12 @@
 
                           <label>
                             <span class="label-title">Quantidade</span>
-                            <input formControlName="amount" type="number" style="text-align: right" (keyup)="sumProductDetails(i)">
+                            <input formControlName="amount" type="number" style="text-align: right" (change)="sumProductDetails(i)" (keyup)="sumProductDetails(i)">
                           </label>
 
                           <label>
                             <span class="label-title">Valor</span>
-                            <input formControlName="cost_value" currencyMask type="text" style="text-align: right" (keyup)="sumProductDetails(i)">
+                            <input formControlName="cost_value" currencyMask type="text" style="text-align: right" (change)="sumProductDetails(i)" (keyup)="sumProductDetails(i)">
                           </label>
 
                           <label>
