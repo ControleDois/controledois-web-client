@@ -446,17 +446,19 @@ export class SaleFormComponent implements OnInit {
   }
 
   sumProductDetails(i: any): void {
-    this.products.at(i).setValue({
-      product_id: this.products.at(i).value.product_id,
-      description: this.products.at(i).value.description,
-      amount: this.products.at(i).value.amount,
-      cost_value: this.products.at(i).value.cost_value,
-      subtotal:
-        this.products.at(i).value.amount * this.products.at(i).value.cost_value,
-    });
+    setTimeout(() => {
+      this.products.at(i).setValue({
+        product_id: this.products.at(i).value.product_id,
+        description: this.products.at(i).value.description,
+        amount: this.products.at(i).value.amount,
+        cost_value: this.products.at(i).value.cost_value,
+        subtotal:
+          this.products.at(i).value.amount * this.products.at(i).value.cost_value,
+      });
 
-    this.sumValues();
-    this.changePortion();
+      this.sumValues();
+      this.changePortion();
+    }, 1000);
   }
 
   sumValues(): void {
