@@ -446,17 +446,19 @@ export class SaleFormComponent implements OnInit {
   }
 
   sumProductDetails(i: any): void {
-    this.products.at(i).setValue({
-      product_id: this.products.at(i).value.product_id,
-      description: this.products.at(i).value.description,
-      amount: this.products.at(i).value.amount,
-      cost_value: this.products.at(i).value.cost_value,
-      subtotal:
-        this.products.at(i).value.amount * this.products.at(i).value.cost_value,
-    });
+    setTimeout(() => {
+      this.products.at(i).setValue({
+        product_id: this.products.at(i).value.product_id,
+        description: this.products.at(i).value.description,
+        amount: this.products.at(i).value.amount,
+        cost_value: this.products.at(i).value.cost_value,
+        subtotal:
+          this.products.at(i).value.amount * this.products.at(i).value.cost_value,
+      });
 
-    this.sumValues();
-    this.changePortion();
+      this.sumValues();
+      this.changePortion();
+    }, 1000);
   }
 
   sumValues(): void {
@@ -510,7 +512,7 @@ export class SaleFormComponent implements OnInit {
           { text: 'Pagamentos', index: 2, icon: 'payment' },
           { text: 'Observações', index: 3, icon: 'description' },
         ],
-        selectedItem: 0
+        selectedItem: this.navigation.selectedItem
       }
     } else {
       this.navigation = {
@@ -519,7 +521,7 @@ export class SaleFormComponent implements OnInit {
           { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
           { text: 'Observações', index: 3, icon: 'description' },
         ],
-        selectedItem: 0
+        selectedItem: this.navigation.selectedItem == 2 ? 3 : this.navigation.selectedItem
       }
     }
   }

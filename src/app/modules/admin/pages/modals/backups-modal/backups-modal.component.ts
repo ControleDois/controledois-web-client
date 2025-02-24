@@ -43,6 +43,24 @@ export class BackupsModalComponent implements OnInit {
     description: 'Aqui você pode gerenciar os backups do sistema.',
   };
 
+  @Output() optionSelectBackup = new FormControl(0);
+  @Output() optionSelect = new FormControl(0);
+
+  public statusType = [
+    { name: 'Todos', type: 0 },
+    { name: 'Sucesso', type: 1 },
+    { name: 'Alerta', type: 2 },
+    { name: 'Erro', type: 3 },
+    { name: 'Não configurado', type: 4 },
+  ];
+
+  public statusTypeBackup = [
+    { name: 'Todos', type: 0 },
+    { name: 'Banco', type: 1 },
+    { name: 'NFe', type: 2 },
+    { name: 'NFCe', type: 3 },
+  ];
+
   constructor(
     private peopleService: PeopleService,
     private widGetService: WidgetService,
@@ -61,6 +79,26 @@ export class BackupsModalComponent implements OnInit {
       )
       .subscribe();
 
+    this.optionSelect.valueChanges
+    .pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      map(() => {
+        this.load();
+      })
+    )
+    .subscribe();
+
+    this.optionSelectBackup.valueChanges
+    .pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      map(() => {
+        this.load();
+      })
+    )
+    .subscribe();
+
     this.load();
   }
 
@@ -76,6 +114,8 @@ export class BackupsModalComponent implements OnInit {
     'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
     this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '5', [
       { param: 'backups', value: 'true' },
+      { param: 'backupStatus', value: this.optionSelect.value },
+      { param: 'backupRole', value: this.optionSelectBackup.value }
     ]).pipe(
       map(res => {
         this.dataSource.data = res.data;
@@ -88,20 +128,20 @@ export class BackupsModalComponent implements OnInit {
     const backup = element.backups.find((backup) => backup.role === role);
 
     if (!backup) {
-      return 'Não Config'
+      return 'layers_clear'
     }
 
     switch (backup.status) {
       case 0:
-        return 'Operacional';
+        return 'verified_user';
       case 1:
-        return 'Alerta';
+        return 'warning';
       case 2:
-        return 'Inoperante';
+        return 'gpp_bad';
       case 3:
-        return 'Erro';
+        return 'report_off';
       default:
-        return 'Erro';
+        return 'report_off';
     }
   }
 
@@ -145,5 +185,15 @@ export class BackupsModalComponent implements OnInit {
       default:
         return '#DBE6FE'
     }
+  }
+
+  getLastBackupDate(element: any, role: number): string {
+    const backup = element.backups.find((backup) => backup.role === role);
+
+    if (!backup) {
+      return 'Sem valor'
+    }
+
+    return backup.last_backup_date;
   }
 }

@@ -61,7 +61,7 @@ import { NfeTaxationListComponent } from './pages/nfe-taxation/nfe-taxation-list
 import { NfeTaxationFormComponent } from './pages/nfe-taxation/nfe-taxation-form/nfe-taxation-form.component';
 import { NfeTaxationRuleFormComponent } from './pages/modals/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
 
-const appName = 'ControleDois';
+const appName = 'CTrix';
 
 const routes: Routes = [
   {

@@ -109,12 +109,12 @@
 
                           <label>
                             <span class="label-title">Quantidade</span>
-                            <input formControlName="amount" type="number" style="text-align: right" (keyup)="sumProductDetails(i)">
+                            <input formControlName="amount" type="number" style="text-align: right" (change)="sumProductDetails(i)" (keyup)="sumProductDetails(i)">
                           </label>
 
                           <label>
                             <span class="label-title">Valor</span>
-                            <input formControlName="cost_value" currencyMask type="text" style="text-align: right" (keyup)="sumProductDetails(i)">
+                            <input formControlName="cost_value" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right" (change)="sumProductDetails(i)" (keyup)="sumProductDetails(i)">
                           </label>
 
                           <label>
@@ -159,7 +159,7 @@
                     <p>Frete a cobrado (R$)</p>
 
                     <label style="width: 110px">
-                      <input formControlName="shipping" type="text" currencyMask style="text-align: right" (keyup)="descountTypeAndShipping()">
+                      <input formControlName="shipping" type="text" prefix="R$ " mask="separator.2" thousandSeparator="." style="text-align: right" (keyup)="descountTypeAndShipping()">
                     </label>
                   </div>
 
@@ -214,7 +214,7 @@
                           </label>
 
                           <label style="width: 23.3%">
-                            <input formControlName="amount" currencyMask type="text" style="text-align: right">
+                            <input formControlName="amount" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right">
                           </label>
 
                           <label style="width: 50%">
