@@ -136,8 +136,8 @@ export class DashboardComponent implements OnInit {
         datasets: [
           {
             data: [this.backups.all, this.backups.on, this.backups.alert, this.backups.off, this.backups.error],
-            backgroundColor: ['#3ba9eee5', '#97fda4', '#f5d678c2', '#fb859c', '#607D8B'],
-            borderColor: ['#1587ce', '#4AB858', '#FFC107', '#F43E61', '#607D8B'],
+            backgroundColor: ['#3ba9eee5', '#97fda4', '#f5d678c2', '#607D8B', '#fb859c'],
+            borderColor: ['#1587ce', '#4AB858', '#FFC107', '#607D8B', '#F43E61', ],
             borderWidth: 1
           }
         ]

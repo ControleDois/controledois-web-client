@@ -4,6 +4,10 @@
 
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
+      <div style="display: flex;">
+        <app-select-option-simple style="margin-right: 10px;" [option]="optionSelectBackup" [optionsType]="statusTypeBackup"></app-select-option-simple>
+        <app-select-option-simple [option]="optionSelect" [optionsType]="statusType"></app-select-option-simple>
+      </div>
     </div>
 
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
@@ -18,34 +22,34 @@
       </ng-container>
 
       <ng-container matColumnDef="db">
-        <th mat-header-cell *matHeaderCellDef> Banco </th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef [ngClass]="{'hidden': !(optionSelectBackup.value == 1 || optionSelectBackup.value == 0)}"> Banco </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{'hidden': !(optionSelectBackup.value == 1 || optionSelectBackup.value == 0)}">
           <div class="status-active"
                [style.color]="getStatusColor(element, 1)"
-               [style.background]="getStatusColorBack(element, 1)">
-            {{getStatusBackup(element, 1)}}
+               style="background: none; text-align: center;">
+            <mat-icon>{{getStatusBackup(element, 1)}}</mat-icon>
           </div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="nfe">
-        <th mat-header-cell *matHeaderCellDef> NFe </th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef [ngClass]="{'hidden': !(optionSelectBackup.value == 2 || optionSelectBackup.value == 0)}"> NFe </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{'hidden': !(optionSelectBackup.value == 2 || optionSelectBackup.value == 0)}">
           <div class="status-active"
                [style.color]="getStatusColor(element, 2)"
-               [style.background]="getStatusColorBack(element, 2)">
-            {{getStatusBackup(element, 2)}}
+               style="background: none; text-align: center;">
+            <mat-icon>{{getStatusBackup(element, 2)}}</mat-icon>
           </div>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="nfce">
-        <th mat-header-cell *matHeaderCellDef> NFCe </th>
-        <td mat-cell *matCellDef="let element">
+        <th mat-header-cell *matHeaderCellDef [ngClass]="{'hidden': !(optionSelectBackup.value == 3 || optionSelectBackup.value == 0)}"> NFCe </th>
+        <td mat-cell *matCellDef="let element" [ngClass]="{'hidden': !(optionSelectBackup.value == 3 || optionSelectBackup.value == 0)}">
           <div class="status-active"
                [style.color]="getStatusColor(element, 3)"
-               [style.background]="getStatusColorBack(element, 3)">
-            {{getStatusBackup(element, 3)}}
+               style="background: none; text-align: center;">
+            <mat-icon>{{getStatusBackup(element, 3)}}</mat-icon>
           </div>
         </td>
       </ng-container>
