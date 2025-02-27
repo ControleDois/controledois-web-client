@@ -61,6 +61,8 @@ export class BackupsModalComponent implements OnInit {
     { name: 'NFCe', type: 3 },
   ];
 
+  public backupTooltip = new FormControl('Sem Backup');
+
   constructor(
     private peopleService: PeopleService,
     private widGetService: WidgetService,
@@ -74,6 +76,7 @@ export class BackupsModalComponent implements OnInit {
         debounceTime(400),
         distinctUntilChanged(),
         map(() => {
+          this.paginator.pageIndex = 0;
           this.load();
         })
       )
@@ -84,6 +87,7 @@ export class BackupsModalComponent implements OnInit {
       debounceTime(400),
       distinctUntilChanged(),
       map(() => {
+        this.paginator.pageIndex = 0;
         this.load();
       })
     )
@@ -94,6 +98,7 @@ export class BackupsModalComponent implements OnInit {
       debounceTime(400),
       distinctUntilChanged(),
       map(() => {
+        this.paginator.pageIndex = 0;
         this.load();
       })
     )
@@ -187,13 +192,24 @@ export class BackupsModalComponent implements OnInit {
     }
   }
 
-  getLastBackupDate(element: any, role: number): string {
+  getLastBackupDate(element: any, role: number): void {
     const backup = element.backups.find((backup) => backup.role === role);
 
-    if (!backup) {
-      return 'Sem valor'
-    }
+    if (!backup || !backup.last_backup) {
+      this.backupTooltip.setValue('Não configurado');
+    } else {
+      // Converte `last_backup` para Date e formata com data e hora
+      const dataFormatada = new Date(backup.last_backup).toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false, // Usa formato 24h
+      });
 
-    return backup.last_backup_date;
+      this.backupTooltip.setValue(dataFormatada);
+    }
   }
 }
