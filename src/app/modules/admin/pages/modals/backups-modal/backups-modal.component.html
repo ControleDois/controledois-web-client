@@ -25,8 +25,11 @@
         <th mat-header-cell *matHeaderCellDef [ngClass]="{'hidden': !(optionSelectBackup.value == 1 || optionSelectBackup.value == 0)}"> Banco </th>
         <td mat-cell *matCellDef="let element" [ngClass]="{'hidden': !(optionSelectBackup.value == 1 || optionSelectBackup.value == 0)}">
           <div class="status-active"
+                (mouseover)="getLastBackupDate(element, 1)"
                [style.color]="getStatusColor(element, 1)"
-               style="background: none; text-align: center;">
+               style="background: none; text-align: center;"
+               #tooltip="matTooltip"
+               [matTooltip]="this.backupTooltip.value || 'Sem Valor'">
             <mat-icon>{{getStatusBackup(element, 1)}}</mat-icon>
           </div>
         </td>
@@ -36,8 +39,11 @@
         <th mat-header-cell *matHeaderCellDef [ngClass]="{'hidden': !(optionSelectBackup.value == 2 || optionSelectBackup.value == 0)}"> NFe </th>
         <td mat-cell *matCellDef="let element" [ngClass]="{'hidden': !(optionSelectBackup.value == 2 || optionSelectBackup.value == 0)}">
           <div class="status-active"
+                (mouseover)="getLastBackupDate(element, 2)"
                [style.color]="getStatusColor(element, 2)"
-               style="background: none; text-align: center;">
+               style="background: none; text-align: center;"
+               #tooltip="matTooltip"
+               [matTooltip]="this.backupTooltip.value || 'Sem Valor'">
             <mat-icon>{{getStatusBackup(element, 2)}}</mat-icon>
           </div>
         </td>
@@ -47,8 +53,11 @@
         <th mat-header-cell *matHeaderCellDef [ngClass]="{'hidden': !(optionSelectBackup.value == 3 || optionSelectBackup.value == 0)}"> NFCe </th>
         <td mat-cell *matCellDef="let element" [ngClass]="{'hidden': !(optionSelectBackup.value == 3 || optionSelectBackup.value == 0)}">
           <div class="status-active"
+                (mouseover)="getLastBackupDate(element, 3)"
                [style.color]="getStatusColor(element, 3)"
-               style="background: none; text-align: center;">
+               style="background: none; text-align: center;"
+               #tooltip="matTooltip"
+               [matTooltip]="this.backupTooltip.value || ''">
             <mat-icon>{{getStatusBackup(element, 3)}}</mat-icon>
           </div>
         </td>
