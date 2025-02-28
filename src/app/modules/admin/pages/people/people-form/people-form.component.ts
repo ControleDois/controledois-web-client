@@ -16,6 +16,7 @@ import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
 
 @Component({
   selector: 'app-client-form',
@@ -119,6 +120,9 @@ export class PeopleFormComponent implements OnInit {
     selectedItem: 0
   }
 
+  @ViewChild('fileInputCertificado') fileInputCertificado!: ElementRef<HTMLInputElement>;
+  public certificado: DropboxFile | undefined;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private peopleService: PeopleService,
@@ -186,6 +190,7 @@ export class PeopleFormComponent implements OnInit {
       this.listDropboxFolder();
       this.listDropboxNFe();
       this.listDropboxNFCe();
+      this.getCertificateDropBox();
     }
   }
 
@@ -510,6 +515,59 @@ export class PeopleFormComponent implements OnInit {
       } else {
         // Se for o único role, impedir desmarcar
         checkbox.checked = true;
+      }
+    }
+  }
+
+  getCertificateDropBox(): void {
+    const documentPath = this.myForm.controls['document'].value || '';
+    if (documentPath) {
+      this.dropboxService.getCertificate(documentPath).subscribe({
+        next: (response) => {
+          console.log(response);
+          this.certificado = response;
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.error('Certificado não vinculado');
+        },
+      });
+    }
+  }
+
+  selectCertificadoButton(): void {
+    this.fileInputCertificado.nativeElement.click();
+  }
+
+  selectCertificado(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const documentPath = this.myForm.controls['document'].value || '';
+      if (documentPath) {
+        const arquivo = input.files[0];
+
+        if (arquivo.name.endsWith('.pfx')) {
+          console.log('Arquivo selecionado:', arquivo.name);
+
+          const path = `/Backups/${documentPath}/Certificado/${arquivo.name}`; // Define o caminho no Dropbox
+
+          this.loadingFull.active = true;
+          this.dropboxService.uploadFile(arquivo, path).subscribe({
+            next: (response) => {
+              this.certificado = response;
+              this.loadingFull.active = false;
+            },
+            error: (error) => {
+              console.error('Erro no upload:', error)
+              this.loadingFull.active = false;
+            },
+          });
+
+        } else {
+          alert('Por favor, selecione um arquivo .pfx');
+          input.value = ''; // Reseta o input
+        }
       }
     }
   }

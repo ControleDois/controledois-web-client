@@ -92,6 +92,21 @@ export class DropboxService {
     return this.listFiles(fullPath);
   }
 
+  getCertificate(path: string): Observable<DropboxFile> {
+    return this.listFiles(`/Backups/${path}/Certificado`).pipe(
+      map((files) => {
+        const certificateFile = files.find(file => file.name.endsWith('.pfx'));
+        if (!certificateFile) {
+          throw new Error('Certificate file not found');
+        }
+        return certificateFile;
+      }),
+      catchError((error) =>
+        throwError(() => new Error('Error getting certificate: ' + error))
+      )
+    );
+  }
+
   downloadFile(path: string): Observable<Blob> {
     return this.getAccessToken().pipe(
       switchMap((accessToken) => {
@@ -113,4 +128,31 @@ export class DropboxService {
       })
     );
   }
+
+  uploadFile(file: File, path: string): Observable<any> {
+    return this.getAccessToken().pipe(
+      switchMap((accessToken) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${accessToken}`,
+          'Dropbox-API-Arg': JSON.stringify({
+            path: path, // Caminho onde o arquivo será salvo no Dropbox
+            mute: false,
+            strict_conflict: false,
+            mode: 'overwrite', // 'add' para não sobrescrever, 'overwrite' para substituir
+            autorename: false,
+          }),
+          'Content-Type': 'application/octet-stream',
+        });
+
+        return this.http
+          .post('https://content.dropboxapi.com/2/files/upload', file, { headers })
+          .pipe(
+            catchError((error) =>
+              throwError(() => new Error('Error uploading file: ' + error))
+            )
+          );
+      })
+    );
+  }
+
 }

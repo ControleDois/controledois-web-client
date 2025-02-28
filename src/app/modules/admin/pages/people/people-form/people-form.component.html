@@ -113,6 +113,31 @@
                   <input formControlName="inscription_suframa" type="text" placeholder="Número da inscrição Suframa">
                 </label>
               </div>
+
+              <div class="basic-form-header" style="padding: 0 20px;">
+                <h3>Certificado</h3>
+              </div>
+
+              <div class="certificado">
+                <div *ngIf="certificado" class="certificado-file">
+                  <div class="icon">
+                    <mat-icon>insert_drive_file</mat-icon>
+                  </div>
+
+                  <div class="info">
+                    <div class="filename-link" (click)="downloadFile(certificado?.path_lower || '')">{{ certificado?.name }}</div>
+                    <div class="filesize">
+                      <span>{{ formatBytes(certificado?.size) }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="c2-btn c2-btn-blue" mat-button (click)="selectCertificadoButton()">
+                  <mat-icon>folder_open</mat-icon> Selecionar Certificado
+                </button>
+
+                <input #fileInputCertificado type="file" accept=".pfx" (change)="selectCertificado($event)" hidden>
+              </div>
             </mat-tab>
 
             <mat-tab>
