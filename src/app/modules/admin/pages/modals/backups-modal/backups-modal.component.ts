@@ -11,6 +11,7 @@ import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, t
 import { PeopleService } from 'src/app/shared/services/people.service';
 import { N } from 'chart.js/dist/chunks/helpers.core';
 import { LibraryService } from 'src/app/shared/services/library.service';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
 
 @Component({
   selector: 'app-backups-modal',
@@ -28,7 +29,8 @@ export class BackupsModalComponent implements OnInit {
     'document',
     'db',
     'nfe',
-    'nfce'
+    'nfce',
+    'actions'
   ];
   public dataSource = new MatTableDataSource<any>();
   public tableLength!: number;
@@ -66,6 +68,7 @@ export class BackupsModalComponent implements OnInit {
   constructor(
     private peopleService: PeopleService,
     private widGetService: WidgetService,
+    private dropboxService: DropboxService,
     public libraryService: LibraryService,
   ) {
   }
@@ -211,5 +214,79 @@ export class BackupsModalComponent implements OnInit {
 
       this.backupTooltip.setValue(dataFormatada);
     }
+  }
+
+  download(document: string, type: number): void {
+    switch (type) {
+      case 0:
+        this.dropboxService.listFolder(document).subscribe({
+          next: (response) => {
+            const file = this.getLatestFile(response);
+            if (file) {
+              this.downloadFile(file.path_display);
+            }
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
+        break;
+      case 1:
+        this.dropboxService.listNfe(document).subscribe({
+          next: (response) => {
+            const file = this.getLatestFile(response);
+            if (file) {
+              this.downloadFile(file.path_display);
+            }
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
+        break;
+      case 2:
+        this.dropboxService.listNfce(document).subscribe({
+          next: (response) => {
+            const file = this.getLatestFile(response);
+            if (file) {
+              this.downloadFile(file.path_display);
+            }
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        });
+        break;
+    }
+  }
+
+  getLatestFile(files: any[]): any | null {
+    if (!files.length) return null;
+
+    return files.reduce((latest, file) =>
+      new Date(file.server_modified) > new Date(latest.server_modified) ? file : latest
+    );
+  }
+
+  downloadFile(path: string): void {
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Fazendo Download'
+    this.dropboxService.downloadFile(path).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = path.split('/').pop() ?? 'default_filename';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.loadingFull.active = false;
+      },
+      (error) => {
+        console.error('Download error:', error);
+        this.loadingFull.active = false;
+      }
+    );
   }
 }

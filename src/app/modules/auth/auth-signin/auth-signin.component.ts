@@ -51,6 +51,7 @@ export class AuthSigninComponent implements OnInit {
           return throwError(error);
         }),
         map((auth) => {
+          auth.theme = false;
           this.storageService.setAuth(auth);
           this.router.navigate(['/dash']);
         })
