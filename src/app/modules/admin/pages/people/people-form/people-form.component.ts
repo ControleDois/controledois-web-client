@@ -60,6 +60,7 @@ export class PeopleFormComponent implements OnInit {
     keys: new FormArray([]),
     contacts: new FormArray([]),
     backups: new FormArray([]),
+    remoteAccess: new FormArray([]),
   });
 
   @Output() public pageHeader: PageHeader = {
@@ -89,6 +90,7 @@ export class PeopleFormComponent implements OnInit {
   @Output() public contactsOutPut: Array<SearchLoadingUnique> = [];
 
   public backups = this.myForm.get('backups') as FormArray;
+  public remoteAccess = this.myForm.get('remoteAccess') as FormArray;
 
   public peopleRole = [
     { name: '⦿ Física', type: 0 },
@@ -139,7 +141,8 @@ export class PeopleFormComponent implements OnInit {
       this.navigation.items.push({ text: 'Chaves', index: 4, icon: 'vpn_key' });
       this.navigation.items.push({ text: 'Backups', index: 5, icon: 'backup' });
     }
-    this.navigation.items.push({ text: 'Observações', index: 6, icon: 'folder' });
+    this.navigation.items.push({ text: 'Acesso Remoto', index: 6, icon: 'folder' });
+    this.navigation.items.push({ text: 'Observações', index: 7, icon: 'folder' });
   }
 
   validateForm(): void {
@@ -184,6 +187,12 @@ export class PeopleFormComponent implements OnInit {
       if (value.backups && value.backups.length > 0) {
         for (const backup of value.backups) {
           this.addBackup(backup);
+        }
+      }
+
+      if (value.remoteAccess && value.remoteAccess.length > 0) {
+        for (const access of value.remoteAccess) {
+          this.addRemoteAccess(access);
         }
       }
 
@@ -570,5 +579,27 @@ export class PeopleFormComponent implements OnInit {
         }
       }
     }
+  }
+
+  addRemoteAccess(value: any): void {
+    const control = new FormGroup({
+      role: new FormControl(value?.role || 0),
+      name: new FormControl(value?.name || ''),
+      access_id: new FormControl(value?.access_id || ''),
+      access_password: new FormControl(value?.access_password || ''),
+    });
+
+    this.remoteAccess.push(control);
+  }
+
+  removeRemoteAccess(index: any): void {
+    this.remoteAccess.controls.splice(index, 1);
+    this.remoteAccess.value.splice(index, 1);
+  }
+
+  openRemoteAccess(index: any): void {
+    const id = this.remoteAccess.controls[index].value.access_id.replace(/\s/g, "");
+    const password = this.remoteAccess.controls[index].value.access_password;
+    window.open(`rustdesk://${id}#${password}`, '_blank');
   }
 }

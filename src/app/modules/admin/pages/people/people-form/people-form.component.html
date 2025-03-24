@@ -421,6 +421,66 @@
             </mat-tab>
 
             <mat-tab>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+                  <ng-container formArrayName="remoteAccess">
+                    <div *ngFor="let access of remoteAccess.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                      <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
+                        <li>Tipo</li>
+                        <li style="width: 30%; margin-left: 10px;">Nome</li>
+                        <li style="width: 30%; margin-left: 10px;">Id Acesso</li>
+                        <li style="width: 20%; margin-left: 10px;">Senha</li>
+                      </ul>
+
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <label>
+                            <span class="label-title">Obrigatório</span>
+                            <select formControlName="role">
+                              <option [value]="0">RustDesk</option>
+                              <option [value]="1">AnyDesk</option>
+                            </select>
+                          </label>
+
+                          <label style="width: 30%">
+                            <span class="label-title">Nome</span>
+                            <input formControlName="name" type="text">
+                          </label>
+
+                          <label style="width: 30%">
+                            <span class="label-title">Id</span>
+                            <input formControlName="access_id" type="text">
+                          </label>
+
+                          <label style="width: 20%">
+                            <span class="label-title">Senha</span>
+                            <input formControlName="access_password" type="text">
+                          </label>
+
+                          <label>
+                            <button mat-icon-button (click)="openRemoteAccess(i)">
+                              <mat-icon>link</mat-icon>
+                            </button>
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removeRemoteAccess(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addRemoteAccess(null)">Adicionar</button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
               <div class="label-group">
                 <label class="label-w100">
                   <span class="field">Observações</span>
