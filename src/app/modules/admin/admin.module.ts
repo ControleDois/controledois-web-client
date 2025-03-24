@@ -60,6 +60,7 @@ import { NfeNatureOperationFormComponent } from './pages/nfe-nature-operation/nf
 import { NfeTaxationListComponent } from './pages/nfe-taxation/nfe-taxation-list/nfe-taxation-list.component';
 import { NfeTaxationFormComponent } from './pages/nfe-taxation/nfe-taxation-form/nfe-taxation-form.component';
 import { NfeTaxationRuleFormComponent } from './pages/modals/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
+import { MediaModalComponent } from './pages/modals/media-modal/media-modal.component';
 
 const appName = 'CTrix';
 
@@ -353,6 +354,7 @@ const routes: Routes = [
     NfeTaxationListComponent,
     NfeTaxationFormComponent,
     NfeTaxationRuleFormComponent,
+    MediaModalComponent,
   ],
   imports: [
     CommonModule,

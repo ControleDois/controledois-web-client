@@ -155,4 +155,18 @@ export class DropboxService {
     );
   }
 
+  getTemporaryLink(path: string) {
+    return this.getAccessToken().pipe(
+      switchMap((accessToken) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        });
+
+        return this.http.post<{ link: string }>('https://api.dropboxapi.com/2/files/get_temporary_link', { path }, {
+          headers
+        });
+      })
+    );
+  }
 }

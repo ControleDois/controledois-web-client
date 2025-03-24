@@ -1,0 +1,14 @@
+<div class="modal-container">
+  <button mat-icon-button class="close-btn" (click)="close()">✖</button>
+
+  <ng-container *ngIf="mediaType === 'image'">
+    <img [src]="mediaUrl" alt="Visualização" class="media-content" />
+  </ng-container>
+
+  <ng-container *ngIf="mediaType === 'video'">
+    <video controls class="media-content">
+      <source [src]="mediaUrl" type="video/mp4" />
+      Seu navegador não suporta a reprodução de vídeo.
+    </video>
+  </ng-container>
+</div>
