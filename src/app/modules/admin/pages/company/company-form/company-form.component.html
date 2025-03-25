@@ -100,6 +100,29 @@
                   <input formControlName="inscription_suframa" type="text">
                 </label>
               </div>
+
+              <div class="basic-form-header" style="padding: 0 20px; margin-bottom: 20px;">
+                <h3>Certificado</h3>
+              </div>
+
+              <div class="certificado">
+                <div class="label-group">
+                  <label>
+                    <div class="double-spans">
+                      <span class="field">Certificado</span>
+                      <span class="field-right-search" (click)="selectCertificadoButton()">Selecionar</span>
+                    </div>
+                    <input readonly [value]="getDetailsCertificado()"  type="text" placeholder="Selecione o certificado">
+                  </label>
+
+                  <label>
+                    <span class="field">Senha:</span>
+                    <input formControlName="certificate_password" type="text" placeholder="Senha do certificado">
+                  </label>
+                </div>
+
+                <input #fileInputCertificado type="file" accept=".pfx" (change)="selectCertificado($event)" hidden>
+              </div>
             </mat-tab>
 
             <mat-tab>

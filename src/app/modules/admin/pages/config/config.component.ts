@@ -5,7 +5,7 @@ import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
 import { PeopleService } from 'src/app/shared/services/people.service';
 import { DatePipe } from '@angular/common';
 import { People } from './../../../../shared/interfaces/people.interface';
@@ -19,6 +19,8 @@ import { DialogWhatsappConnectComponent } from 'src/app/shared/widget/dialog-wha
 import { PageHeader } from '../../interfaces/page-header.interface';
 import { BasicFormButtons } from '../../interfaces/basic-form-buttons.interface';
 import { BasicFormNavigation } from '../../interfaces/basic-form-navigation.interface';
+import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
 
 @Component({
   selector: 'app-config',
@@ -40,17 +42,6 @@ export class ConfigComponent implements OnInit {
     dropbox_client_id: new FormControl(''),
     dropbox_client_secret: new FormControl(''),
     dropbox_refresh_token: new FormControl(''),
-    firebase_api_key: new FormControl(''),
-    firebase_auth_domain: new FormControl(''),
-    firebase_project_id: new FormControl(''),
-    firebase_storage_bucket: new FormControl(''),
-    firebase_messaging_sender_id: new FormControl(''),
-    firebase_app_id: new FormControl(''),
-    focus_nfe_api_producao: new FormControl(''),
-    focus_nfe_api_homologacao: new FormControl(''),
-    focus_nfe_token_producao: new FormControl(''),
-    focus_nfe_token_homologacao: new FormControl(''),
-    focus_nfe_producao: new FormControl(false),
     people: new FormGroup({
       id: new FormControl('', Validators.required),
       company_id: new FormControl('', Validators.required),
@@ -65,6 +56,8 @@ export class ConfigComponent implements OnInit {
       document: new FormControl('', Validators.required),
       general_record: new FormControl('', Validators.required),
       birth: new FormControl('', Validators.required),
+      certificate_path: new FormControl(''),
+      certificate_password: new FormControl(''),
       address: new FormGroup({
         zip_code: new FormControl('', Validators.required),
         address: new FormControl('', Validators.required),
@@ -210,6 +203,9 @@ export class ConfigComponent implements OnInit {
 
   public whatsapps = this.myForm.get('whatsapps') as FormArray;
 
+  @ViewChild('fileInputCertificado') fileInputCertificado!: ElementRef<HTMLInputElement>;
+  public certificado: DropboxFile | undefined;
+
   constructor(
     private notificationService: NotificationService,
     private router: Router,
@@ -219,6 +215,7 @@ export class ConfigComponent implements OnInit {
     private firebaseService: FirebaseService,
     private storageService: StorageService,
     private dialogMessageService: DialogMessageService,
+    private dropboxService: DropboxService,
     public dialog: MatDialog
   ) {}
 
@@ -296,6 +293,8 @@ export class ConfigComponent implements OnInit {
 
       this.searchCategories.searchFieldOn = value?.shop?.categories?.map((category: any) => category.name) || [];
       this.myForm.patchValue(value);
+
+      this.getCertificateDropBox();
     }
   }
 
@@ -458,5 +457,90 @@ export class ConfigComponent implements OnInit {
       })
     ).subscribe();
 
+  }
+
+  getCertificateDropBox(): void {
+    const documentPath = (this.myForm.get('people') as FormGroup).controls['document'].value || '';
+    console.log(documentPath);
+
+    if (documentPath) {
+      this.dropboxService.getCertificate(documentPath).subscribe({
+        next: (response) => {
+          (this.myForm.get('people') as FormGroup).controls['certificate_path'].setValue(response?.path_display);
+          this.certificado = response;
+
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.error('Certificado não vinculado');
+        },
+      });
+    }
+  }
+
+  selectCertificadoButton(): void {
+    this.fileInputCertificado.nativeElement.click();
+  }
+
+  selectCertificado(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const documentPath = (this.myForm.get('people') as FormGroup).controls['document'].value || '';
+      if (documentPath) {
+        const arquivo = input.files[0];
+
+        if (arquivo.name.endsWith('.pfx')) {
+          const path = `/Backups/${documentPath}/Certificado/${arquivo.name}`; // Define o caminho no Dropbox
+
+          this.loadingFull.active = true;
+          this.dropboxService.uploadFile(arquivo, path).subscribe({
+            next: (response) => {
+              (this.myForm.get('people') as FormGroup).controls['certificate_path'].setValue(response?.path_display);
+              this.certificado = response;
+              this.loadingFull.active = false;
+            },
+            error: (error) => {
+              console.error('Erro no upload:', error)
+              this.loadingFull.active = false;
+            },
+          });
+
+        } else {
+          alert('Por favor, selecione um arquivo .pfx');
+          input.value = ''; // Reseta o input
+        }
+      }
+    }
+  }
+
+  getDetailsCertificado(): string {
+    if (this.certificado) {
+      return this.certificado?.name + ' - ' + this.formatBytes(this.certificado?.size)
+    } else {
+      return ''
+    }
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = [
+      'Bytes',
+      'KiB',
+      'MiB',
+      'GiB',
+      'TiB',
+      'PiB',
+      'EiB',
+      'ZiB',
+      'YiB',
+    ];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   }
 }

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
@@ -10,6 +10,8 @@ import { DialogMessageService } from 'src/app/shared/services/dialog-message.ser
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
 
 @Component({
   selector: 'app-company-form',
@@ -40,6 +42,8 @@ export class CompanyFormComponent implements OnInit {
     phone_commercial: new FormControl(''),
     phone_cell: new FormControl(''),
     birth: new FormControl(''),
+    certificate_path: new FormControl(''),
+    certificate_password: new FormControl(''),
     address: new FormGroup({
       zip_code: new FormControl(''),
       address: new FormControl(''),
@@ -99,6 +103,9 @@ export class CompanyFormComponent implements OnInit {
     ]
   }
 
+  @ViewChild('fileInputCertificado') fileInputCertificado!: ElementRef<HTMLInputElement>;
+  public certificado: DropboxFile | undefined;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private peopleService: CompanyService,
@@ -106,6 +113,7 @@ export class CompanyFormComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private dialogMessageService: DialogMessageService,
+    private dropboxService: DropboxService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Empresa' : 'Editar Empresa';
@@ -137,6 +145,8 @@ export class CompanyFormComponent implements OnInit {
     if (value) {
       this.myForm.patchValue(value);
       this.myForm.controls['birth'].setValue(this.datePipe.transform(value.birth, 'yyyy-MM-dd'));
+
+      this.getCertificateDropBox();
     }
   }
 
@@ -240,5 +250,88 @@ export class CompanyFormComponent implements OnInit {
         (this.myForm.get('address') as FormGroup).controls['state'].setValue(cep["uf"]);
       })
     ).subscribe();
+  }
+
+  getCertificateDropBox(): void {
+    const documentPath = this.myForm.controls['document'].value || '';
+    if (documentPath) {
+      this.dropboxService.getCertificate(documentPath).subscribe({
+        next: (response) => {
+          this.myForm.controls['certificate_path'].setValue(response?.path_display);
+          this.certificado = response;
+
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.error('Certificado não vinculado');
+        },
+      });
+    }
+  }
+
+  selectCertificadoButton(): void {
+    this.fileInputCertificado.nativeElement.click();
+  }
+
+  selectCertificado(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const documentPath = this.myForm.controls['document'].value || '';
+      if (documentPath) {
+        const arquivo = input.files[0];
+
+        if (arquivo.name.endsWith('.pfx')) {
+          const path = `/Backups/${documentPath}/Certificado/${arquivo.name}`; // Define o caminho no Dropbox
+
+          this.loadingFull.active = true;
+          this.dropboxService.uploadFile(arquivo, path).subscribe({
+            next: (response) => {
+              this.myForm.controls['certificate_path'].setValue(response.path_display);
+              this.certificado = response;
+              this.loadingFull.active = false;
+            },
+            error: (error) => {
+              console.error('Erro no upload:', error)
+              this.loadingFull.active = false;
+            },
+          });
+
+        } else {
+          alert('Por favor, selecione um arquivo .pfx');
+          input.value = ''; // Reseta o input
+        }
+      }
+    }
+  }
+
+  getDetailsCertificado(): string {
+    if (this.certificado) {
+      return this.certificado?.name + ' - ' + this.formatBytes(this.certificado?.size)
+    } else {
+      return ''
+    }
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = [
+      'Bytes',
+      'KiB',
+      'MiB',
+      'GiB',
+      'TiB',
+      'PiB',
+      'EiB',
+      'ZiB',
+      'YiB',
+    ];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   }
 }

@@ -136,6 +136,29 @@
                   </label>
                 </div>
               </div>
+
+              <div class="basic-form-header" style="margin-bottom: 20px;">
+                <h3>Certificado</h3>
+              </div>
+
+              <div class="certificado">
+                <div class="label-group">
+                  <label>
+                    <div class="double-spans">
+                      <span class="field">Certificado</span>
+                      <span class="field-right-search" (click)="selectCertificadoButton()">Selecionar</span>
+                    </div>
+                    <input readonly [value]="getDetailsCertificado()"  type="text" placeholder="Selecione o certificado">
+                  </label>
+
+                  <label>
+                    <span class="field">Senha:</span>
+                    <input formControlName="certificate_password" type="text" placeholder="Senha do certificado">
+                  </label>
+                </div>
+
+                <input #fileInputCertificado type="file" accept=".pfx" (change)="selectCertificado($event)" hidden>
+              </div>
             </mat-tab>
 
             <mat-tab>
@@ -191,39 +214,6 @@
               </div>
 
               <div class="basic-form-header" style="margin-top: 20px;">
-                <h3>Focus NFe</h3>
-              </div>
-
-              <div class="label-group">
-                <label class="label-w50">
-                  <span class="field">Api Produção</span>
-                  <input formControlName="focus_nfe_api_producao" type="text">
-                </label>
-
-                <label class="label-w50">
-                  <span class="field">Api Homologação</span>
-                  <input formControlName="focus_nfe_api_homologacao" type="text">
-                </label>
-              </div>
-
-              <div class="label-group">
-                <label class="label-w50">
-                  <span class="field">Token Produção</span>
-                  <input formControlName="focus_nfe_token_producao" type="text">
-                </label>
-
-                <label class="label-w50">
-                  <span class="field">Token Homologação</span>
-                  <input formControlName="focus_nfe_token_homologacao" type="text">
-                </label>
-              </div>
-
-              <label class="check">
-                <input type="checkbox" formControlName="focus_nfe_producao">
-                <span>Ativar Focus em Produção?</span>
-              </label>
-
-              <div class="basic-form-header" style="margin-top: 20px;">
                 <h3>Dados de Dropbox</h3>
               </div>
 
@@ -241,44 +231,6 @@
                 <label class="label-w100">
                   <span class="field">Refresh Token</span>
                   <input formControlName="dropbox_refresh_token" type="text">
-                </label>
-              </div>
-
-              <div class="basic-form-header" style="margin-top: 20px;">
-                <h3>Dados de Firebase</h3>
-              </div>
-
-              <div class="label-group">
-                <label class="label-w50">
-                  <span class="field">Api Key</span>
-                  <input formControlName="firebase_api_key" type="text">
-                </label>
-
-                <label class="label-w50">
-                  <span class="field">Auth Domain</span>
-                  <input formControlName="firebase_auth_domain" type="text">
-                </label>
-
-                <label class="label-w30">
-                  <span class="field">Project Id</span>
-                  <input formControlName="firebase_project_id" type="text">
-                </label>
-              </div>
-
-              <div class="label-group">
-                <label class="label-w30">
-                  <span class="field">Storage Bucket</span>
-                  <input formControlName="firebase_storage_bucket" type="text">
-                </label>
-
-                <label class="label-w30">
-                  <span class="field">Messaging Sender Id</span>
-                  <input formControlName="firebase_messaging_sender_id" type="text">
-                </label>
-
-                <label class="label-w50">
-                  <span class="field">App Id</span>
-                  <input formControlName="firebase_app_id" type="text">
                 </label>
               </div>
 

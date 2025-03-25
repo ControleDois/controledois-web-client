@@ -21,8 +21,6 @@ import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
 @Component({
   selector: 'app-client-form',
   templateUrl: './people-form.component.html',
-  styleUrls: ['./people-form.component.scss'],
-
 })
 export class PeopleFormComponent implements OnInit {
   private formId: string;
@@ -47,6 +45,8 @@ export class PeopleFormComponent implements OnInit {
     document: new FormControl(''),
     general_record: new FormControl(''),
     birth: new FormControl(''),
+    certificate_path: new FormControl(''),
+    certificate_password: new FormControl(''),
     address: new FormGroup({
       zip_code: new FormControl(''),
       address: new FormControl(''),
@@ -533,8 +533,9 @@ export class PeopleFormComponent implements OnInit {
     if (documentPath) {
       this.dropboxService.getCertificate(documentPath).subscribe({
         next: (response) => {
-          console.log(response);
+          this.myForm.controls['certificate_path'].setValue(response?.path_display);
           this.certificado = response;
+
         },
         error: (error) => {
           console.error(error);
@@ -557,13 +558,12 @@ export class PeopleFormComponent implements OnInit {
         const arquivo = input.files[0];
 
         if (arquivo.name.endsWith('.pfx')) {
-          console.log('Arquivo selecionado:', arquivo.name);
-
           const path = `/Backups/${documentPath}/Certificado/${arquivo.name}`; // Define o caminho no Dropbox
 
           this.loadingFull.active = true;
           this.dropboxService.uploadFile(arquivo, path).subscribe({
             next: (response) => {
+              this.myForm.controls['certificate_path'].setValue(response.path_display);
               this.certificado = response;
               this.loadingFull.active = false;
             },
@@ -601,5 +601,13 @@ export class PeopleFormComponent implements OnInit {
     const id = this.remoteAccess.controls[index].value.access_id.replace(/\s/g, "");
     const password = this.remoteAccess.controls[index].value.access_password;
     window.open(`rustdesk://${id}#${password}`, '_blank');
+  }
+
+  getDetailsCertificado(): string {
+    if (this.certificado) {
+      return this.certificado?.name + ' - ' + this.formatBytes(this.certificado?.size)
+    } else {
+      return ''
+    }
   }
 }

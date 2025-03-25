@@ -114,27 +114,25 @@
                 </label>
               </div>
 
-              <div class="basic-form-header" style="padding: 0 20px;">
+              <div class="basic-form-header" style="padding: 0 20px; margin-bottom: 20px;">
                 <h3>Certificado</h3>
               </div>
 
               <div class="certificado">
-                <div *ngIf="certificado" class="certificado-file">
-                  <div class="icon">
-                    <mat-icon>insert_drive_file</mat-icon>
-                  </div>
-
-                  <div class="info">
-                    <div class="filename-link" (click)="downloadFile(certificado?.path_lower || '')">{{ certificado?.name }}</div>
-                    <div class="filesize">
-                      <span>{{ formatBytes(certificado?.size) }}</span>
+                <div class="label-group">
+                  <label>
+                    <div class="double-spans">
+                      <span class="field">Certificado</span>
+                      <span class="field-right-search" (click)="selectCertificadoButton()">Selecionar</span>
                     </div>
-                  </div>
-                </div>
+                    <input readonly [value]="getDetailsCertificado()"  type="text" placeholder="Selecione o certificado">
+                  </label>
 
-                <button class="c2-btn c2-btn-blue" mat-button (click)="selectCertificadoButton()">
-                  <mat-icon>folder_open</mat-icon> Selecionar Certificado
-                </button>
+                  <label>
+                    <span class="field">Senha:</span>
+                    <input formControlName="certificate_password" type="text" placeholder="Senha do certificado">
+                  </label>
+                </div>
 
                 <input #fileInputCertificado type="file" accept=".pfx" (change)="selectCertificado($event)" hidden>
               </div>
