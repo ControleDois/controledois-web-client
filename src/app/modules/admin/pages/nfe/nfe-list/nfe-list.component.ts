@@ -11,6 +11,8 @@ import { PageHeader } from '../../../interfaces/page-header.interface';
 import { DatePipe } from '@angular/common';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-nfe-list',
@@ -53,6 +55,7 @@ export class NfeListComponent implements OnInit {
     private widGetService: WidgetService,
     private datePipe: DatePipe,
     private notificationService: NotificationService,
+    public dialog: MatDialog,
     public libraryService: LibraryService
   ) {
    }
@@ -127,13 +130,13 @@ export class NfeListComponent implements OnInit {
   getStatusColor(status: number): string {
     switch (status) {
       case 0:
-        return '#B98E00';
-      case 1:
-        return '#4ab858';
-      case 2:
-        return '#F43E61';
-      case 3:
         return '#2687E9';
+      case 1:
+        return '#B98E00';
+      case 2:
+        return '#4ab858';
+      case 3:
+        return '#F43E61';
       default:
         return '#2687E9'
     }
@@ -142,13 +145,13 @@ export class NfeListComponent implements OnInit {
   getStatusColorBack(status: number): string {
     switch (status) {
       case 0:
-        return '#FFF4CE';
-      case 1:
-        return '#ddf1de';
-      case 2:
-        return '#FCD9E0';
-      case 3:
         return '#DBE6FE';
+      case 1:
+        return '#FFF4CE';
+      case 2:
+        return '#ddf1de';
+      case 3:
+        return '#FCD9E0';
       default:
         return '#DBE6FE'
     }
@@ -170,20 +173,17 @@ export class NfeListComponent implements OnInit {
     ).subscribe();
   }
 
-  searchStatus(id: string): void {
-    this.loadingFull.active = true;
-    this.nfeService.searchStatus(id).pipe(
-      finalize(() => this.loadingFull.active = false),
-      catchError((error) => {
-        console.log(error)
-        this.notificationService.warn('Dados não encontrados...');
-        return throwError(error);
-      }),
-      map((res) => {
-        console.log(res)
-        this.notificationService.warn(res.mensagem);
-      })
-    ).subscribe();
+  showLog(nfe: any): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '920px';
+    dialogConfig.maxHeight = '550px';
+    dialogConfig.data = {
+      status: nfe?.status_sefaz,
+      message: nfe?.mensagem_sefaz,
+    };
+    this.dialog.open(ConsoleMessageModalComponent, dialogConfig);
   }
 
   showLink(link: string): void {

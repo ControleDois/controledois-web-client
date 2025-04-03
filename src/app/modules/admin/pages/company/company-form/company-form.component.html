@@ -41,12 +41,7 @@
 
                 <label>
                   <span class="field">Telefone comercial</span>
-                  <input formControlName="phone_commercial" type="text">
-                </label>
-
-                <label>
-                  <span class="field">Telefone celular</span>
-                  <input formControlName="phone_cell" type="text">
+                  <input formControlName="phone" type="text">
                 </label>
 
                 <label>
@@ -98,6 +93,24 @@
                 <label *ngIf="myForm.value.people_type == 1">
                   <span class="field">Inscrição Suframa</span>
                   <input formControlName="inscription_suframa" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">CRT:</span>
+                  <select formControlName="crt">
+                    <option *ngFor="let options of crt" [value]="options.type">{{ options.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Regime Especial:</span>
+                  <select formControlName="special_regime">
+                    <option *ngFor="let options of specialRegime" [value]="options.type">{{ options.name }}
+                    </option>
+                  </select>
                 </label>
               </div>
 
@@ -155,6 +168,11 @@
                   <label>
                     <span class="field">Cidade</span>
                     <input formControlName="city" type="text">
+                  </label>
+
+                  <label>
+                    <span class="field">Cidade IBGE:</span>
+                    <input formControlName="code_ibge" type="text" placeholder="Código ibge...">
                   </label>
 
                   <label class="label-w30">

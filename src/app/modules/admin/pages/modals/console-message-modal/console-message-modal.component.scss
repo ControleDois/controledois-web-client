@@ -1,0 +1,23 @@
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 8px;
+}
+
+.message {
+  background-color: var(--overlay-bg);
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px 0 var(--overlay-shadow);
+  border: 1px solid var(--overlay-border);
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.message-line {
+  color: rgb(34 197 94/ 1);
+}

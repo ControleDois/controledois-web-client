@@ -61,6 +61,7 @@ import { NfeTaxationListComponent } from './pages/nfe-taxation/nfe-taxation-list
 import { NfeTaxationFormComponent } from './pages/nfe-taxation/nfe-taxation-form/nfe-taxation-form.component';
 import { NfeTaxationRuleFormComponent } from './pages/modals/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
 import { MediaModalComponent } from './pages/modals/media-modal/media-modal.component';
+import { ConsoleMessageModalComponent } from './pages/modals/console-message-modal/console-message-modal.component';
 
 const appName = 'CTrix';
 
@@ -355,6 +356,7 @@ const routes: Routes = [
     NfeTaxationFormComponent,
     NfeTaxationRuleFormComponent,
     MediaModalComponent,
+    ConsoleMessageModalComponent,
   ],
   imports: [
     CommonModule,

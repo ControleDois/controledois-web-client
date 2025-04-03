@@ -14,8 +14,8 @@
       </ng-container>
 
       <ng-container matColumnDef="social_name">
-        <th mat-header-cell *matHeaderCellDef> Razão social </th>
-        <td mat-cell *matCellDef="let element"> {{element?.people?.social_name}} </td>
+        <th mat-header-cell *matHeaderCellDef> Nome / Razão social </th>
+        <td mat-cell *matCellDef="let element"> {{libraryService.getMaxString(element?.people?.social_name || element?.people?.name, 32)}} </td>
       </ng-container>
 
       <ng-container matColumnDef="value">
@@ -56,8 +56,8 @@
             <button mat-menu-item (click)="send(element.id)" *ngIf="element.status === 0 || element.status > 2">
               <span>Enviar Nfe</span>
             </button>
-            <button mat-menu-item (click)="searchStatus(element.id)" *ngIf="element.status === 1">
-              <span>Consultar</span>
+            <button mat-menu-item (click)="showLog(element)" *ngIf="element.status === 3">
+              <span>Verificar Erro</span>
             </button>
             <button mat-menu-item (click)="showLink(element.caminho_danfe)" *ngIf="element.status === 2">
               <span>Danfe</span>

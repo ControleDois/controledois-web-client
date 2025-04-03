@@ -39,6 +39,16 @@
                   <input formControlName="general_record" type="text" placeholder="Somente números">
                 </label>
 
+                <label class="label-w50">
+                  <span class="field">E-mail principal</span>
+                  <input formControlName="email" type="email">
+                </label>
+
+                <label>
+                  <span class="field">Telefone comercial</span>
+                  <input formControlName="phone" type="text">
+                </label>
+
                 <label>
                   <span class="field">{{myForm.value.people_type == 0 ? 'Nascimento:' : 'Data abertura:'}}</span>
                   <input formControlName="birth" type="date">
@@ -114,7 +124,25 @@
                 </label>
               </div>
 
-              <div class="basic-form-header" style="padding: 0 20px; margin-bottom: 20px;">
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">CRT:</span>
+                  <select formControlName="crt">
+                    <option *ngFor="let options of crt" [value]="options.type">{{ options.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Regime Especial:</span>
+                  <select formControlName="special_regime">
+                    <option *ngFor="let options of specialRegime" [value]="options.type">{{ options.name }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="margin-bottom: 20px;">
                 <h3>Certificado</h3>
               </div>
 
@@ -168,6 +196,11 @@
                   <label>
                     <span class="field">Cidade:</span>
                     <input formControlName="city" type="text" placeholder="Nome...">
+                  </label>
+
+                  <label>
+                    <span class="field">Cidade IBGE:</span>
+                    <input formControlName="code_ibge" type="text" placeholder="Código ibge...">
                   </label>
 
                   <label class="label-w30">
