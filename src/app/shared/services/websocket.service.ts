@@ -11,7 +11,7 @@ export class WebsocketService {
   private messageSubject = new BehaviorSubject<any>(null); // Cria um observable
 
   constructor() {
-    this.socket = io(environment.api, {
+    this.socket = io(environment.ws, {
       transports: ['websocket'], // Força uso de WebSocket
     });
 
