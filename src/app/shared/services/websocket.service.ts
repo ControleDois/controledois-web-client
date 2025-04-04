@@ -12,6 +12,7 @@ export class WebsocketService {
 
   constructor() {
     this.socket = io(environment.ws, {
+      path: '/socket.io/',
       transports: ['websocket'], // Força uso de WebSocket
     });
 
