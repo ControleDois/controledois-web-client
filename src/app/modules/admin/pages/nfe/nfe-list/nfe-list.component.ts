@@ -1,9 +1,9 @@
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, tap, throwError } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, Subscription, tap, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { NFeService } from 'src/app/shared/services/nfe.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
@@ -14,12 +14,13 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
+import { WebsocketService } from 'src/app/shared/services/websocket.service';
 
 @Component({
   selector: 'app-nfe-list',
   templateUrl: './nfe-list.component.html',
 })
-export class NfeListComponent implements OnInit {
+export class NfeListComponent implements OnInit, OnDestroy {
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
@@ -51,12 +52,15 @@ export class NfeListComponent implements OnInit {
     },
   };
 
+  private messageSubscription!: Subscription;
+
   constructor(
     private nfeService: NFeService,
     private widGetService: WidgetService,
     private datePipe: DatePipe,
     private notificationService: NotificationService,
     private dropboxService: DropboxService,
+    private ws: WebsocketService,
     public dialog: MatDialog,
     public libraryService: LibraryService
   ) {
@@ -74,6 +78,20 @@ export class NfeListComponent implements OnInit {
       .subscribe();
 
     this.load();
+
+    // Inscreve-se para receber mensagens
+    this.messageSubscription = this.ws.getMessage().subscribe((response) => {
+      if (response && response.type === 'nfe-status') {
+        this.updateNfeList(response.data)
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // Cancela a inscrição ao destruir o componente
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit(): void {
@@ -184,6 +202,25 @@ export class NfeListComponent implements OnInit {
     // Se o item for encontrado, atualiza o status
     if (index !== -1) {
       data[index].status = newStatus;
+
+      // Atualiza os dados da tabela para refletir a mudança
+      this.dataSource.data = [...data];
+    }
+  }
+
+  updateNfeList(nfe: any): void {
+    // Obtém os dados atuais da tabela
+    const data = this.dataSource.data;
+
+    // Encontra o índice do item pelo ID
+    const index = data.findIndex(item => item.id === nfe.id);
+
+    // Se o item for encontrado, atualiza o status
+    if (index !== -1) {
+      data[index].numero = nfe.numero;
+      data[index].caminho_danfe = nfe.caminho_danfe;
+      data[index].caminho_xml_nota_fiscal = nfe.caminho_xml_nota_fiscal;
+      data[index].status = nfe.status;
 
       // Atualiza os dados da tabela para refletir a mudança
       this.dataSource.data = [...data];
