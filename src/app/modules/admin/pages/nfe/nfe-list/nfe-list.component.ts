@@ -13,6 +13,7 @@ import { LibraryService } from 'src/app/shared/services/library.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
 
 @Component({
   selector: 'app-nfe-list',
@@ -55,6 +56,7 @@ export class NfeListComponent implements OnInit {
     private widGetService: WidgetService,
     private datePipe: DatePipe,
     private notificationService: NotificationService,
+    private dropboxService: DropboxService,
     public dialog: MatDialog,
     public libraryService: LibraryService
   ) {
@@ -162,15 +164,30 @@ export class NfeListComponent implements OnInit {
     this.nfeService.send(id).pipe(
       finalize(() => this.loadingFull.active = false),
       catchError((error) => {
-        console.log(error)
         this.notificationService.warn('Dados não encontrados...');
         return throwError(error);
       }),
       map((res) => {
-        console.log(res)
         this.notificationService.warn(res.mensagem);
+        this.updateStatus(id, 1);
       })
     ).subscribe();
+  }
+
+  updateStatus(id: string, newStatus: number) {
+    // Obtém os dados atuais da tabela
+    const data = this.dataSource.data;
+
+    // Encontra o índice do item pelo ID
+    const index = data.findIndex(item => item.id === id);
+
+    // Se o item for encontrado, atualiza o status
+    if (index !== -1) {
+      data[index].status = newStatus;
+
+      // Atualiza os dados da tabela para refletir a mudança
+      this.dataSource.data = [...data];
+    }
   }
 
   showLog(nfe: any): void {
@@ -186,7 +203,25 @@ export class NfeListComponent implements OnInit {
     this.dialog.open(ConsoleMessageModalComponent, dialogConfig);
   }
 
-  showLink(link: string): void {
-    window.open(link, '_blank');
+  downloadFile(path: string): void {
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Fazendo Download'
+    this.dropboxService.downloadFile(path.replace(/\\/g, "/")).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = path.split('/').pop() ?? 'default_filename';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.loadingFull.active = false;
+      },
+      (error) => {
+        console.error('Download error:', error);
+        this.loadingFull.active = false;
+      }
+    );
   }
 }

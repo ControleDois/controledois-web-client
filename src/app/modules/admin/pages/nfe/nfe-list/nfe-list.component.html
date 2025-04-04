@@ -59,10 +59,10 @@
             <button mat-menu-item (click)="showLog(element)" *ngIf="element.status === 3">
               <span>Verificar Erro</span>
             </button>
-            <button mat-menu-item (click)="showLink(element.caminho_danfe)" *ngIf="element.status === 2">
+            <button mat-menu-item (click)="downloadFile(element.caminho_danfe)" *ngIf="element.status === 2">
               <span>Danfe</span>
             </button>
-            <button mat-menu-item (click)="showLink(element.caminho_xml_nota_fiscal)" *ngIf="element.status === 2">
+            <button mat-menu-item (click)="downloadFile(element.caminho_xml_nota_fiscal)" *ngIf="element.status === 2">
               <span>XML</span>
             </button>
           </mat-menu>
