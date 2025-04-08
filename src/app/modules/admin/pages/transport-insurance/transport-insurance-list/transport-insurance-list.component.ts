@@ -4,22 +4,23 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, tap, throwError } from 'rxjs';
-import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
-import { TransportRouteService } from 'src/app/shared/services/transport-route.service';
+import { LibraryService } from 'src/app/shared/services/library.service';
+import { TransportInsuranceService } from 'src/app/shared/services/transport-insurance.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 
 @Component({
-  selector: 'app-transport-route-list',
-  templateUrl: './transport-route-list.component.html',
+  selector: 'app-transport-insurance-list',
+  templateUrl: './transport-insurance-list.component.html',
 })
-export class TransportRouteListComponent implements OnInit {
+export class TransportInsuranceListComponent implements OnInit {
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
   }
 
-  public displayedColumns: string[] = ['uf_origin', 'uf_destination', 'actions'];
+  public displayedColumns: string[] = ['people', 'number_apolice', 'validity', 'actions'];
   public dataSource = new MatTableDataSource<any>();
   public tableLength!: number;
   @ViewChild(MatPaginator)
@@ -28,51 +29,21 @@ export class TransportRouteListComponent implements OnInit {
   public sort!: MatSort;
   @Output() search = new FormControl('');
 
-  public stateList = [
-    { name: 'Acre', type: 'AC' },
-    { name: 'Alagoas', type: 'AL' },
-    { name: 'Amapá', type: 'AP' },
-    { name: 'Amazonas', type: 'AM' },
-    { name: 'Bahia', type: 'BA' },
-    { name: 'Ceará', type: 'CE' },
-    { name: 'Distrito Federal', type: 'DF' },
-    { name: 'Espírito Santo', type: 'ES' },
-    { name: 'Goiás', type: 'GO' },
-    { name: 'Maranhão', type: 'MA' },
-    { name: 'Mato Grosso', type: 'MT' },
-    { name: 'Mato Grosso do Sul', type: 'MS' },
-    { name: 'Minas Gerais', type: 'MG' },
-    { name: 'Pará', type: 'PA' },
-    { name: 'Paraíba', type: 'PB' },
-    { name: 'Paraná', type: 'PR' },
-    { name: 'Pernambuco', type: 'PE' },
-    { name: 'Piauí', type: 'PI' },
-    { name: 'Rio de Janeiro', type: 'RJ' },
-    { name: 'Rio Grande do Norte', type: 'RN' },
-    { name: 'Rio Grande do Sul', type: 'RS' },
-    { name: 'Rondônia', type: 'RO' },
-    { name: 'Roraima', type: 'RR' },
-    { name: 'Santa Catarina', type: 'SC' },
-    { name: 'São Paulo', type: 'SP' },
-    { name: 'Sergipe', type: 'SE' },
-    { name: 'Tocantins', type: 'TO' }
-  ];
-
   @Output() public pageHeader: PageHeader = {
-    title: 'Rotas de transporte',
-    description: 'Gerencie as rotas de transporte',
+    title: 'Seguros de transporte',
+    description: 'Gerencie os seguros de transporte',
     button: {
-      text: 'Nova rota',
-      routerLink: '/transport-route/new',
+      text: 'Novo seguro',
+      routerLink: '/transport-insurance/new',
       icon: 'add',
     },
   };
 
   constructor(
-    private transportRouteService: TransportRouteService,
-    private widGetService: WidgetService
-  ) {
-   }
+    private transportInsuranceService: TransportInsuranceService,
+    private widGetService: WidgetService,
+    public libraryService: LibraryService
+  ) {}
 
   ngOnInit(): void {
     this.search.valueChanges
@@ -96,7 +67,7 @@ export class TransportRouteListComponent implements OnInit {
   }
 
   load(): void {
-    this.transportRouteService.index(this.search.value ? this.search.value : '', 'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1').pipe(
+    this.transportInsuranceService.index(this.search.value ? this.search.value : '', 'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1').pipe(
       map(res => {
         this.dataSource.data = res.data;
         this.tableLength = res.meta.total;
@@ -110,8 +81,8 @@ export class TransportRouteListComponent implements OnInit {
     }).afterClosed().subscribe(res => {
       if (res === true) {
         this.loadingFull.active = true;
-        this.transportRouteService.destroy(id).pipe(
-          finalize(() => this.loadingFull.active  = false),
+        this.transportInsuranceService.destroy(id).pipe(
+          finalize(() => this.loadingFull.active = false),
           catchError((error) => {
             return throwError(error);
           }),
@@ -129,7 +100,7 @@ export class TransportRouteListComponent implements OnInit {
     }).afterClosed().subscribe(res => {
       if (res === true) {
         this.loadingFull.active = true;
-        this.transportRouteService.destroy(id).pipe(
+        this.transportInsuranceService.destroy(id).pipe(
           finalize(() => this.loadingFull.active = false),
           catchError((error) => {
             return throwError(error);
@@ -140,11 +111,5 @@ export class TransportRouteListComponent implements OnInit {
         ).subscribe();
       }
     });
-  }
-
-  //Busca Estado pela uf
-  getState(uf: string): string {
-    const state = this.stateList.find((state) => state.type === uf);
-    return state ? state.name : '';
   }
 }

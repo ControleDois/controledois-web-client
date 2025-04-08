@@ -66,6 +66,8 @@ import { MdfeFormComponent } from './pages/mdfe/mdfe-form/mdfe-form.component';
 import { MdfeListComponent } from './pages/mdfe/mdfe-list/mdfe-list.component';
 import { TransportRouteListComponent } from './pages/transport-route/transport-route-list/transport-route-list.component';
 import { TransportRouteFormComponent } from './pages/transport-route/transport-route-form/transport-route-form.component';
+import { TransportInsuranceListComponent } from './pages/transport-insurance/transport-insurance-list/transport-insurance-list.component';
+import { TransportInsuranceFormComponent } from './pages/transport-insurance/transport-insurance-form/transport-insurance-form.component';
 
 const appName = 'CTrix';
 
@@ -320,6 +322,16 @@ const routes: Routes = [
     component: TransportRouteFormComponent,
     data: { title: `Cadastro de Rotas -  ${appName}`},
   },
+  {
+    path: 'transport-insurance',
+    component: TransportInsuranceListComponent,
+    data: { title: `Seguros -  ${appName}`},
+  },
+  {
+    path: 'transport-insurance/:id',
+    component: TransportInsuranceFormComponent,
+    data: { title: `Cadastro de Seguros -  ${appName}`},
+  },
 ]
 
 @NgModule({
@@ -384,7 +396,9 @@ const routes: Routes = [
     MdfeFormComponent,
     MdfeListComponent,
     TransportRouteListComponent,
-    TransportRouteFormComponent
+    TransportRouteFormComponent,
+    TransportInsuranceListComponent,
+    TransportInsuranceFormComponent
   ],
   imports: [
     CommonModule,
