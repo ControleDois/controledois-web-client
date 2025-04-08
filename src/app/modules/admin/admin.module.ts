@@ -62,6 +62,10 @@ import { NfeTaxationFormComponent } from './pages/nfe-taxation/nfe-taxation-form
 import { NfeTaxationRuleFormComponent } from './pages/modals/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
 import { MediaModalComponent } from './pages/modals/media-modal/media-modal.component';
 import { ConsoleMessageModalComponent } from './pages/modals/console-message-modal/console-message-modal.component';
+import { MdfeFormComponent } from './pages/mdfe/mdfe-form/mdfe-form.component';
+import { MdfeListComponent } from './pages/mdfe/mdfe-list/mdfe-list.component';
+import { TransportRouteListComponent } from './pages/transport-route/transport-route-list/transport-route-list.component';
+import { TransportRouteFormComponent } from './pages/transport-route/transport-route-form/transport-route-form.component';
 
 const appName = 'CTrix';
 
@@ -296,6 +300,26 @@ const routes: Routes = [
     component: NfeTaxationFormComponent,
     data: { title: `Cadastro de Tributação -  ${appName}`},
   },
+  {
+    path: 'mdfe',
+    component: MdfeListComponent,
+    data: { title: `MDFe -  ${appName}`},
+  },
+  {
+    path: 'mdfe/:id',
+    component: MdfeFormComponent,
+    data: { title: `Cadastro de MDFe -  ${appName}`},
+  },
+  {
+    path: 'transport-route',
+    component: TransportRouteListComponent,
+    data: { title: `Rotas -  ${appName}`},
+  },
+  {
+    path: 'transport-route/:id',
+    component: TransportRouteFormComponent,
+    data: { title: `Cadastro de Rotas -  ${appName}`},
+  },
 ]
 
 @NgModule({
@@ -357,6 +381,10 @@ const routes: Routes = [
     NfeTaxationRuleFormComponent,
     MediaModalComponent,
     ConsoleMessageModalComponent,
+    MdfeFormComponent,
+    MdfeListComponent,
+    TransportRouteListComponent,
+    TransportRouteFormComponent
   ],
   imports: [
     CommonModule,

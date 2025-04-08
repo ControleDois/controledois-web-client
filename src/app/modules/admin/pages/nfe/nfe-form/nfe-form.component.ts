@@ -89,9 +89,7 @@ export class NfeFormComponent implements OnInit {
     { name: '⦿ Operação não presencial, outros', type: 9 },
   ];
 
-  public validationFields: Array<any> = [
-
-  ];
+  public validationFields: Array<any> = [];
 
   @Output() searchPeople: SearchLoadingUnique = {
     noTitle: false,

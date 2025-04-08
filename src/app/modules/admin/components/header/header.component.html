@@ -98,9 +98,6 @@
             <li (click)="menuMobileOn = !menuMobileOn">
               <a routerLink="/bill-payment">NFCe</a>
             </li>
-            <li (click)="menuMobileOn = !menuMobileOn">
-              <a routerLink="/nfe-manifest">Manifesto</a>
-            </li>
           </article>
           <article>
             <li><span>Cadastro</span></li>
@@ -112,6 +109,32 @@
             </li>
             <li (click)="menuMobileOn = !menuMobileOn">
               <a routerLink="/nfe-taxation">Tributação</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/nfe-manifest">Manifesto</a>
+            </li>
+          </article>
+        </ul>
+      </li>
+      <li class="nav-ul-li">
+        <a class="menu-list">MDFe <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <ul>
+          <article>
+            <li><span>Controle</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/mdfe">MDFe</a>
+            </li>
+          </article>
+          <article>
+            <li><span>Cadastro</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/transport-route">Rotas</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/transport-insurance">Seguros</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/transport-vehicle">Veículos</a>
             </li>
           </article>
         </ul>

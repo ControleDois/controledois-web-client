@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="page-content">
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
+
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
+
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="label-group">
+
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>
