@@ -10,7 +10,201 @@
           <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
             <mat-tab>
               <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Estado de Origem <i>*</i></span>
+                  <select formControlName="uf_origin" (change)="updateFilterConties()">
+                    <option *ngFor="let role of stateList" [value]="role.type" >{{ role.name }}
+                    </option>
+                  </select>
+                </label>
 
+                <label class="label-w50">
+                  <span class="field">Estado de Destino <i>*</i></span>
+                  <select formControlName="uf_destination" (change)="updateFulterContiesUnloading()">
+                    <option *ngFor="let role of stateList" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="label-group">
+                <app-search-loading-unique class="label-w100" [search]="searchRoute"></app-search-loading-unique>
+              </div>
+
+              <div class="label-group">
+                <app-search-loading-unique class="label-w100" [search]="searchPeople"></app-search-loading-unique>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <app-search-loading-chips-object class="label-w100" [search]="searchCounties"></app-search-loading-chips-object>
+
+                <label class="check" style="margin-left: 20px;">
+                  <input type="checkbox" formControlName="post_load">
+                  <span>Indicador de carregamento posterior?</span>
+                </label>
+              </div>
+
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+                  <ng-container formArrayName="documents">
+                    <div *ngFor="let document of documents.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                      <ul class="shopping-budget-grid-header">
+                        <li style="width: 70%">Chave</li>
+                        <li style="width: 35%">Mun. de descarregamento</li>
+                      </ul>
+
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <label style="width: 70%">
+                            <span class="label-title">Chave</span>
+                            <input formControlName="document_key" type="text" maxlength="44">
+                          </label>
+
+                          <app-search-loading-unique style="width: 35%" [search]="documentsOutPut[i]" (eventEmit)="selectDocument($event, i)"></app-search-loading-unique>
+
+                          <button class="add-item" mat-icon-button (click)="removeDocument(i)" *ngIf="documents.length > 1">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+
+                        <div class="basic-form-header" style="padding: 0 20px;">
+                          <h3>Produtos</h3>
+                        </div>
+
+                        <div class="shopping-budget" style="padding: 0 20px;">
+                          <div class="shopping-budget-grid" style="border: none !important">
+                            <ng-container formArrayName="products">
+                              <div *ngFor="let product of getProdutsDocument(i).controls; index as p" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                                <ul class="shopping-budget-grid-header">
+                                  <li style="width: 10%">N° ONU/UN</li>
+                                  <li style="width: 30%">Nome Produto</li>
+                                  <li style="width: 15%">Classe de Risco</li>
+                                  <li style="width: 15%">Grupo embalagem</li>
+                                  <li style="width: 15%">Qt. T. produto</li>
+                                  <li style="width: 15%">Qt. Tp volumes</li>
+                                </ul>
+
+                                <ng-container [formGroupName]="p">
+                                  <div class="label-group">
+                                    <label style="width: 10%">
+                                      <span class="label-title">N° ONU/UN</span>
+                                      <input formControlName="onu_number" type="text" maxlength="4">
+                                    </label>
+
+                                    <label style="width: 30%">
+                                      <span class="label-title">Nome do produto</span>
+                                      <input formControlName="product_name" type="text" maxlength="100">
+                                    </label>
+
+                                    <label style="width: 15%">
+                                      <span class="label-title">Classe de Risco</span>
+                                      <input formControlName="risk_class" type="text" maxlength="40">
+                                    </label>
+
+                                    <label style="width: 15%">
+                                      <span class="label-title">Grupo de Embalagem</span>
+                                      <input formControlName="packing_class" type="text" maxlength="6">
+                                    </label>
+
+                                    <label style="width: 15%">
+                                      <span class="label-title">Qt. Total por Produto</span>
+                                      <input formControlName="total_quantity_per_product" type="text" maxlength="20">
+                                    </label>
+
+                                    <label style="width: 15%">
+                                      <span class="label-title">Qt. E tipo de volumes</span>
+                                      <input formControlName="quantity_and_type_of_volumes" type="text" maxlength="60">
+                                    </label>
+
+                                    <button class="add-item" mat-icon-button (click)="removeProduct(p, i)">
+                                      <mat-icon>clear</mat-icon>
+                                    </button>
+                                  </div>
+                                </ng-container>
+                              </div>
+                            </ng-container>
+                          </div>
+
+                          <div class="shopping-budget-footer">
+                            <div class="amount-button-add">
+                              <button mat-button (click)="addProduct(null, i)">Adicionar Produto</button>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addDocument(null)">Adicionar Documento</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="basic-form-header" style="margin-top: 20px;">
+                <h3>Informações de carga e lotação</h3>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="label-title">CEP do local de carregamento <i>*</i></span>
+                  <input formControlName="loading_zip_code" type="text" mask="00000-000">
+                </label>
+
+                <label class="label-w50">
+                  <span class="label-title">CEP do local de descarregamento <i>*</i></span>
+                  <input formControlName="unloading_zip_code" type="text" mask="00000-000">
+                </label>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <app-search-loading-unique class="label-w50" [search]="searchVehicle"></app-search-loading-unique>
+                <app-search-loading-chips class="label-w50" [search]="searchVehicleCarts" style="margin-bottom: 10px; padding: 0 20px;"></app-search-loading-chips>
+              </div>
+
+              <div class="label-group">
+                <app-search-loading-chips-object class="label-w100" [search]="searchDrivers" style="margin-bottom: 10px; padding: 0 20px;"></app-search-loading-chips-object>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Tipo da Carga</span>
+                  <select formControlName="charge_type">
+                    <option *ngFor="let role of chargeTypeList" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <label class="label-w100">
+                  <span class="label-title">Descrição do produto predominante</span>
+                  <input formControlName="description_product" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Unidade de medida <i>*</i></span>
+                  <select formControlName="code_unit_measure_gross_weight">
+                    <option *ngFor="let role of codeUnitMeasureGrossWeightList" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <label class="label-w30">
+                  <span class="label-title">Quantidade em Quilos <i>*</i></span>
+                  <input formControlName="total_amount" mask="separator.2" thousandSeparator="." decimalSeparator="," currency="BRL" type="text">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Valor total da carga <i>*</i></span>
+                  <input formControlName="total_load_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
               </div>
             </mat-tab>
           </mat-tab-group>

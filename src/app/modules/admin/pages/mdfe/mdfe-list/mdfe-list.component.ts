@@ -3,33 +3,25 @@ import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, tap, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
-import { PageHeader } from '../../../interfaces/page-header.interface';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, Subscription, tap, throwError } from 'rxjs';
-import { NDFeService } from 'src/app/shared/services/mdfe.service';
-import { WidgetService } from 'src/app/shared/services/widget.service';
-import { DatePipe } from '@angular/common';
-import { NotificationService } from 'src/app/shared/services/notification.service';
-import { DropboxService } from 'src/app/shared/services/dropbox.service';
-import { WebsocketService } from 'src/app/shared/services/websocket.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { LibraryService } from 'src/app/shared/services/library.service';
-import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
+import { MdfeService } from 'src/app/shared/services/mdfe.service';
+import { WidgetService } from 'src/app/shared/services/widget.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-mdfe-list',
   templateUrl: './mdfe-list.component.html',
 })
 export class MdfeListComponent implements OnInit {
+
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
   }
 
-  public displayedColumns: string[] = [
-    'actions'
-  ];
-
+  public displayedColumns: string[] = ['number', 'vehicle','uf_origin', 'uf_destination', 'amount', 'value', 'status', 'actions'];
   public dataSource = new MatTableDataSource<any>();
   public tableLength!: number;
   @ViewChild(MatPaginator)
@@ -37,31 +29,22 @@ export class MdfeListComponent implements OnInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
-  public vDateFilter = new Date();
 
   @Output() public pageHeader: PageHeader = {
-    title: 'MDFes',
-    description: 'Listagem de MDFe cadastrados no sistema.',
+    title: 'MDF-e',
+    description: 'Listagem de MDF-e',
     button: {
-      text: 'Nova NDFe',
+      text: 'Nova MDF-e',
       routerLink: '/mdfe/new',
       icon: 'add',
     },
   };
 
-  private messageSubscription!: Subscription;
-
   constructor(
-    private mdfeService: NDFeService,
+    private mdfeService: MdfeService,
     private widGetService: WidgetService,
-    private datePipe: DatePipe,
-    private notificationService: NotificationService,
-    private dropboxService: DropboxService,
-    private ws: WebsocketService,
-    public dialog: MatDialog,
     public libraryService: LibraryService
-  ) {
-    }
+  ) {}
 
   ngOnInit(): void {
     this.search.valueChanges
@@ -75,20 +58,6 @@ export class MdfeListComponent implements OnInit {
       .subscribe();
 
     this.load();
-
-    // Inscreve-se para receber mensagens
-    this.messageSubscription = this.ws.getMessage().subscribe((response) => {
-      if (response && response.type === 'mdfe-status') {
-        this.updateNfeList(response.data)
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    // Cancela a inscrição ao destruir o componente
-    if (this.messageSubscription) {
-      this.messageSubscription.unsubscribe();
-    }
   }
 
   ngAfterViewInit(): void {
@@ -99,15 +68,63 @@ export class MdfeListComponent implements OnInit {
   }
 
   load(): void {
-    this.mdfeService.index(this.search.value ? this.search.value : '',
-      this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), 'data_emissao', 'data_emissao',
-      this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
-      this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
+    this.mdfeService.index(this.search.value ? this.search.value : '', 'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1').pipe(
       map(res => {
         this.dataSource.data = res.data;
         this.tableLength = res.meta.total;
       })
     ).subscribe();
+  }
+
+  getStatus(element: any): string {
+    switch (element.status) {
+      case 0:
+        return 'Não enviado';
+      case 1:
+        return 'Processando';
+      case 2:
+        return 'Pendencias';
+      case 3:
+        return 'Autorizado';
+      case 4:
+        return 'cancelado';
+      default:
+        return 'Não enviado'
+    }
+  }
+
+  getStatusColor(status: number): string {
+    switch (status) {
+      case 0:
+        return '#B98E00';
+      case 1:
+        return '#2687E9';
+      case 2:
+        return '#F45E61';
+      case 3:
+        return '#4ab858';
+      case 4:
+        return '#F43E61';
+      default:
+        return '#B98E00'
+    }
+  }
+
+  getStatusColorBack(status: number): string {
+    switch (status) {
+      case 0:
+        return '#FFF4CE';
+      case 1:
+        return '#DBE6FE';
+      case 2:
+        return '#FCD9E0';
+      case 3:
+        return '#ddf1de';
+      case 4:
+        return '#FCD9E0';
+      default:
+        return '#FFF4CE'
+    }
   }
 
   delete(id: string): void {
@@ -129,133 +146,61 @@ export class MdfeListComponent implements OnInit {
     });
   }
 
-  getStatus(status: number): string {
-    switch (status) {
-      case 0:
-        return 'Aguardando envio';
-      case 1:
-        return 'Em processo';
-      case 2:
-        return 'Emitida';
-      case 3:
-        return 'Error';
-      default:
-        return 'Error'
-    }
-  }
-
-  getStatusColor(status: number): string {
-    switch (status) {
-      case 0:
-        return '#2687E9';
-      case 1:
-        return '#B98E00';
-      case 2:
-        return '#4ab858';
-      case 3:
-        return '#F43E61';
-      default:
-        return '#2687E9'
-    }
-  }
-
-  getStatusColorBack(status: number): string {
-    switch (status) {
-      case 0:
-        return '#DBE6FE';
-      case 1:
-        return '#FFF4CE';
-      case 2:
-        return '#ddf1de';
-      case 3:
-        return '#FCD9E0';
-      default:
-        return '#DBE6FE'
-    }
-  }
-
-  send(id: string): void {
+  getStatusMDFe(id: string): void {
     this.loadingFull.active = true;
-    this.mdfeService.send(id).pipe(
+    this.mdfeService.getStatus(id).pipe(
       finalize(() => this.loadingFull.active = false),
       catchError((error) => {
-        this.notificationService.warn('Dados não encontrados...');
         return throwError(error);
       }),
       map((res) => {
-        this.notificationService.warn(res.mensagem);
-        this.updateStatus(id, 1);
+        if (res?.mensagem_sefaz) {
+          this.widGetService.modalQuestion({
+            isMessage: true,
+            json: res,
+            message: res?.mensagem_sefaz,
+            message_title: res.status
+          });
+        }
+
+        this.load();
       })
     ).subscribe();
   }
 
-  updateStatus(id: string, newStatus: number) {
-    // Obtém os dados atuais da tabela
-    const data = this.dataSource.data;
-
-    // Encontra o índice do item pelo ID
-    const index = data.findIndex(item => item.id === id);
-
-    // Se o item for encontrado, atualiza o status
-    if (index !== -1) {
-      data[index].status = newStatus;
-
-      // Atualiza os dados da tabela para refletir a mudança
-      this.dataSource.data = [...data];
-    }
+  openXML(element: any): void {
+    window.open(element.url_xml, '_blank');
   }
 
-  updateNfeList(nfe: any): void {
-    // Obtém os dados atuais da tabela
-    const data = this.dataSource.data;
-
-    // Encontra o índice do item pelo ID
-    const index = data.findIndex(item => item.id === nfe.id);
-
-    // Se o item for encontrado, atualiza o status
-    if (index !== -1) {
-      data[index].numero = nfe.numero;
-      data[index].caminho_danfe = nfe.caminho_danfe;
-      data[index].caminho_xml_nota_fiscal = nfe.caminho_xml_nota_fiscal;
-      data[index].status = nfe.status;
-
-      // Atualiza os dados da tabela para refletir a mudança
-      this.dataSource.data = [...data];
-    }
+  openPDF(element: any): void {
+    //abrir link
+    window.open(element.url_damdfe, '_blank');
   }
 
-  showLog(nfe: any): void {
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = false;
-    dialogConfig.autoFocus = false;
-    dialogConfig.width = '920px';
-    dialogConfig.maxHeight = '550px';
-    dialogConfig.data = {
-      status: nfe?.status_sefaz,
-      message: nfe?.mensagem_sefaz,
-    };
-    this.dialog.open(ConsoleMessageModalComponent, dialogConfig);
-  }
-
-  downloadFile(path: string): void {
+  sendMDfe(id: string): void {
     this.loadingFull.active = true;
-    this.loadingFull.message = 'Fazendo Download'
-  this.dropboxService.downloadFile(path.replace(/\\/g, "/")).subscribe(
-    (blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = path.split('/').pop() ?? 'default_filename';
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-      this.loadingFull.active = false;
-    },
-    (error) => {
-      console.error('Download error:', error);
-      this.loadingFull.active = false;
-    }
-  )}
+    this.mdfeService.sendMdfe(id).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        return throwError(error);
+      }),
+      map(() => {
+        this.load();
+      })
+    ).subscribe();
+  }
 
+  cancelMDfe(id: string): void {
+    this.loadingFull.active = true;
+    this.mdfeService.cancelMdfe(id).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        return throwError(error);
+      }),
+      map(() => {
+        this.load();
+      })
+    ).subscribe();
+
+  }
 }

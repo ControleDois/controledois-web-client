@@ -68,6 +68,8 @@ import { TransportRouteListComponent } from './pages/transport-route/transport-r
 import { TransportRouteFormComponent } from './pages/transport-route/transport-route-form/transport-route-form.component';
 import { TransportInsuranceListComponent } from './pages/transport-insurance/transport-insurance-list/transport-insurance-list.component';
 import { TransportInsuranceFormComponent } from './pages/transport-insurance/transport-insurance-form/transport-insurance-form.component';
+import { TransportVehicleListComponent } from './pages/transport-vehicle/transport-vehicle-list/transport-vehicle-list.component';
+import { TransportVehicleFormComponent } from './pages/transport-vehicle/transport-vehicle-form/transport-vehicle-form.component';
 
 const appName = 'CTrix';
 
@@ -332,6 +334,16 @@ const routes: Routes = [
     component: TransportInsuranceFormComponent,
     data: { title: `Cadastro de Seguros -  ${appName}`},
   },
+  {
+    path: 'transport-vehicle',
+    component: TransportVehicleListComponent,
+    data: { title: `Veículos -  ${appName}`},
+  },
+  {
+    path: 'transport-vehicle/:id',
+    component: TransportVehicleFormComponent,
+    data: { title: `Cadastro de Veículos -  ${appName}`},
+  },
 ]
 
 @NgModule({
@@ -398,7 +410,9 @@ const routes: Routes = [
     TransportRouteListComponent,
     TransportRouteFormComponent,
     TransportInsuranceListComponent,
-    TransportInsuranceFormComponent
+    TransportInsuranceFormComponent,
+    TransportVehicleListComponent,
+    TransportVehicleFormComponent
   ],
   imports: [
     CommonModule,

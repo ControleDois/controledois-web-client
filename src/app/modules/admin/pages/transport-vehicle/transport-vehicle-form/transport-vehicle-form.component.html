@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <label class="label-w50">
+            <span class="field">Placa</span>
+            <input formControlName="plate" type="text" placeholder="Placa" maxlength="7">
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Nome do veículo</span>
+            <input formControlName="name" type="text" placeholder="Nome">
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Renavam</span>
+            <input formControlName="renavam" type="text" placeholder="Renavam" maxlength="11">
+          </label>
+        </div>
+
+        <div class="label-group">
+          <label class="label-w50">
+            <span class="field">Tara em KG</span>
+            <input formControlName="tara" type="number" placeholder="Tara em KG">
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Capacidade em KG</span>
+            <input formControlName="capacity_in_kg" type="number" placeholder="Capacidade em KG">
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Capacidade em M3</span>
+            <input formControlName="capacity_in_m3" type="number" placeholder="Capacidade em M3">
+          </label>
+        </div>
+
+        <div class="label-group">
+          <label class="label-w50">
+            <span class="field">Estado</span>
+            <select formControlName="licensing_uf">
+              <option *ngFor="let role of stateList" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Tipo de Transporte</span>
+            <select formControlName="transport_type">
+              <option *ngFor="let role of typeTransportList" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+
+          <app-search-loading-unique *ngIf="myForm.value.transport_type == 1" class="label-w50" [search]="searchTransporter"></app-search-loading-unique>
+        </div>
+
+        <label class="label-group">
+          <label class="label-w50">
+            <span class="field">Tipo do veículo</span>
+            <select formControlName="vehicle_type">
+              <option *ngFor="let role of typeVehicleList" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Tipo do rodado</span>
+            <select formControlName="wheeled_type">
+              <option *ngFor="let role of typeWheeledList" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Tipo da carroceria</span>
+            <select formControlName="body_type">
+              <option *ngFor="let role of typeBodyList" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+        </label>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

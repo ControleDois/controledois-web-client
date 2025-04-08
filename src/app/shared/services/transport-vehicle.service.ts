@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class MdfeService {
-  private resource = 'mdfe';
+export class TransportVehicleService {
+  private resource = 'transport-vehicle';
 
   constructor(
     private apiService: ApiService
@@ -15,7 +15,6 @@ export class MdfeService {
 
   index(search: string, sorteBy?: string, orderBy?: string, page?: string, limit?: string): Observable<any> {
     const params = new HttpParams()
-      .set('role', '1')
       .set('search', search)
       .set('sortedBy', sorteBy || 'name')
       .set('orderBy', orderBy || 'name')
@@ -23,18 +22,6 @@ export class MdfeService {
       .set('limit', limit || '10');
 
     return this.apiService.on(this.resource, '', 'get-token-params', params);
-  }
-
-  getStatus(id: string): Observable<any> {
-    return this.apiService.on(`focusnfe/getStatus/${id}`, '', 'get-token');
-  }
-
-  sendMdfe(id: string): Observable<any> {
-    return this.apiService.on(`focusnfe/createMDFe/${id}`, '', 'post-token');
-  }
-
-  cancelMdfe(id: string): Observable<any> {
-    return this.apiService.on(`focusnfe/cancel/${id}`, '', 'delete-token');
   }
 
   store(body: Object): Observable<any> {
