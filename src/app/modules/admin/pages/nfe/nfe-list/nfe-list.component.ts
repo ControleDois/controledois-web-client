@@ -221,6 +221,8 @@ export class NfeListComponent implements OnInit, OnDestroy {
       data[index].caminho_danfe = nfe.caminho_danfe;
       data[index].caminho_xml_nota_fiscal = nfe.caminho_xml_nota_fiscal;
       data[index].status = nfe.status;
+      data[index].status_sefaz = nfe.status_sefaz;
+      data[index].mensagem_sefaz = nfe.mensagem_sefaz;
 
       // Atualiza os dados da tabela para refletir a mudança
       this.dataSource.data = [...data];

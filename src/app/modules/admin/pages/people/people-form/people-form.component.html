@@ -84,6 +84,35 @@
                   </label>
                 </div>
               </div>
+
+              <div class="basic-form-header" style="margin: 20px 0;" *ngIf="roleActive(4)">
+                <h3>Dados de Transportadora</h3>
+              </div>
+
+              <div formGroupName="transporter" *ngIf="roleActive(4)">
+                <div class="label-group">
+                  <label class="label-w30">
+                    <span class="field">RNTRC</span>
+                    <input formControlName="national_transport_registration" type="text" placeholder="RNTRC(ANTT)" maxlength="8">
+                  </label>
+
+                  <label>
+                    <span class="field">Vínculo com o Transportador</span>
+                    <select formControlName="vehicle_owner_type">
+                      <option *ngFor="let role of vehicleOwnerType" [value]="role.type">{{ role.name }}
+                      </option>
+                    </select>
+                  </label>
+
+                  <label>
+                    <span class="field">Tipo de Transportador</span>
+                    <select formControlName="transport_type">
+                      <option *ngFor="let role of transportType" [value]="role.type">{{ role.name }}
+                      </option>
+                    </select>
+                  </label>
+                </div>
+              </div>
             </mat-tab>
 
             <mat-tab>

@@ -195,6 +195,10 @@
             </mat-tab>
 
             <mat-tab>
+              <div class="basic-form-header" style="margin-bottom: 20px;">
+                <h3>Configurações de NF-e</h3>
+              </div>
+
               <div class="label-group">
                 <label class="label-w50">
                   <span class="field">Ambiente:</span>
@@ -205,23 +209,61 @@
                 </label>
 
                 <label>
-                  <span class="field">Série NFe</span>
+                  <span class="field">Série NF-e</span>
                   <input formControlName="nfe_serie" type="number">
                 </label>
 
                 <label>
-                  <span class="field">Número NFe</span>
+                  <span class="field">Número NF-e</span>
                   <input formControlName="nfe_numero" type="number">
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="margin-bottom: 20px;">
+                <h3>Configurações de NFC-e</h3>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Ambiente:</span>
+                  <select formControlName="nfce_ambiente">
+                    <option value="1">Homologação</option>
+                    <option value="0">Produção</option>
+                  </select>
                 </label>
 
                 <label>
-                  <span class="field">Série NFCe</span>
+                  <span class="field">Série NFC-e</span>
                   <input formControlName="nfce_serie" type="number">
                 </label>
 
                 <label>
-                  <span class="field">Número NFCe</span>
+                  <span class="field">Número NFC-e</span>
                   <input formControlName="nfce_numero" type="number">
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="margin-bottom: 20px;">
+                <h3>Configurações de MDF-e</h3>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Ambiente:</span>
+                  <select formControlName="mdfe_ambiente">
+                    <option value="1">Homologação</option>
+                    <option value="0">Produção</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span class="field">Série MDF-e</span>
+                  <input formControlName="mdfe_serie" type="number">
+                </label>
+
+                <label>
+                  <span class="field">Número MDF-e</span>
+                  <input formControlName="mdfe_numero" type="number">
                 </label>
               </div>
             </mat-tab>

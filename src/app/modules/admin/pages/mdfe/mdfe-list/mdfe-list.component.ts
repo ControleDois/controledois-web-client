@@ -3,12 +3,17 @@ import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, tap, throwError } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, Observable, Subscription, tap, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { MdfeService } from 'src/app/shared/services/mdfe.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { WebsocketService } from 'src/app/shared/services/websocket.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
 
 @Component({
   selector: 'app-mdfe-list',
@@ -40,10 +45,16 @@ export class MdfeListComponent implements OnInit {
     },
   };
 
+  private messageSubscription!: Subscription;
+
   constructor(
     private mdfeService: MdfeService,
     private widGetService: WidgetService,
-    public libraryService: LibraryService
+    private notificationService: NotificationService,
+    private ws: WebsocketService,
+    private dropboxService: DropboxService,
+    public libraryService: LibraryService,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +69,13 @@ export class MdfeListComponent implements OnInit {
       .subscribe();
 
     this.load();
+
+    // Inscreve-se para receber mensagens
+    this.messageSubscription = this.ws.getMessage().subscribe((response) => {
+      if (response && response.type === 'mdfe-status') {
+        this.updateMDFeList(response.data)
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -146,28 +164,6 @@ export class MdfeListComponent implements OnInit {
     });
   }
 
-  getStatusMDFe(id: string): void {
-    this.loadingFull.active = true;
-    this.mdfeService.getStatus(id).pipe(
-      finalize(() => this.loadingFull.active = false),
-      catchError((error) => {
-        return throwError(error);
-      }),
-      map((res) => {
-        if (res?.mensagem_sefaz) {
-          this.widGetService.modalQuestion({
-            isMessage: true,
-            json: res,
-            message: res?.mensagem_sefaz,
-            message_title: res.status
-          });
-        }
-
-        this.load();
-      })
-    ).subscribe();
-  }
-
   openXML(element: any): void {
     window.open(element.url_xml, '_blank');
   }
@@ -177,30 +173,90 @@ export class MdfeListComponent implements OnInit {
     window.open(element.url_damdfe, '_blank');
   }
 
-  sendMDfe(id: string): void {
+  send(id: string): void {
     this.loadingFull.active = true;
-    this.mdfeService.sendMdfe(id).pipe(
+    this.mdfeService.send(id).pipe(
       finalize(() => this.loadingFull.active = false),
       catchError((error) => {
+        this.notificationService.warn('Dados não encontrados...');
         return throwError(error);
       }),
-      map(() => {
-        this.load();
+      map((res) => {
+        this.notificationService.warn(res.mensagem);
+        this.updateStatus(id, 1);
       })
     ).subscribe();
   }
 
-  cancelMDfe(id: string): void {
-    this.loadingFull.active = true;
-    this.mdfeService.cancelMdfe(id).pipe(
-      finalize(() => this.loadingFull.active = false),
-      catchError((error) => {
-        return throwError(error);
-      }),
-      map(() => {
-        this.load();
-      })
-    ).subscribe();
+  updateStatus(id: string, newStatus: number) {
+    // Obtém os dados atuais da tabela
+    const data = this.dataSource.data;
 
+    // Encontra o índice do item pelo ID
+    const index = data.findIndex(item => item.id === id);
+
+    // Se o item for encontrado, atualiza o status
+    if (index !== -1) {
+      data[index].status = newStatus;
+
+      // Atualiza os dados da tabela para refletir a mudança
+      this.dataSource.data = [...data];
+    }
+  }
+
+  updateMDFeList(mdfe: any): void {
+    // Obtém os dados atuais da tabela
+    const data = this.dataSource.data;
+
+    // Encontra o índice do item pelo ID
+    const index = data.findIndex(item => item.id === mdfe.id);
+
+    // Se o item for encontrado, atualiza o status
+    if (index !== -1) {
+      data[index].document_number = mdfe.document_number;
+      data[index].path_damdfe = mdfe.path_damdfe;
+      data[index].path_xml = mdfe.path_xml;
+      data[index].status = mdfe.status;
+      data[index].status_sefaz = mdfe.status_sefaz;
+      data[index].message_sefaz = mdfe.message_sefaz;
+
+      // Atualiza os dados da tabela para refletir a mudança
+      this.dataSource.data = [...data];
+    }
+  }
+
+  showLog(mdfe: any): void {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = false;
+      dialogConfig.autoFocus = false;
+      dialogConfig.width = '920px';
+      dialogConfig.maxHeight = '550px';
+      dialogConfig.data = {
+        status: mdfe?.status_sefaz,
+        message: mdfe?.message_sefaz,
+      };
+      this.dialog.open(ConsoleMessageModalComponent, dialogConfig);
+  }
+
+  downloadFile(path: string): void {
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Fazendo Download'
+    this.dropboxService.downloadFile(path.replace(/\\/g, "/")).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = path.split('/').pop() ?? 'default_filename';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.loadingFull.active = false;
+      },
+      (error) => {
+        console.error('Download error:', error);
+        this.loadingFull.active = false;
+      }
+    );
   }
 }

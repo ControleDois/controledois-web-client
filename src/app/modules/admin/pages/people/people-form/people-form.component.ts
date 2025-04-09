@@ -61,6 +61,11 @@ export class PeopleFormComponent implements OnInit {
       complement: new FormControl(''),
       code_ibge: new FormControl(''),
     }),
+    transporter: new FormGroup({
+      national_transport_registration: new FormControl(''),
+      vehicle_owner_type: new FormControl(0),
+      transport_type: new FormControl(0),
+    }),
     note: new FormControl(''),
     keys: new FormArray([]),
     contacts: new FormArray([]),
@@ -146,6 +151,18 @@ export class PeopleFormComponent implements OnInit {
     { name: '⦿ Microempresário Individual (MEI)', type: 5 },
     { name: '⦿ Microempresário e Empresa de Pequeo Porte(ME/EPP)', type: 6 },
     { name: '⦿ Lucro real', type: 7 },
+  ];
+
+  public vehicleOwnerType = [
+    { name: '⦿ Agregado (TAC)', type: 0 },
+    { name: '⦿ Independente (TAC)', type: 1 },
+    { name: '⦿ Outros', type: 2 },
+  ];
+
+  public transportType = [
+    { name: '⦿ Empresa de Transporte de Cargas (ETC)', type: 1 },
+    { name: '⦿ Transportador Autônomo de Cargas (TAC)', type: 2 },
+    { name: '⦿ Cooperativa de Transporte de Cargas (CTC)', type: 3 },
   ];
 
   constructor(

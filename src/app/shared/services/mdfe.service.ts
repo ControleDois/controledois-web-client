@@ -25,18 +25,6 @@ export class MdfeService {
     return this.apiService.on(this.resource, '', 'get-token-params', params);
   }
 
-  getStatus(id: string): Observable<any> {
-    return this.apiService.on(`focusnfe/getStatus/${id}`, '', 'get-token');
-  }
-
-  sendMdfe(id: string): Observable<any> {
-    return this.apiService.on(`focusnfe/createMDFe/${id}`, '', 'post-token');
-  }
-
-  cancelMdfe(id: string): Observable<any> {
-    return this.apiService.on(`focusnfe/cancel/${id}`, '', 'delete-token');
-  }
-
   store(body: Object): Observable<any> {
     return this.apiService.on(`${this.resource}`, body, 'post-token');
   }
@@ -55,5 +43,9 @@ export class MdfeService {
 
   save(id: string, body: Object): Observable<any> {
     return id === 'new' ? this.store(body) : this.update(id, body);
+  }
+
+  send(id: string): Observable<any> {
+    return this.apiService.on(`${this.resource}/send/${id}`, '', 'post-token');
   }
 }

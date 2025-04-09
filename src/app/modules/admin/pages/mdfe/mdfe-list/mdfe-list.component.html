@@ -56,26 +56,23 @@
             <mat-icon>keyboard_arrow_down</mat-icon>
           </div>
           <mat-menu #actions="matMenu">
-            <button mat-menu-item (click)="sendMDfe(element.id)" *ngIf="element.status === 0 || element.status === 2">
+            <button mat-menu-item (click)="send(element.id)" *ngIf="element.status === 0 || element.status === 2">
               <span>Enviar MDFe</span>
             </button>
             <button mat-menu-item [routerLink]="'/mdfe/' + element.id" *ngIf="element.status === 0 || element.status === 2">
               <span>Editar</span>
             </button>
-            <button mat-menu-item (click)="getStatusMDFe(element.id)" *ngIf="element.status > 0">
-              <span>Consultar Status</span>
-            </button>
-            <button mat-menu-item (click)="cancelMDfe(element.id)" *ngIf="element.status === 3">
-              <span>Cancelar MDFe</span>
-            </button>
-            <button mat-menu-item (click)="openXML(element)" *ngIf="element.status >= 3">
-              <span>Download XML</span>
-            </button>
-            <button mat-menu-item (click)="openPDF(element)" *ngIf="element.status >= 3">
-              <span>Download Documento</span>
-            </button>
             <button mat-menu-item (click)="delete(element.id)" *ngIf="element.status === 0 || element.status === 2">
               <span>Remover</span>
+            </button>
+            <button mat-menu-item (click)="showLog(element)" *ngIf="element.status === 2">
+              <span>Verificar Erro</span>
+            </button>
+            <button mat-menu-item (click)="downloadFile(element.path_damdfe)" *ngIf="element.status >= 3">
+              <span>Danfe</span>
+            </button>
+            <button mat-menu-item (click)="downloadFile(element.path_xml)" *ngIf="element.status >= 3">
+              <span>XML</span>
             </button>
           </mat-menu>
         </td>
