@@ -97,15 +97,17 @@ export class MdfeListComponent implements OnInit {
   getStatus(element: any): string {
     switch (element.status) {
       case 0:
-        return 'Não enviado';
+        return 'Com Erro';
       case 1:
-        return 'Processando';
+        return 'Aguardando';
       case 2:
-        return 'Pendencias';
+        return 'Processando';
       case 3:
         return 'Autorizado';
       case 4:
-        return 'cancelado';
+        return 'Cancelado';
+      case 5:
+        return 'Encerrado';
       default:
         return 'Não enviado'
     }
@@ -114,34 +116,38 @@ export class MdfeListComponent implements OnInit {
   getStatusColor(status: number): string {
     switch (status) {
       case 0:
-        return '#B98E00';
+        return '#F43E61';
       case 1:
         return '#2687E9';
       case 2:
-        return '#F45E61';
+        return '#B98E00';
       case 3:
         return '#4ab858';
       case 4:
         return '#F43E61';
+      case 5:
+        return '#6a6a6a';
       default:
-        return '#B98E00'
+        return '#2687E9'
     }
   }
 
   getStatusColorBack(status: number): string {
     switch (status) {
       case 0:
-        return '#FFF4CE';
+        return '#FCD9E0';
       case 1:
         return '#DBE6FE';
       case 2:
-        return '#FCD9E0';
+        return '#FFF4CE';
       case 3:
         return '#ddf1de';
       case 4:
         return '#FCD9E0';
+      case 5:
+        return '#f3f3f3';
       default:
-        return '#FFF4CE'
+        return '#DBE6FE'
     }
   }
 
@@ -183,7 +189,7 @@ export class MdfeListComponent implements OnInit {
       }),
       map((res) => {
         this.notificationService.warn(res.mensagem);
-        this.updateStatus(id, 1);
+        this.updateStatus(id, 2);
       })
     ).subscribe();
   }
@@ -258,5 +264,20 @@ export class MdfeListComponent implements OnInit {
         this.loadingFull.active = false;
       }
     );
+  }
+
+  closing(id: string): void {
+    this.loadingFull.active = true;
+    this.mdfeService.closing(id).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        this.notificationService.warn('Dados não encontrados...');
+        return throwError(error);
+      }),
+      map((res) => {
+        this.notificationService.warn(res.mensagem);
+        this.updateStatus(id, 2);
+      })
+    ).subscribe();
   }
 }

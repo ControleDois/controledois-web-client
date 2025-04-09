@@ -48,4 +48,8 @@ export class MdfeService {
   send(id: string): Observable<any> {
     return this.apiService.on(`${this.resource}/send/${id}`, '', 'post-token');
   }
+
+  closing(id: string): Observable<any> {
+    return this.apiService.on(`${this.resource}/closing/${id}`, '', 'post-token');
+  }
 }
