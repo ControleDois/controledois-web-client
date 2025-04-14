@@ -269,16 +269,16 @@ const routes: Routes = [
     component: PostFormComponent,
     data: { title: `Cadastro transmissão de mensagens -  ${appName}`},
   },
-  // {
-  //   path: 'task',
-  //   component: TaskListComponent,
-  //   data: { title: `Tarefas -  ${appName}`},
-  // },
-  // {
-  //   path: 'task/:id',
-  //   component: TaskFormComponent,
-  //   data: { title: `Cadastro de Tarefas -  ${appName}`},
-  // },
+  {
+    path: 'task',
+    component: TaskListComponent,
+    data: { title: `Tarefas -  ${appName}`},
+  },
+  {
+    path: 'task/:id',
+    component: TaskFormComponent,
+    data: { title: `Cadastro de Tarefas -  ${appName}`},
+  },
   {
     path: 'chat',
     component: ChatComponent,
