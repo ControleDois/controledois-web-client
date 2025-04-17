@@ -31,7 +31,7 @@ export class SidenavComponent implements OnInit {
     title: 'Empresa',
     url: 'company',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),

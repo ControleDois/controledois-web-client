@@ -257,28 +257,28 @@ export class PeopleFormComponent implements OnInit {
         finalize(() => this.loadingFull.active = false),
         catchError((res) => {
           let title = 'Atenção';
-            let message = 'Ocorreu um erro ao realizar o cadastro, tente novamente mais tarde.';
-            let message_next = '';
+          let message = 'Ocorreu um erro ao realizar o cadastro, tente novamente mais tarde.';
+          let message_next = '';
 
-            if (res?.error?.errors?.[0]?.field === 'document') {
-              title = this.myForm.value.people_type === 0 ? 'Campo CPF' : 'Campo CNPJ';
-              message = res.error.errors[0].message;
-              message_next = 'Para cadastrar um CPF, é necessário que ele tenha 11 dígitos. Para cadastrar um CNPJ, é necessário que ele tenha 14 dígitos. Caso o CPF ou CNPJ esteja correto, talvez a empresa já esteja cadastrada em nossa base de dados.';
-            }
+          if (res?.error?.errors?.[0]?.field === 'document') {
+            title = this.myForm.value.people_type === 0 ? 'Campo CPF' : 'Campo CNPJ';
+            message = res.error.errors[0].message;
+            message_next = 'Para cadastrar um CPF, é necessário que ele tenha 11 dígitos. Para cadastrar um CNPJ, é necessário que ele tenha 14 dígitos. Caso o CPF ou CNPJ esteja correto, talvez a empresa já esteja cadastrada em nossa base de dados.';
+          }
 
-            if (res?.error?.errors?.[0]?.field === 'name') {
-              title = this.myForm.value.people_type === 0 ? 'Campo Nome' : 'Campo Nome Fantasia';
-              message = res.error.errors[0].message;
-              message_next = 'É essecial que o nome do cliente seja informado. Sempre valide se o cliente que você está cadastrando já não está em nossa base de dados.';
-            }
+          if (res?.error?.errors?.[0]?.field === 'name') {
+            title = this.myForm.value.people_type === 0 ? 'Campo Nome' : 'Campo Nome Fantasia';
+            message = res.error.errors[0].message;
+            message_next = 'É essecial que o nome do cliente seja informado. Sempre valide se o cliente que você está cadastrando já não está em nossa base de dados.';
+          }
 
-            this.dialogMessageService.openDialog({
-              icon: 'pan_tool',
-              iconColor: '#ff5959',
-              title: title,
-              message: message,
-              message_next: message_next,
-            });
+          this.dialogMessageService.openDialog({
+            icon: 'pan_tool',
+            iconColor: '#ff5959',
+            title: title,
+            message: message,
+            message_next: message_next,
+          });
           return throwError(res);
         }),
         map(() => {
@@ -420,7 +420,7 @@ export class PeopleFormComponent implements OnInit {
       title: 'Contatos',
       url: 'contact',
       searchFieldOn: value?.contact || null,
-      searchFieldOnCollum: 'name',
+      searchFieldOnCollum: ['name'],
       sortedBy: 'name',
       orderBy: 'name',
       searchField: new FormControl(''),

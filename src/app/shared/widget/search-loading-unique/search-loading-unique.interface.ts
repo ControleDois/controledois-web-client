@@ -6,7 +6,7 @@ export interface SearchLoadingUnique {
   title: string; // Titulo que vai em cima no input
   url: string; // Url da api para buscar os dados
   searchFieldOn: any; // Filtro/Objeto da api já setado
-  searchFieldOnCollum: string; // Coluna da tabela que mostrara Filtro/Objeto da api já setado
+  searchFieldOnCollum: string[]; // Coluna da tabela que mostrara Filtro/Objeto da api já setado
   sortedBy: string;
   orderBy: string;
   paramsArray: Array<Object>;

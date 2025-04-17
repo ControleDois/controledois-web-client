@@ -19,7 +19,7 @@ export class HeaderComponent implements OnInit {
     title: 'Empresa',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),

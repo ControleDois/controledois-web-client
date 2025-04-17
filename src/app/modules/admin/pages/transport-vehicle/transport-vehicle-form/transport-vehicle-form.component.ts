@@ -101,7 +101,7 @@ export class TransportVehicleFormComponent implements OnInit {
     title: 'Transportadora',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),

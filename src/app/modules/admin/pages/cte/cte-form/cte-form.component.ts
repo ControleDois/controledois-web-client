@@ -10,6 +10,7 @@ import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
+import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
 
 @Component({
   selector: 'app-cte-form',
@@ -34,8 +35,8 @@ export class CteFormComponent implements OnInit {
     receiver_id: new FormControl(''),
     globalized: new FormControl(false),
     document_type: new FormControl(0),
-    service_type: new FormControl(''),
-    service_taker: new FormControl(''),
+    service_type: new FormControl(0),
+    service_taker: new FormControl(0),
     code_municipality_start_transport: new FormControl(''),
     municipality_start_transport: new FormControl(''),
     state_municipality_start_transport: new FormControl(''),
@@ -113,7 +114,7 @@ export class CteFormComponent implements OnInit {
     title: 'CFOP',
     url: 'cfop',
     searchFieldOn: null,
-    searchFieldOnCollum: 'description',
+    searchFieldOnCollum: ['cfop','description'],
     sortedBy: 'description',
     orderBy: 'description',
     searchField: new FormControl(''),
@@ -126,7 +127,7 @@ export class CteFormComponent implements OnInit {
     title: 'Remetente',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -139,7 +140,7 @@ export class CteFormComponent implements OnInit {
     title: 'Expedidor',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -152,7 +153,7 @@ export class CteFormComponent implements OnInit {
     title: 'Destinatário',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -165,7 +166,7 @@ export class CteFormComponent implements OnInit {
     title: 'Recebedor',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -177,8 +178,8 @@ export class CteFormComponent implements OnInit {
     noTitle: false,
     title: 'Município do Início do Transporte',
     url: 'br-conties',
-    searchFieldOn: [],
-    searchFieldOnCollum: 'nome',
+    searchFieldOn: null,
+    searchFieldOnCollum: ['nome'],
     sortedBy: 'name',
     orderBy: 'name',
     paramsArray: [],
@@ -190,8 +191,8 @@ export class CteFormComponent implements OnInit {
     noTitle: false,
     title: 'Município do término do Transporte',
     url: 'br-conties',
-    searchFieldOn: [],
-    searchFieldOnCollum: 'nome',
+    searchFieldOn: null,
+    searchFieldOnCollum: ['nome'],
     sortedBy: 'name',
     orderBy: 'name',
     paramsArray: [],
@@ -255,6 +256,7 @@ export class CteFormComponent implements OnInit {
     private datePipe: DatePipe,
     private notificationService: NotificationService,
     private router: Router,
+    private dialogMessageService: DialogMessageService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
   }
@@ -306,11 +308,23 @@ export class CteFormComponent implements OnInit {
   save(): void {
     this.loadingFull.active = true;
 
-    this.myForm.value.cfop_idd = this.searchCfop?.searchFieldOn?.id;
+    this.myForm.value.cfop_id = this.searchCfop?.searchFieldOn?.id;
     this.myForm.value.sender_id = this.searchSender?.searchFieldOn?.id;
     this.myForm.value.consignor_id = this.searchConsignor?.searchFieldOn?.id;
     this.myForm.value.recipient_id = this.searchRecipient?.searchFieldOn?.id;
     this.myForm.value.receiver_id = this.searchReceiver?.searchFieldOn?.id;
+
+    if (this.searchCountiesStart?.searchFieldOn) {
+      this.myForm.value.code_municipality_start_transport = this.searchCountiesStart?.searchFieldOn?.id.toString();
+      this.myForm.value.municipality_start_transport = this.searchCountiesStart?.searchFieldOn?.nome;
+      this.myForm.value.state_municipality_start_transport = this.searchCountiesStart?.searchFieldOn?.uf_sigla;
+    }
+
+    if (this.searchCountiesEnd?.searchFieldOn) {
+      this.myForm.value.code_municipality_end_transport = this.searchCountiesEnd?.searchFieldOn?.id.toString();
+      this.myForm.value.municipality_end_transport = this.searchCountiesEnd?.searchFieldOn?.nome;
+      this.myForm.value.state_municipality_end_transport = this.searchCountiesEnd?.searchFieldOn?.uf_sigla;
+    }
 
     this.validateForm();
 
@@ -319,10 +333,88 @@ export class CteFormComponent implements OnInit {
     ) {
       this.cteService.save(this.formId, this.myForm.value).pipe(
         finalize(() => this.loadingFull.active = false),
-        catchError((error) => {
-          console.log(error);
-          this.notificationService.warn(error.error.messages.errors[0].message);
-          return throwError(error);
+        catchError((res) => {
+          let title = 'Atenção';
+          let message = 'Ocorreu um erro inesperado.';
+          let message_next = '';
+
+          // Verifica se há erros e trata cada campo individualmente
+          if (res?.error?.errors?.[0]?.field) {
+            const field = res.error.errors[0].field;
+
+            switch (field) {
+              case 'cfop_id':
+                title = 'Campo CFOP';
+                message = res.error.errors[0].message;
+                message_next = 'É essencial que o CFOP seja informado. Sempre valide se o CFOP que você está cadastrando já não está em nossa base de dados.';
+                break;
+
+              case 'code_municipality_start_transport':
+                title = 'Código do Município de Início';
+                message = res.error.errors[0].message;
+                message_next = 'Informe o código correto do município onde o transporte começa.';
+                break;
+
+              case 'municipality_start_transport':
+                title = 'Município de Início do Transporte';
+                message = res.error.errors[0].message;
+                message_next = 'Informe o nome do município de início do transporte.';
+                break;
+
+              case 'state_municipality_start_transport':
+                title = 'Estado do Município de Início';
+                message = res.error.errors[0].message;
+                message_next = 'Informe o estado do município de início do transporte.';
+                break;
+
+              case 'code_municipality_end_transport':
+                title = 'Código do Município de Fim';
+                message = res.error.errors[0].message;
+                message_next = 'Informe o código correto do município onde o transporte termina.';
+                break;
+
+              case 'municipality_end_transport':
+                title = 'Município de Fim do Transporte';
+                message = res.error.errors[0].message;
+                message_next = 'Informe o nome do município de fim do transporte.';
+                break;
+
+              case 'state_municipality_end_transport':
+                title = 'Estado do Município de Fim';
+                message = res.error.errors[0].message;
+                message_next = 'Informe o estado do município de fim do transporte.';
+                break;
+
+              case 'issue_date':
+                title = 'Data de Emissão';
+                message = res.error.errors[0].message;
+                message_next = 'Certifique-se de informar a data de emissão corretamente.';
+                break;
+
+              case 'load_predominant_product':
+                title = 'Produto Predominante';
+                message = res.error.errors[0].message;
+                message_next = 'Informe o produto predominante na carga.';
+                break;
+
+              default:
+                title = 'Erro Desconhecido';
+                message = res.error.errors[0].message || 'Um erro ocorreu. Verifique os dados informados.';
+                message_next = '';
+                break;
+            }
+          }
+
+          // Exibe o diálogo com as mensagens adequadas
+          this.dialogMessageService.openDialog({
+            icon: 'pan_tool',
+            iconColor: '#ff5959',
+            title: title,
+            message: message,
+            message_next: message_next,
+          });
+
+          return throwError(res);
         }),
         map(() => {
           this.notificationService.success('Salvo com sucesso.');

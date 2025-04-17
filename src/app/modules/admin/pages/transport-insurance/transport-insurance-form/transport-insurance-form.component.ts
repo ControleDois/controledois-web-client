@@ -38,7 +38,7 @@ export class TransportInsuranceFormComponent implements OnInit {
     title: 'Seguradora',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),

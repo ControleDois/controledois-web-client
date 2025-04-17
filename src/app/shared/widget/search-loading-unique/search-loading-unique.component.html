@@ -12,8 +12,8 @@
   </button>
   <div class="load_circle" [ngStyle]="{'top': search.noTitle ? '10px' : '32px'}" *ngIf="loading && !search.searchFieldOn"></div>
   <mat-autocomplete #matAutocompleteSearch="matAutocomplete" (optionSelected)="selectedItem($event)">
-    <mat-option *ngFor="let item of list" [value]="item">
-      {{ item[search.searchFieldOnCollum] }}
+    <mat-option *ngFor="let item of list" [value]="item" style="display: flex !important">
+      {{ getDisplayValue(item) }}
     </mat-option>
   </mat-autocomplete>
 </label>
