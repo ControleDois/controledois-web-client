@@ -244,6 +244,30 @@
               </div>
 
               <div class="basic-form-header" style="margin-bottom: 20px;">
+                <h3>Configurações de CT-e</h3>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Ambiente:</span>
+                  <select formControlName="cte_ambiente">
+                    <option value="1">Homologação</option>
+                    <option value="0">Produção</option>
+                  </select>
+                </label>
+
+                <label>
+                  <span class="field">Série CT-e</span>
+                  <input formControlName="cte_serie" type="number">
+                </label>
+
+                <label>
+                  <span class="field">Número CT-e</span>
+                  <input formControlName="cte_numero" type="number">
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="margin-bottom: 20px;">
                 <h3>Configurações de MDF-e</h3>
               </div>
 

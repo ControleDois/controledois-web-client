@@ -51,6 +51,9 @@ export class ConfigComponent implements OnInit {
     mdfe_serie: new FormControl(0),
     mdfe_numero: new FormControl(0),
     mdfe_ambiente: new FormControl(1),
+    cte_serie: new FormControl(0),
+    cte_numero: new FormControl(0),
+    cte_ambiente: new FormControl(1),
     people: new FormGroup({
       id: new FormControl('', Validators.required),
       company_id: new FormControl('', Validators.required),
