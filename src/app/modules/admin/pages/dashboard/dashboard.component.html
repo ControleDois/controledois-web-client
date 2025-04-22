@@ -22,6 +22,28 @@
       </div>
     </div>
 
+    <div class="card card-help" style="margin-bottom: 20px">
+      <div class="card-header">
+        <h4>Cadastrar NFC-e de compra?</h4>
+      </div>
+      <div class="card-content">
+        <div class="card-helper">
+          <div class="card-helper-img">
+            <img src="assets/qrcode.png" />
+          </div>
+          <div class="card-helper-description">
+            <p>Armazenar compras</p>
+            <h3>Basta ler o QrCode</h3>
+          </div>
+        </div>
+
+        <p style="margin-top: 20px; text-align: center">Clique para ler o QrCode da nota.</p>
+        <button (click)="showPurchaseModel()" class="button-add" mat-button style="color: #fff; background-color: #2687e9; width: 100%">
+          Ler QrCode
+        </button>
+      </div>
+    </div>
+
     <div class="card" [ngStyle]="{ display: backups.all > 0 ? 'block' : 'none'}">
       <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
         <h4>Backups</h4>
@@ -45,13 +67,6 @@
       <div class="bank" *ngFor="let bank of banks">
         <h4 style="text-align: center">{{bank.name}}</h4>
         <p style="text-align: right">R$ {{bank.total}}</p>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top: 20px;">
-      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
-        <h4>QrCode</h4>
-        <button mat-icon-button (click)="showPurchaseModel()"><mat-icon>find_in_page</mat-icon></button>
       </div>
     </div>
   </div>

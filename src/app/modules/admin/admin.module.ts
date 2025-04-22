@@ -74,6 +74,8 @@ import { CteListComponent } from './pages/cte/cte-list/cte-list.component';
 import { CteFormComponent } from './pages/cte/cte-form/cte-form.component';
 import { PurchaseNoteComponent } from './pages/modals/purchase-note/purchase-note.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { PurchaseNotFormComponent } from './pages/purchase-note/purchase-not-form/purchase-not-form.component';
+import { PurchaseNotListComponent } from './pages/purchase-note/purchase-not-list/purchase-not-list.component';
 
 const appName = 'CTrix';
 
@@ -358,6 +360,16 @@ const routes: Routes = [
     component: CteFormComponent,
     data: { title: `Cadastro de CT-e -  ${appName}`},
   },
+  {
+    path: 'purchase-note',
+    component: PurchaseNotListComponent,
+    data: { title: `Nota de Compras -  ${appName}`},
+  },
+  {
+    path: 'purchase-note/:id',
+    component: PurchaseNotFormComponent,
+    data: { title: `Cadastro de Nota de Compras -  ${appName}`},
+  },
 ]
 
 @NgModule({
@@ -429,7 +441,9 @@ const routes: Routes = [
     TransportVehicleFormComponent,
     CteListComponent,
     CteFormComponent,
-    PurchaseNoteComponent
+    PurchaseNoteComponent,
+    PurchaseNotFormComponent,
+    PurchaseNotListComponent
   ],
   imports: [
     CommonModule,
