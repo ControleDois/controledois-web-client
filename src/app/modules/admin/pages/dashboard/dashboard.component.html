@@ -47,7 +47,15 @@
         <p style="text-align: right">R$ {{bank.total}}</p>
       </div>
     </div>
+
+    <div class="card" style="margin-top: 20px;">
+      <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
+        <h4>QrCode</h4>
+        <button mat-icon-button (click)="showPurchaseModel()"><mat-icon>find_in_page</mat-icon></button>
+      </div>
+    </div>
   </div>
+
   <div class="dash-right">
     <div class="bill">
       <div class="card" style="padding: 30px">

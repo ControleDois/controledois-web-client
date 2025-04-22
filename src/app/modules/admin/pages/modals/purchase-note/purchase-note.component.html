@@ -1,0 +1,7 @@
+<p>purchase-note works!</p>
+
+<button (click)="scannerEnabled = true">Ler QrCode</button>
+<p>Resultado: {{qrCodeResult}}</p>
+
+<zxing-scanner *ngIf="scannerEnabled" (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+

@@ -5,6 +5,7 @@ import { Chart, CategoryScale, BarController, BarElement, PointElement, LinearSc
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BackupsModalComponent } from '../modals/backups-modal/backups-modal.component';
+import { PurchaseNoteComponent } from '../modals/purchase-note/purchase-note.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -207,5 +208,14 @@ export class DashboardComponent implements OnInit {
     dialogConfig.width = '920px';
     dialogConfig.maxHeight = '550px';
     this.dialog.open(BackupsModalComponent, dialogConfig);
+  }
+
+  showPurchaseModel(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '920px';
+    dialogConfig.maxHeight = '550px';
+    this.dialog.open(PurchaseNoteComponent, dialogConfig);
   }
 }

@@ -72,6 +72,8 @@ import { TransportVehicleListComponent } from './pages/transport-vehicle/transpo
 import { TransportVehicleFormComponent } from './pages/transport-vehicle/transport-vehicle-form/transport-vehicle-form.component';
 import { CteListComponent } from './pages/cte/cte-list/cte-list.component';
 import { CteFormComponent } from './pages/cte/cte-form/cte-form.component';
+import { PurchaseNoteComponent } from './pages/modals/purchase-note/purchase-note.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 const appName = 'CTrix';
 
@@ -426,7 +428,8 @@ const routes: Routes = [
     TransportVehicleListComponent,
     TransportVehicleFormComponent,
     CteListComponent,
-    CteFormComponent
+    CteFormComponent,
+    PurchaseNoteComponent
   ],
   imports: [
     CommonModule,
@@ -435,6 +438,7 @@ const routes: Routes = [
     WidgetModule,
     NgxMaskModule.forRoot(),
     CurrencyMaskModule,
+    ZXingScannerModule
   ],
 })
 export class AdminModule { }
