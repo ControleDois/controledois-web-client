@@ -43,4 +43,8 @@ export class PurchaseNoteService {
   save(id: string, body: Object): Observable<any>  {
     return id === 'new' ? this.store(body) : this.update(id, body);
   }
+
+  search(body: Object): Observable<any> {
+    return this.apiService.on(`${this.resource}/search`, body, 'post-token');
+  }
 }

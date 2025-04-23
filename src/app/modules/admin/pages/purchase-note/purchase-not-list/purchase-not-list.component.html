@@ -25,7 +25,7 @@
             <mat-icon>keyboard_arrow_down</mat-icon>
           </div>
           <mat-menu #actions="matMenu">
-            <button mat-menu-item [routerLink]="'/cost-center/' + element.id">
+            <button mat-menu-item [routerLink]="'/purchase-note/' + element.id">
               <span>Editar</span>
             </button>
             <button mat-menu-item (click)="delete(element.id)">
