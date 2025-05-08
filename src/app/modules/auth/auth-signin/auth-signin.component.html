@@ -12,7 +12,7 @@
           </label>
           <label>
             <span class="field">Senha</span>
-            <input formControlName="password" type="password" placeholder="Senha">
+            <input (keydown.enter)="login()" formControlName="password" type="password" placeholder="Senha">
           </label>
         </form>
       </div>

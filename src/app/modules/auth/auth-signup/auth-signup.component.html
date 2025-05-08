@@ -24,7 +24,7 @@
 
           <label>
             <span class="field">Senha</span>
-            <input [ngClass]="{'errorValidation': getValidation('repeat_password')}" formControlName="repeat_password" type="password" placeholder="Confirme a senha">
+            <input (keydown.enter)="register()" [ngClass]="{'errorValidation': getValidation('repeat_password')}" formControlName="repeat_password" type="password" placeholder="Confirme a senha">
           </label>
         </form>
       </div>

@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  api: 'http://192.168.1.6:3333',
-  ws: 'ws://192.168.1.6:3333',
+  api: 'https://api.ctrix.com.br',
+  ws: 'wss://api.ctrix.com.br',
   firebase: {
     apiKey: "AIzaSyA7Rb1Eh33X8fd8XU284V0_zxt2tWHBXEk",
     authDomain: "controledois-br.firebaseapp.com",
