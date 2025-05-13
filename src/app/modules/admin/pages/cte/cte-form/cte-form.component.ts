@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
@@ -75,6 +75,7 @@ export class CteFormComponent implements OnInit {
     updatedAt: new FormControl(''),
     deletedAt: new FormControl(''),
     synchronized: new FormControl(''),
+    duplicates: new FormArray([]),
   });
 
   @Output() public pageHeader: PageHeader = {
@@ -249,6 +250,8 @@ export class CteFormComponent implements OnInit {
   public validationFields: Array<any> = [
 
   ];
+
+  public duplicates = this.myForm.get('duplicates') as FormArray;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -426,6 +429,52 @@ export class CteFormComponent implements OnInit {
       this.notificationService.error(
         this.validationFields.filter((v) => v.validation === false)[0].msg
       );
+    }
+  }
+
+  //Soma valor original - desconto
+  sumInvoiceValue(): void {
+    const originalValue = this.myForm.get('original_invoice_value')?.value;
+    const discountValue = this.myForm.get('invoice_discount_value')?.value;
+
+    if (originalValue && discountValue) {
+      const netValue = originalValue - discountValue;
+      this.myForm.get('net_invoice_value')?.setValue(netValue);
+    } else {
+      this.myForm.get('net_invoice_value')?.setValue(0);
+    }
+  }
+
+  addDuplicate(value: any): void {
+    const control = new FormGroup({
+      number: new FormControl(value?.portion || this.duplicates.length + 1),
+      date_due: new FormControl(
+        this.datePipe.transform(value?.date_due || new Date(), 'yyyy-MM-dd')
+      ),
+      value: new FormControl(parseFloat(value?.value).toFixed(2) || 0),
+    });
+
+    this.duplicates.push(control);
+  }
+
+  changeAmountDuplicates(): void {
+    const amount = this.myForm.get('invoice_installments')?.value;
+    if (this.duplicates.length > 0) {
+      this.duplicates.clear();
+    }
+
+    const netTotal = this.myForm.get('net_invoice_value')?.value;
+
+    for (let i = 0; i < amount; i++) {
+      const control = new FormGroup({
+        number: new FormControl(i + 1),
+        date_due: new FormControl(
+          this.datePipe.transform(new Date(), 'yyyy-MM-dd')
+        ),
+        value: new FormControl((netTotal / amount).toFixed(2)),
+      });
+
+      this.duplicates.push(control);
     }
   }
 }

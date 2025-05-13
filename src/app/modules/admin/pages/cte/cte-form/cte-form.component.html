@@ -129,12 +129,71 @@
 
               <div class="label-group">
                 <label class="label-w30">
-                  <span class="field">Unidade de medida</span>
+                  <span class="field">CST do ICMS</span>
                   <select formControlName="icms_tax_situation">
                     <option *ngFor="let role of icmsTaxSituation" [value]="role.type">{{ role.name }}
                     </option>
                   </select>
                 </label>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Número da fatura</span>
+                  <input formControlName="invoice_number" type="text" maxlength="60">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Valor original da fatura</span>
+                  <input (change)="sumInvoiceValue()" formControlName="original_invoice_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Valor do desconto da fatura</span>
+                  <input (change)="sumInvoiceValue()" formControlName="invoice_discount_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Valor líquido da fatura</span>
+                  <input formControlName="net_invoice_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Quantidade de Parcelas</span>
+                  <input (change)="changeAmountDuplicates()" formControlName="invoice_installments" type="number">
+                </label>
+              </div>
+
+              <div class="shopping-budget" style="margin-bottom: 10px">
+                <div class="shopping-budget-grid">
+                  <ul class="shopping-budget-grid-header">
+                    <li style="width: 10%">Número</li>
+                    <li style="width: 23.3%">Vencimento</li>
+                    <li style="text-align: right; width: 23.3%">Valor</li>
+                  </ul>
+
+                  <ng-container formArrayName="duplicates">
+                    <div *ngFor="let duplicate of duplicates.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <p style="font-weight: bold; margin-top: 10px; width: 10%; text-align: center; color: #395a7a">{{duplicate.value.number}} / {{duplicates.length}}</p>
+
+                          <label style="width: 23.3%">
+                            <input formControlName="date_due" type="date">
+                          </label>
+
+                          <label style="width: 23.3%">
+                            <input formControlName="value" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right">
+                          </label>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
               </div>
             </mat-tab>
           </mat-tab-group>
