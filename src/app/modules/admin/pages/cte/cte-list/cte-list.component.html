@@ -34,7 +34,7 @@
             <button mat-menu-item (click)="send(element.id)" *ngIf="(element.status === 0 || element.status === 1) && !element.document_protocol">
               <span>Enviar MDFe</span>
             </button>
-            <button mat-menu-item [routerLink]="'/mdfe/' + element.id" *ngIf="(element.status === 0 || element.status === 1) && !element.document_protocol">
+            <button mat-menu-item [routerLink]="'/cte/' + element.id" *ngIf="(element.status === 0 || element.status === 1) && !element.document_protocol">
               <span>Editar</span>
             </button>
             <button mat-menu-item (click)="delete(element.id)" *ngIf="(element.status === 0 || element.status === 1) && !element.document_protocol">

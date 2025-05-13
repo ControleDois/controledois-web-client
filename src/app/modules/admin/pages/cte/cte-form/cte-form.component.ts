@@ -283,9 +283,10 @@ export class CteFormComponent implements OnInit {
 
   setForm(value: any): void {
     if (value) {
+      console.log(value);
 
-      this.searchCfop.searchFieldOn = value?.Cfop;
-      this.searchCfop.searchField.setValue(value?.Cfop?.description);
+      this.searchCfop.searchFieldOn = value?.cfop;
+      this.searchCfop.searchField.setValue(value?.cfop?.cfop + ' - ' + value?.cfop?.description);
 
       this.searchSender.searchFieldOn = value?.sender;
       this.searchSender.searchField.setValue(value?.sender?.name);
@@ -299,7 +300,35 @@ export class CteFormComponent implements OnInit {
       this.searchReceiver.searchFieldOn = value?.receiver;
       this.searchReceiver.searchField.setValue(value?.receiver?.name);
 
+      if (value?.code_municipality_start_transport) {
+        this.searchCountiesStart.searchFieldOn = {
+          id: value?.code_municipality_start_transport,
+          nome: value?.municipality_start_transport,
+          uf_sigla: value?.state_municipality_start_transport,
+        };
+        this.searchCountiesStart.searchField.setValue(value?.municipality_start_transport);
+      }
+
+      if (value?.code_municipality_end_transport) {
+        this.searchCountiesEnd.searchFieldOn = {
+          id: value?.code_municipality_end_transport,
+          nome: value?.municipality_end_transport,
+          uf_sigla: value?.state_municipality_end_transport,
+        };
+        this.searchCountiesEnd.searchField.setValue(value?.municipality_end_transport);
+      }
+
+      if (value?.duplicates) {
+        value?.duplicates.forEach((duplicate: any) => {
+          this.addDuplicate(duplicate);
+        });
+      }
+
       this.myForm.patchValue(value);
+
+      this.myForm.controls['issue_date'].setValue(
+        this.datePipe.transform(value?.issue_date, 'yyyy-MM-dd')
+      );
     }
   }
 
@@ -447,10 +476,8 @@ export class CteFormComponent implements OnInit {
 
   addDuplicate(value: any): void {
     const control = new FormGroup({
-      number: new FormControl(value?.portion || this.duplicates.length + 1),
-      date_due: new FormControl(
-        this.datePipe.transform(value?.date_due || new Date(), 'yyyy-MM-dd')
-      ),
+      number: new FormControl(value?.number || this.duplicates.length + 1),
+      date_due: new FormControl(value?.date_due ? value.date_due.split('T')[0] : this.datePipe.transform(new Date(), 'yyyy-MM-dd')),
       value: new FormControl(parseFloat(value?.value).toFixed(2) || 0),
     });
 
