@@ -12,6 +12,7 @@ import { NgxMaskModule } from 'ngx-mask';
 import { DatePipe, registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
 import { CurrencyMaskConfig, CURRENCY_MASK_CONFIG } from 'ng2-currency-mask';
+import { PdvComponent } from './modules/pdv/pdv.component';
 
 export const CustomCurrencyMaskConfig: CurrencyMaskConfig = {
   align: "right",
@@ -28,6 +29,7 @@ registerLocaleData(ptBr);
 @NgModule({
   declarations: [
     AppComponent,
+    PdvComponent,
   ],
   imports: [
     BrowserModule,
