@@ -61,7 +61,7 @@
             <button mat-menu-item (click)="closing(element.id)" *ngIf="(element.status === 0 || element.status === 3) && element.document_protocol">
               <span>Encerrar MDFe</span>
             </button>
-            <button mat-menu-item (click)="downloadFile(element.path_damdfe)" *ngIf="element.status >= 3">
+            <button mat-menu-item (click)="downloadFile(element.path_dacte)" *ngIf="element.status >= 3">
               <span>Danfe</span>
             </button>
             <button mat-menu-item (click)="downloadFile(element.path_xml)" *ngIf="element.status >= 3">
