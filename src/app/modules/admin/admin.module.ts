@@ -76,6 +76,7 @@ import { PurchaseNoteComponent } from './pages/modals/purchase-note/purchase-not
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { PurchaseNotFormComponent } from './pages/purchase-note/purchase-not-form/purchase-not-form.component';
 import { PurchaseNotListComponent } from './pages/purchase-note/purchase-not-list/purchase-not-list.component';
+import { CteDocumentModalComponent } from './pages/modals/cte-document-modal/cte-document-modal.component';
 
 const appName = 'CTrix';
 
@@ -443,7 +444,8 @@ const routes: Routes = [
     CteFormComponent,
     PurchaseNoteComponent,
     PurchaseNotFormComponent,
-    PurchaseNotListComponent
+    PurchaseNotListComponent,
+    CteDocumentModalComponent
   ],
   imports: [
     CommonModule,

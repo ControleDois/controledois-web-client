@@ -26,7 +26,7 @@ export class CteListComponent implements OnInit {
     message: 'Aguarde, carregando...'
   }
 
-  public displayedColumns: string[] = ['number', 'status', 'actions'];
+  public displayedColumns: string[] = ['number', 'service_taker', 'value', 'data', 'status', 'actions'];
   public dataSource = new MatTableDataSource<any>();
   public tableLength!: number;
   @ViewChild(MatPaginator)
@@ -281,4 +281,16 @@ export class CteListComponent implements OnInit {
     ).subscribe();
   }
 
+  getServiceTaker(element: any): any {
+    switch (element.service_taker) {
+      case 0:
+        return element?.sender;
+      case 1:
+        return element?.consignor;
+      case 2:
+        return element?.receiver;
+      case 3:
+        return element?.recipient;
+    }
+  }
 }

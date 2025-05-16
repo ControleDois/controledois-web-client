@@ -5,5 +5,6 @@ export interface PageHeader {
     text?: string;
     routerLink?: string;
     icon?: string;
+    action?: () => void;
   };
 }

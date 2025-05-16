@@ -11,6 +11,8 @@ import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interfa
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { CteDocumentModalComponent } from '../../modals/cte-document-modal/cte-document-modal.component';
 
 @Component({
   selector: 'app-cte-form',
@@ -76,6 +78,7 @@ export class CteFormComponent implements OnInit {
     deletedAt: new FormControl(''),
     synchronized: new FormControl(''),
     duplicates: new FormArray([]),
+    documents: new FormArray([]),
   });
 
   @Output() public pageHeader: PageHeader = {
@@ -252,6 +255,7 @@ export class CteFormComponent implements OnInit {
   ];
 
   public duplicates = this.myForm.get('duplicates') as FormArray;
+  public documents = this.myForm.get('documents') as FormArray;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -259,7 +263,8 @@ export class CteFormComponent implements OnInit {
     private datePipe: DatePipe,
     private notificationService: NotificationService,
     private router: Router,
-    private dialogMessageService: DialogMessageService
+    private dialogMessageService: DialogMessageService,
+    private dialog: MatDialog,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
   }
@@ -283,8 +288,6 @@ export class CteFormComponent implements OnInit {
 
   setForm(value: any): void {
     if (value) {
-      console.log(value);
-
       this.searchCfop.searchFieldOn = value?.cfop;
       this.searchCfop.searchField.setValue(value?.cfop?.cfop + ' - ' + value?.cfop?.description);
 
@@ -324,6 +327,12 @@ export class CteFormComponent implements OnInit {
         });
       }
 
+      if (value?.documents) {
+        value?.documents.forEach((document: any) => {
+          this.addDocument(document);
+        });
+      }
+
       this.myForm.patchValue(value);
 
       this.myForm.controls['issue_date'].setValue(
@@ -341,10 +350,10 @@ export class CteFormComponent implements OnInit {
     this.loadingFull.active = true;
 
     this.myForm.value.cfop_id = this.searchCfop?.searchFieldOn?.id;
-    this.myForm.value.sender_id = this.searchSender?.searchFieldOn?.id;
-    this.myForm.value.consignor_id = this.searchConsignor?.searchFieldOn?.id;
-    this.myForm.value.recipient_id = this.searchRecipient?.searchFieldOn?.id;
-    this.myForm.value.receiver_id = this.searchReceiver?.searchFieldOn?.id;
+    this.myForm.value.sender_id = this.searchSender?.searchFieldOn?.id || null;
+    this.myForm.value.consignor_id = this.searchConsignor?.searchFieldOn?.id || null;
+    this.myForm.value.recipient_id = this.searchRecipient?.searchFieldOn?.id || null;
+    this.myForm.value.receiver_id = this.searchReceiver?.searchFieldOn?.id || null;
 
     if (this.searchCountiesStart?.searchFieldOn) {
       this.myForm.value.code_municipality_start_transport = this.searchCountiesStart?.searchFieldOn?.id.toString();
@@ -502,6 +511,80 @@ export class CteFormComponent implements OnInit {
       });
 
       this.duplicates.push(control);
+    }
+  }
+
+  //Adiciona um novo documento
+  addDocumentModal(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '980px';
+    dialogConfig.maxHeight = '760px';
+    this.dialog.open(CteDocumentModalComponent, dialogConfig).afterClosed().subscribe(res => {
+      if (res) {
+        this.addDocument(res);
+      }
+    });
+  }
+
+  addDocument(value: any): void {
+    console.log(value);
+
+    const control = new FormGroup({
+      role: new FormControl(value?.role || ''),
+      mailing_number: new FormControl(value?.mailing_number || ''),
+      order_number: new FormControl(value?.order_number || ''),
+      model: new FormControl(value?.model || ''),
+      series: new FormControl(value?.series || ''),
+      icms_calculation_base_value: new FormControl(value?.icms_calculation_base_value || 0),
+      total_icms_value: new FormControl(value?.total_icms_value || 0),
+      base_value_calculation_icms_st: new FormControl(value?.base_value_calculation_icms_st || 0),
+      icms_st_value: new FormControl(value?.icms_st_value || 0),
+      cfop: new FormControl(value?.cfop || ''),
+      weight: new FormControl(value?.weight || 0),
+      access_key: new FormControl(value?.access_key || ''),
+      description_document: new FormControl(value?.description_document || ''),
+      pin_suframa: new FormControl(value?.pin_suframa || ''),
+      delivery_forecast: new FormControl(value?.delivery_forecast || ''),
+      number: new FormControl(value?.number || ''),
+      issue_date: new FormControl(value?.issue_date ? value.issue_date.split('T')[0] : this.datePipe.transform(new Date(), 'yyyy-MM-dd')),
+      total_products: new FormControl(value?.total_products || 0),
+      total_value: new FormControl(value?.total_value || 0),
+      loadUnit: new FormGroup({
+        role: new FormControl(value?.loadUnit?.role || ''),
+        identification: new FormControl(value?.loadUnit?.identification || ''),
+        prorated_quantity: new FormControl(value?.loadUnit?.prorated_quantity || 0),
+        taxed_weight: new FormControl(value?.loadUnit?.taxed_weight || 0),
+      }),
+    });
+
+    this.documents.push(control);
+  }
+
+  removeDocument(index: any): void {
+    this.documents.controls.splice(index, 1);
+  }
+
+  getRoleDocument(value: number): string {
+    const role = Number(value)
+    switch (role) {
+      case 0:
+        return 'NFe Modelo 01/1A e Avulsa...';
+      case 1:
+        return 'NF de Produtor';
+      case 2:
+        return 'NFe';
+      case 3:
+        return 'Declaração';
+      case 5:
+        return 'CFe SAT';
+      case 6:
+        return 'NFC-e';
+      case 7:
+        return 'Outros';
+      default:
+        return '';
     }
   }
 }

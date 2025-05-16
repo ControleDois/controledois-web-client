@@ -3,7 +3,7 @@
     <h2>{{header.title}}</h2>
     <p>{{header.description}}</p>
   </div>
-  <button *ngIf="header.button" class="c2-btn c2-btn-blue" mat-button [routerLink]="header.button.routerLink">
+  <button (click)="header?.button?.action()" *ngIf="header.button" class="c2-btn c2-btn-blue" mat-button [routerLink]="header.button.routerLink">
     <mat-icon>{{header.button.icon}}</mat-icon>{{header.button.text}}
   </button>
 </div>

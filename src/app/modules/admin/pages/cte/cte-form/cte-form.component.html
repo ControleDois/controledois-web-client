@@ -196,6 +196,66 @@
                 </div>
               </div>
             </mat-tab>
+
+            <mat-tab>
+              <div class="basic-form-header" style="margin-bottom: 20px;">
+                <h3>Documentos transportados pelo CT-e</h3>
+              </div>
+
+              <div class="shopping-budget" style="margin-bottom: 10px">
+                <div class="shopping-budget-grid">
+                  <ng-container formArrayName="documents">
+                    <div *ngFor="let document of documents.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <p style="font-weight: bold; margin-top: 30px; width: 30%; text-align: center; color: #395a7a">{{getRoleDocument(document.value.role)}}</p>
+
+                          <label style="width: 30%" *ngIf="document.value.role == 0">
+                            <span class="field">Série</span>
+                            <input type="text" formControlName="series">
+                          </label>
+
+                          <label style="width: 60%" *ngIf="document.value.role == 2">
+                            <span class="field">Chave de acesso</span>
+                            <input type="text" formControlName="access_key">
+                          </label>
+
+                          <label style="width: 30%" *ngIf="document.value.role != 0 && document.value.role != 2">
+                            <span class="field">Número do documento</span>
+                            <input type="text" formControlName="number">
+                          </label>
+
+                          <label style="width: 30%" *ngIf="document.value.role != 0 && document.value.role != 2">
+                            <span class="field">Descrição do documento</span>
+                            <input type="text" formControlName="description_document">
+                          </label>
+
+                          <label style="width: 30%">
+                            <span class="field">Data prevista de entrega</span>
+                            <input type="date" formControlName="delivery_forecast">
+                          </label>
+
+                          <label style="width: 30%" *ngIf="document.value.role == 0">
+                            <span class="field">Valor Total da NF</span>
+                            <input formControlName="total_value" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right">
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removeDocument(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addDocumentModal()">Adicionar documento</button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
           </mat-tab-group>
         </form>
 
