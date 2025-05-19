@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class TaskService {
-  private resource = 'task';
+export class TaskBoardService {
+  private resource = 'task-board';
 
   constructor(
     private apiService: ApiService
@@ -48,11 +48,5 @@ export class TaskService {
 
   upload(body: Object): Observable<any> {
     return this.apiService.on(`task-files`, body, 'post-token');
-  }
-
-  updateBoard(taskId, boardId: string): Observable<any> {
-    return this.apiService.on(`task/update-board/${taskId}`, {
-      boardId: boardId
-    }, 'post-token');
   }
 }

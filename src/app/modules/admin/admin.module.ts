@@ -77,6 +77,8 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { PurchaseNotFormComponent } from './pages/purchase-note/purchase-not-form/purchase-not-form.component';
 import { PurchaseNotListComponent } from './pages/purchase-note/purchase-not-list/purchase-not-list.component';
 import { CteDocumentModalComponent } from './pages/modals/cte-document-modal/cte-document-modal.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TaskBoardModalComponent } from './pages/modals/task-board-modal/task-board-modal.component';
 
 const appName = 'CTrix';
 
@@ -445,7 +447,8 @@ const routes: Routes = [
     PurchaseNoteComponent,
     PurchaseNotFormComponent,
     PurchaseNotListComponent,
-    CteDocumentModalComponent
+    CteDocumentModalComponent,
+    TaskBoardModalComponent
   ],
   imports: [
     CommonModule,
@@ -454,7 +457,8 @@ const routes: Routes = [
     WidgetModule,
     NgxMaskModule.forRoot(),
     CurrencyMaskModule,
-    ZXingScannerModule
+    ZXingScannerModule,
+    DragDropModule
   ],
 })
 export class AdminModule { }

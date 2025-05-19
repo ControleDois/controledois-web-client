@@ -2,11 +2,12 @@
   <div class="page-content">
     <app-page-header [header]="pageHeader"></app-page-header>
 
-    <div class="page-search">
-      <app-search-simple [search]="search"></app-search-simple>
-      <app-select-option-simple [option]="optionSelect" [optionsType]="statusType"></app-select-option-simple>
+     <div class="page-search">
+      <button (click)="addBoard()" class="c2-btn c2-btn-blue" mat-button>
+        <mat-icon>add</mat-icon>Adicionar Quadro
+      </button>
     </div>
-
+<!--
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="user">
         <th mat-header-cell *matHeaderCellDef> Criado Por </th>
@@ -54,7 +55,33 @@
       </tr>
     </table>
 
-    <mat-paginator [length]="tableLength" [pageSizeOptions]="[10, 50, 100]" showFirstLastButtons></mat-paginator>
+    <mat-paginator [length]="tableLength" [pageSizeOptions]="[10, 50, 100]" showFirstLastButtons></mat-paginator> -->
+
+
+    <div class="board-columns">
+      <div cdkDropList
+          cdkDropListOrientation="horizontal" class="board-columns"
+          (cdkDropListDropped)="dropGrid($event)">
+      <div
+          cdkDragLockAxis="x" class="board-column"
+          *ngFor="let column of board.columns" cdkDrag>
+        <div class="column-title" cdkDragHandle>
+          {{ column.name }}
+        </div>
+        <div class="tasks-container"
+        id="{{column.id}}"
+        [cdkDropListConnectedTo]="listCdkDropListConnectedTo()"
+        cdkDropList
+        [cdkDropListData]="column.tasks"
+        (cdkDropListDropped)="drop($event)">
+          <div class="task" *ngFor="let item of column.tasks" cdkDrag
+        [routerLink]="'/task/' + item.id">
+            {{ item.title }}
+          </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </div>
 

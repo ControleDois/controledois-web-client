@@ -9,10 +9,18 @@ import { LibraryService } from 'src/app/shared/services/library.service';
 import { TaskService } from 'src/app/shared/services/task.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { Board } from 'src/app/shared/models/board.model';
+import { Column } from 'src/app/shared/models/column.model';
+import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDropList } from '@angular/cdk/drag-drop';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { TaskBoardModalComponent } from '../../modals/task-board-modal/task-board-modal.component';
+import { TaskBoardService } from 'src/app/shared/services/task-boards.service';
+import { TaskBoard } from '../../../interfaces/task.board.interface';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
+  styleUrls: ['./task-list.component.scss']
 })
 export class TaskListComponent implements OnInit, AfterViewInit {
 
@@ -49,10 +57,14 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     },
   };
 
+  public board: Board = new Board('CTrix', []);
+
   constructor(
     private taskService: TaskService,
+    private taskBoardService: TaskBoardService,
     private widGetService: WidgetService,
-    public libraryService: LibraryService
+    public libraryService: LibraryService,
+    private dialog: MatDialog,
   ) {
    }
 
@@ -81,20 +93,37 @@ export class TaskListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
-    merge(this.sort.sortChange, this.paginator.page)
-      .pipe(tap(() => this.load()))
-      .subscribe();
+    // this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    // merge(this.sort.sortChange, this.paginator.page)
+    //   .pipe(tap(() => this.load()))
+    //   .subscribe();
   }
 
   load(): void {
-    const search = this.search.value ? this.search.value : ''
-    const status = this.optionSelect.value ? this.optionSelect.value : 0
+    // const search = this.search.value ? this.search.value : ''
+    // const status = this.optionSelect.value ? this.optionSelect.value : 0
 
-    this.taskService.index(search, status, 'title', 'title', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1').pipe(
+    // this.taskService.index(search, status, 'title', 'title', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1').pipe(
+    //   map(res => {
+    //     this.dataSource.data = res.data;
+    //     this.tableLength = res.meta.total;
+    //   })
+    // ).subscribe();
+
+    this.taskBoardService.index('').pipe(
       map(res => {
         this.dataSource.data = res.data;
-        this.tableLength = res.meta.total;
+
+        res.data.forEach((board: any) => {
+          const tasks = board.tasks.map((task: any) => {
+            return {
+              id: task.id,
+              title: task.title,
+            };
+          });
+
+          this.board.columns.push(new Column(board.title, board.id, tasks));
+        });
       })
     ).subscribe();
   }
@@ -192,5 +221,59 @@ export class TaskListComponent implements OnInit, AfterViewInit {
     const user = users.find((user) => user.roles = [0]);
 
     return user ? user.name : '';
+  }
+
+  public dropGrid(event: CdkDragDrop<string[]>): void {
+    moveItemInArray(this.board.columns, event.previousIndex, event.currentIndex);
+  }
+
+  public drop(event: CdkDragDrop<TaskBoard[]>): void {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      //Id da tarefa
+      const taskId = event.previousContainer.data[event.previousIndex].id;
+
+      //Pegar id do quadro
+      const boardId = event.container.id;;
+
+      console.log('taskId', taskId);
+      console.log('boardId', boardId);
+
+      transferArrayItem(event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex);
+
+      this.taskService.updateBoard(taskId, boardId).pipe(
+          finalize(() => this.loadingFull.active = false),
+          catchError((error) => {
+            return throwError(error);
+          }),
+          map(() => {
+            console.log('Tarefa movida com sucesso');
+          })
+        ).subscribe();
+    }
+  }
+
+  addBoard(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '980px';
+    dialogConfig.maxHeight = '760px';
+    dialogConfig.data = {
+      id: 'new',
+    };
+    this.dialog.open(TaskBoardModalComponent, dialogConfig).afterClosed().subscribe(res => {
+      if (res) {
+        //
+      }
+    });
+  }
+
+  listCdkDropListConnectedTo(): string[] {
+    return this.board.columns.map((column) => column.id);
   }
 }
