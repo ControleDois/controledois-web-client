@@ -79,6 +79,7 @@ import { PurchaseNotListComponent } from './pages/purchase-note/purchase-not-lis
 import { CteDocumentModalComponent } from './pages/modals/cte-document-modal/cte-document-modal.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TaskBoardModalComponent } from './pages/modals/task-board-modal/task-board-modal.component';
+import { CourseListComponent } from './pages/course/course-list/course-list.component';
 
 const appName = 'CTrix';
 
@@ -373,6 +374,11 @@ const routes: Routes = [
     component: PurchaseNotFormComponent,
     data: { title: `Cadastro de Nota de Compras -  ${appName}`},
   },
+  {
+    path: 'course',
+    component: CourseListComponent,
+    data: { title: `Cursos -  ${appName}`},
+  },
 ]
 
 @NgModule({
@@ -448,7 +454,8 @@ const routes: Routes = [
     PurchaseNotFormComponent,
     PurchaseNotListComponent,
     CteDocumentModalComponent,
-    TaskBoardModalComponent
+    TaskBoardModalComponent,
+    CourseListComponent
   ],
   imports: [
     CommonModule,
