@@ -4,9 +4,14 @@
 
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
+
       <div style="display: flex;">
         <app-select-option-simple style="margin-right: 10px;" [option]="optionSelectBackup" [optionsType]="statusTypeBackup"></app-select-option-simple>
         <app-select-option-simple [option]="optionSelect" [optionsType]="statusType"></app-select-option-simple>
+
+        <button style="margin-left: 10px;" (click)="createPDF()" class="c2-btn c2-btn-blue" mat-button>
+          <mat-icon>print</mat-icon>Imprimir
+        </button>
       </div>
     </div>
 
@@ -95,4 +100,5 @@
   </div>
 </div>
 
+<div #priceListPDF></div>
 <app-loading-full [loadingFull]="loadingFull"></app-loading-full>

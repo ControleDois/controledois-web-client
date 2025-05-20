@@ -80,6 +80,7 @@ import { CteDocumentModalComponent } from './pages/modals/cte-document-modal/cte
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TaskBoardModalComponent } from './pages/modals/task-board-modal/task-board-modal.component';
 import { CourseListComponent } from './pages/course/course-list/course-list.component';
+import { BackupViewComponent } from './pages/report/backup-view/backup-view.component';
 
 const appName = 'CTrix';
 
@@ -455,7 +456,8 @@ const routes: Routes = [
     PurchaseNotListComponent,
     CteDocumentModalComponent,
     TaskBoardModalComponent,
-    CourseListComponent
+    CourseListComponent,
+    BackupViewComponent
   ],
   imports: [
     CommonModule,

@@ -1,17 +1,17 @@
-import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, Output, ViewChild, ViewContainerRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
-import { CostCenterService } from 'src/app/shared/services/cost-center.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, tap, throwError } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, map, merge, tap } from 'rxjs';
 import { PeopleService } from 'src/app/shared/services/people.service';
-import { N } from 'chart.js/dist/chunks/helpers.core';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
+import html2pdf from 'html2pdf.js'
+import { BackupViewComponent } from '../../report/backup-view/backup-view.component';
 
 @Component({
   selector: 'app-backups-modal',
@@ -65,10 +65,14 @@ export class BackupsModalComponent implements OnInit {
 
   public backupTooltip = new FormControl('Sem Backup');
 
+  @ViewChild('priceListPDF', { static: true, read: ViewContainerRef })
+  priceListPDF!: ViewContainerRef;
+
   constructor(
     private peopleService: PeopleService,
     private widGetService: WidgetService,
     private dropboxService: DropboxService,
+    private readonly resolver: ComponentFactoryResolver,
     public libraryService: LibraryService,
   ) {
   }
@@ -288,5 +292,48 @@ export class BackupsModalComponent implements OnInit {
         this.loadingFull.active = false;
       }
     );
+  }
+
+  createPDF(): void {
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Gerando Relatório...';
+
+    this.peopleService.index('',
+    'name', 'name', '1', '150', [
+      { param: 'backups', value: 'true' },
+      { param: 'backupStatus', value: this.optionSelect.value },
+      { param: 'backupRole', value: this.optionSelectBackup.value }
+    ]).pipe(
+      finalize(() => this.loadingFull.active = false),
+      map(res => {
+        this.showPDF(res.data);
+      })
+    ).subscribe();
+  }
+
+  showPDF(data: any): void {
+    const factory = this.resolver.resolveComponentFactory(BackupViewComponent);
+    const componentRef = this.priceListPDF.createComponent(factory);
+    componentRef.instance.data = data;
+    componentRef.instance.emitter.subscribe(() => {
+      const config = {
+        html2canvas: {
+          scale: 1,
+          scrollX: 0,
+          scrollY: 0,
+        },
+      };
+
+      this.print(componentRef.location.nativeElement, config);
+      componentRef.destroy();
+    });
+  }
+
+  private print(content: any, config: any): void {
+    html2pdf()
+      .set(config)
+      .from(content)
+      .toPdf()
+      .outputPdf('dataurlnewwindow');
   }
 }

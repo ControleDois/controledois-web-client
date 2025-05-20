@@ -1,0 +1,47 @@
+<div class="report">
+  <header>
+    <div>Data: {{getDateNow()}}</div>
+  </header>
+
+  <section class="company">
+    <!--<div class="logo">
+      <h1>eebu</h1>
+    </div>-->
+
+    <div class="description">
+      <h1>{{auth.company.people.name || '...'}}</h1>
+      <p>{{auth.company.people.address?.address || ''}},
+        {{auth.company.people.address?.number || ''}},
+        {{auth.company.people.address?.district || ''}},
+        {{auth.company.people.address?.city || ''}}-{{auth.company.people.address?.state || ''}}
+        CEP: {{auth.company.people.address?.zip_code || ''}}</p>
+      <div>
+        <p>{{auth.company.people.role == 0 ? 'CPF: ' : 'CNPJ: '}}{{auth.company.people.document | mask: auth.company.people.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </p>
+        <p style="margin-left: 20px">Fone: {{auth.company.people.phone_commercial | mask: '(00) 00000-0000'}}</p>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top: 20px">
+    <table class="zebra-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Documento</th>
+          <th>Banco</th>
+          <th>Nfe</th>
+          <th>NFCe</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let backup of data; let i = index">
+          <td>{{libraryService.getMaxString(backup?.social_name || backup?.name, 32)}} </td>
+          <td>{{backup.document | mask: backup.document.lenght <= 11 ? '000.000.000-00' : '00.000.000/0000-00'}} </td>
+          <td><mat-icon [style.color]="getStatusColor(backup, 1)">{{getStatusBackup(backup, 1)}}</mat-icon> {{getLastBackupDate(backup, 1)}}</td>
+          <td><mat-icon [style.color]="getStatusColor(backup, 2)">{{getStatusBackup(backup, 2)}}</mat-icon> {{getLastBackupDate(backup, 2)}}</td>
+          <td><mat-icon [style.color]="getStatusColor(backup, 3)">{{getStatusBackup(backup, 3)}}</mat-icon> {{getLastBackupDate(backup, 3)}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
