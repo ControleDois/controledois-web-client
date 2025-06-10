@@ -18,3 +18,18 @@
     }
   }
 }
+
+@media (max-width: 52em) {
+  .page-header {
+    display: block;
+    text-align: center;
+
+    .title {
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+    }
+  }
+}

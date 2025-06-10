@@ -1,5 +1,13 @@
 <div class="basic-form-buttons">
-  <button *ngFor="let button of navigation.buttons" [ngClass]="button.class" mat-button (click)="button.action()">
-    <mat-icon>{{button.icon}}</mat-icon>{{ button.text }}
-  </button>
+  <div class="buttons-navigation">
+    <button *ngFor="let button of getButtons(true)" [ngClass]="button.class" mat-button (click)="button.action()">
+      <mat-icon>{{button.icon}}</mat-icon>{{ button.text }}
+    </button>
+  </div>
+
+  <div class="buttons-actions">
+    <button *ngFor="let button of getButtons(false)" [ngClass]="button.class" mat-button (click)="button.action()">
+      <mat-icon>{{button.icon}}</mat-icon>{{ button.text }}
+    </button>
+  </div>
 </div>

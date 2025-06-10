@@ -90,3 +90,16 @@ a {
   box-shadow: 0 3px #3A8F4F;
 }
 
+.c2-btn-green:active {
+  box-shadow: 0 1px #3A8F4F;
+}
+
+.c2-btn-bg-no-color {
+  background-color: none;
+  color: var(--color-primary-font);
+}
+
+.c2-btn-bg-no-color:active {
+  //
+}
+

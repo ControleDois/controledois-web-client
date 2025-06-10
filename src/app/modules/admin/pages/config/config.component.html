@@ -1,7 +1,7 @@
 <div class="container">
   <div class="page-content">
     <div class="basic">
-      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
+      <app-basic-form-navigation class="hide-62em" [navigation]="navigation"></app-basic-form-navigation>
 
       <div class="basic-form">
         <app-page-header [header]="pageHeader"></app-page-header>
@@ -19,7 +19,7 @@
                     </select>
                   </label>
 
-                  <label>
+                  <label class="label-w30">
                     <div class="double-spans">
                       <span class="field">{{myForm.value.people.people_type == 0 ? 'CPF' : 'CNPJ'}}</span>
                       <span *ngIf="myForm.value.people.people_type != 0" class="field-right-search" (click)="getCNPJ()">Consultar CNPJ</span>
@@ -28,7 +28,7 @@
                       [mask]="myForm.value.people.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'">
                   </label>
 
-                  <label class="label-w50">
+                  <label class="label-w100">
                     <span class="field">{{myForm.value.people.people_type == 0 ? 'Nome' : 'Nome Fantasia'}}</span>
                     <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Ex: Empresa fulano de tal">
                   </label>
@@ -40,17 +40,17 @@
                     <input [ngClass]="{'errorValidation': getValidation('general_record')}" formControlName="general_record" type="text">
                   </label>
 
-                  <label class="label-w50">
+                  <label class="label-w100">
                     <span class="field">E-mail principal</span>
                     <input formControlName="email" type="email">
                   </label>
 
-                  <label>
+                  <label class="label-w30">
                     <span class="field">Telefone comercial</span>
                     <input formControlName="phone" type="text">
                   </label>
 
-                  <label>
+                  <label class="label-w30">
                     <span class="field">{{myForm.value.people.people_type == 0 ? 'Nascimento' : 'Data abertura'}}</span>
                     <input [ngClass]="{'errorValidation': getValidation('birth')}" formControlName="birth" type="date">
                   </label>
@@ -59,7 +59,7 @@
 
               <mat-tab>
                 <div class="label-group" *ngIf="myForm.value.people.people_type == 1">
-                  <label class="label-w50">
+                  <label class="label-w100">
                     <span class="field">Razão social:</span>
                     <input formControlName="social_name" type="text" placeholder="Nome registrado da empresa">
                   </label>
@@ -96,7 +96,7 @@
                 </div>
 
                 <div class="label-group">
-                  <label class="label-w50">
+                  <label class="label-w100">
                     <span class="field">CRT:</span>
                     <select formControlName="crt">
                       <option *ngFor="let options of crt" [value]="options.type">{{ options.name }}
@@ -104,7 +104,7 @@
                     </select>
                   </label>
 
-                  <label class="label-w50">
+                  <label class="label-w100">
                     <span class="field">Regime Especial:</span>
                     <select formControlName="special_regime">
                       <option *ngFor="let options of specialRegime" [value]="options.type">{{ options.name }}
@@ -147,7 +147,7 @@
                       <input formControlName="zip_code" type="text" mask="00000-000" placeholder="Número">
                     </label>
 
-                    <label class="label-w50">
+                    <label class="label-w100">
                       <span class="field">Endereço:</span>
                       <input formControlName="address" type="text" placeholder="Rua, Av, Br, etc...">
                     </label>
@@ -200,7 +200,7 @@
               </div>
 
               <div class="label-group">
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">Ambiente:</span>
                   <select formControlName="nfe_ambiente">
                     <option value="1">Homologação</option>
@@ -208,12 +208,12 @@
                   </select>
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Série NF-e</span>
                   <input formControlName="nfe_serie" type="number">
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Número NF-e</span>
                   <input formControlName="nfe_numero" type="number">
                 </label>
@@ -224,7 +224,7 @@
               </div>
 
               <div class="label-group">
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">Ambiente:</span>
                   <select formControlName="nfce_ambiente">
                     <option value="1">Homologação</option>
@@ -232,12 +232,12 @@
                   </select>
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Série NFC-e</span>
                   <input formControlName="nfce_serie" type="number">
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Número NFC-e</span>
                   <input formControlName="nfce_numero" type="number">
                 </label>
@@ -248,7 +248,7 @@
               </div>
 
               <div class="label-group">
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">Ambiente:</span>
                   <select formControlName="cte_ambiente">
                     <option value="1">Homologação</option>
@@ -256,12 +256,12 @@
                   </select>
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Série CT-e</span>
                   <input formControlName="cte_serie" type="number">
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Número CT-e</span>
                   <input formControlName="cte_numero" type="number">
                 </label>
@@ -272,7 +272,7 @@
               </div>
 
               <div class="label-group">
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">Ambiente:</span>
                   <select formControlName="mdfe_ambiente">
                     <option value="1">Homologação</option>
@@ -280,12 +280,12 @@
                   </select>
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Série MDF-e</span>
                   <input formControlName="mdfe_serie" type="number">
                 </label>
 
-                <label>
+                <label class="label-w100">
                   <span class="field">Número MDF-e</span>
                   <input formControlName="mdfe_numero" type="number">
                 </label>
@@ -408,7 +408,6 @@
             </mat-tab>
           </mat-tab-group>
         </form>
-
 
         <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
       </div>

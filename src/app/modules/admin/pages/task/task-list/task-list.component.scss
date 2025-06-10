@@ -1,6 +1,7 @@
 .board-columns {
   display: flex;
   flex-grow: 1;
+  overflow-x: auto;
 }
 
 .board-column {
@@ -9,9 +10,9 @@
   flex-grow: 1;
   flex-basis: 0;
 
-  max-width: 300px;
-  margin: 0 10px 0 0;
-  padding: 25px;
+  min-width: 250px;
+  margin: 0 20px 0 0;
+  padding: 25px 10px;
 
   border-radius: 10px;
   background: var(--background-color);

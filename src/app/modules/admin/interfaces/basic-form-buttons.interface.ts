@@ -4,5 +4,7 @@ export interface BasicFormButtons {
     icon: string;
     action: () => void;
     class: string;
+    navigation?: boolean;
+    style?: string;
   }[];
 }

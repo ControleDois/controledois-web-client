@@ -1,7 +1,7 @@
 <div class="container">
   <div class="page-content">
     <div class="basic">
-      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
+      <app-basic-form-navigation [navigation]="navigation" class="hide-62em"></app-basic-form-navigation>
 
       <div class="basic-form">
         <app-page-header [header]="pageHeader"></app-page-header>
@@ -18,7 +18,7 @@
                   </select>
                 </label>
 
-                <label>
+                <label class="label-w30">
                   <div class="double-spans">
                     <span class="field">{{myForm.value.people_type === 0 ? 'CPF:' : 'CNPJ:'}}</span>
                     <span *ngIf="myForm.value.people_type == '1'" class="field-right-search" (click)="getCNPJ()">Consultar CNPJ</span>
@@ -27,7 +27,7 @@
                     [mask]="myForm.value.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'" placeholder="Número do Documento">
                 </label>
 
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">{{myForm.value.people_type == 0 ? 'Nome:' : 'Nome Fantasia:'}}</span>
                   <input [ngClass]="{'errorValidation': getValidation('name')}" formControlName="name" type="text" placeholder="Nome completo, Nome fantasia da empresa...">
                 </label>
@@ -39,23 +39,23 @@
                   <input formControlName="general_record" type="text" placeholder="Somente números">
                 </label>
 
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">E-mail principal</span>
                   <input formControlName="email" type="email">
                 </label>
 
-                <label>
+                <label class="label-w30">
                   <span class="field">Telefone comercial</span>
                   <input formControlName="phone" type="text">
                 </label>
 
-                <label>
+                <label class="label-w30">
                   <span class="field">{{myForm.value.people_type == 0 ? 'Nascimento:' : 'Data abertura:'}}</span>
                   <input formControlName="birth" type="date">
                 </label>
               </div>
 
-              <div class="label-group-check" style="width: 450px;">
+              <div class="label-group-check">
                 <span class="title">Tipo de pessoa</span>
                 <div class="checks">
                   <label class="check">
@@ -117,7 +117,7 @@
 
             <mat-tab>
               <div class="label-group" *ngIf="myForm.value.people_type == 1">
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">Razão social:</span>
                   <input formControlName="social_name" type="text" placeholder="Nome registrado da empresa">
                 </label>
@@ -154,7 +154,7 @@
               </div>
 
               <div class="label-group">
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">CRT:</span>
                   <select formControlName="crt">
                     <option *ngFor="let options of crt" [value]="options.type">{{ options.name }}
@@ -162,7 +162,7 @@
                   </select>
                 </label>
 
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">Regime Especial:</span>
                   <select formControlName="special_regime">
                     <option *ngFor="let options of specialRegime" [value]="options.type">{{ options.name }}
@@ -205,7 +205,7 @@
                     <input formControlName="zip_code" type="text" mask="00000-000" placeholder="Número">
                   </label>
 
-                  <label class="label-w50">
+                  <label class="label-w100">
                     <span class="field">Endereço:</span>
                     <input formControlName="address" type="text" placeholder="Rua, Av, Br, etc...">
                   </label>

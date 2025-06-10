@@ -16,7 +16,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 /* Table */
@@ -779,6 +778,32 @@ option {
   }
 }
 
+.break-div-52em {
+  display: none;
+}
+
+@media (max-width: 62em) {
+  .label-group-check {
+    .checks {
+      display: block !important;
+
+      .check {
+        margin: 10px !important;
+        justify-content: start !important;
+      }
+    }
+  }
+
+  .order2-62em {
+    order: 2 !important;
+  }
+
+  .hide-62em {
+    display: none;
+  }
+}
+
+
 @media (max-width: 52em) {
   .table-actions {
     span {
@@ -818,5 +843,10 @@ option {
 
   .summary {
     display: block;
+  }
+
+  .break-div-52em {
+    display: block;
+    font-size: 11px;
   }
 }

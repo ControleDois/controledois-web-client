@@ -9,12 +9,12 @@
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Nome </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        <td mat-cell *matCellDef="let element"> {{libraryService.getMaxString(element.name, 32)}} <div class="break-div-52em">{{element.document | mask: element.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'}}</div> </td>
       </ng-container>
 
       <ng-container matColumnDef="document">
-        <th mat-header-cell *matHeaderCellDef> Documento </th>
-        <td mat-cell *matCellDef="let element"> {{element.document | mask: element.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </td>
+        <th mat-header-cell *matHeaderCellDef class="hide-62em"> Documento </th>
+        <td mat-cell *matCellDef="let element" class="hide-62em"> {{element.document | mask: element.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">

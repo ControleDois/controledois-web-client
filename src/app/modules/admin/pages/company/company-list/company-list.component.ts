@@ -11,6 +11,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { FirebaseService } from 'src/app/shared/services/firebase.service';
+import { LibraryService } from 'src/app/shared/services/library.service';
 
 @Component({
   selector: 'app-company-list',
@@ -45,7 +46,8 @@ export class CompanyListComponent implements OnInit {
     private storageService: StorageService,
     private router: Router,
     private notificationService: NotificationService,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    public libraryService: LibraryService
   ) {
    }
 
