@@ -64,6 +64,7 @@ export class SaleFormComponent implements OnInit {
     contract_portion: new FormControl(''),
     products: new FormArray([]),
     plots: new FormArray([]),
+    checklists: new FormArray([]),
   });
 
   public contractDateBilling = 0;
@@ -72,6 +73,9 @@ export class SaleFormComponent implements OnInit {
   @Output() public productsOutPut: Array<SearchLoadingUnique>;
 
   public plots = this.myForm.get('plots') as FormArray;
+
+  public checklists = this.myForm.get('checklists') as FormArray;
+  @Output() public checkListsOutPut: Array<SearchLoadingUnique>;
 
   public statusList = [
     { name: '⦿ Em orçamento', type: 0 },
@@ -145,6 +149,7 @@ export class SaleFormComponent implements OnInit {
       { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
       { text: 'Pagamentos', index: 2, icon: 'payment' },
       { text: 'Observações', index: 3, icon: 'description' },
+      { text: 'CheckList', index: 4, icon: 'checklist' },
     ],
     selectedItem: 0
   }
@@ -152,16 +157,25 @@ export class SaleFormComponent implements OnInit {
   @Output() public navigationButtons: BasicFormButtons = {
     buttons: [
       {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
         text: 'Salvar',
         icon: 'save',
         action: () => this.save(false),
         class: 'c2-btn c2-btn-green',
-      },
-      {
-        text: 'Salvar e Continuar',
-        icon: 'save_as',
-        action: () => this.save(true),
-        class: 'c2-btn c2-btn-green',
+        navigation: false,
       },
     ]
   }
@@ -245,6 +259,7 @@ export class SaleFormComponent implements OnInit {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Venda' : 'Editar Venda';
     this.productsOutPut = [];
+    this.checkListsOutPut = [];
   }
 
   ngOnInit(): void {
@@ -414,7 +429,7 @@ export class SaleFormComponent implements OnInit {
     this.products.push(control);
     this.productsOutPut.push({
       noTitle: true,
-      title: '',
+      title: 'Produto / Serviço',
       url: 'product',
       searchFieldOn: value?.product || null,
       searchFieldOnCollum: ['name'],
@@ -587,5 +602,74 @@ export class SaleFormComponent implements OnInit {
       (validity.getFullYear() - initial.getFullYear()) * 12 +
       (validity.getMonth() - initial.getMonth()) +
       1;
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
+  }
+
+  removeCheckList(index: any): void {
+    this.checklists.controls.splice(index, 1);
+    this.checklists.value.splice(index, 1);
+  }
+
+  getChecksForCheckList(index: any): FormArray {
+    return this.checklists.at(index).get('checks') as FormArray;
+  }
+
+  addCheckList(value: any): void {
+    const control = new FormGroup({
+      checklist_id: new FormControl(value?.checklist?.id || null),
+      checks: new FormArray([]),
+    });
+
+    this.checklists.push(control);
+    this.checkListsOutPut.push({
+      noTitle: true,
+      title: 'CheckList',
+      url: 'checklist',
+      searchFieldOn: value?.checklist || null,
+      searchFieldOnCollum: ['name'],
+      sortedBy: 'name',
+      orderBy: 'name',
+      searchField: new FormControl(''),
+      validation: true,
+      paramsArray: [
+        {
+          param: 'checks',
+          value: true,
+        },
+      ],
+    });
+  }
+
+  selectCheckList(event: any, i: any): void {
+    this.checklists.at(i).setValue({
+      checklist_id: event.id,
+      checks: [],
+    });
+
+    // Adiciona os checks do checklist selecionado
+    if (event.checks && event.checks.length > 0) {
+      const checksArray = this.getChecksForCheckList(i);
+      event.checks.forEach((check: any) => {
+        const checkControl = new FormGroup({
+          id: new FormControl(check.id),
+          name: new FormControl(check.name),
+          checked: new FormControl(false),
+        });
+        checksArray.push(checkControl);
+      });
+    }
   }
 }

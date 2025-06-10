@@ -801,6 +801,16 @@ option {
   .hide-62em {
     display: none;
   }
+
+  .shopping-budget-grid-list {
+    .label-group{
+      display: block !important;
+    }
+  }
+
+  .shopping-budget .shopping-budget-grid .shopping-budget-grid-list .label-group label .label-title {
+    display: block !important;
+  }
 }
 
 
