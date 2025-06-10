@@ -81,6 +81,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TaskBoardModalComponent } from './pages/modals/task-board-modal/task-board-modal.component';
 import { CourseListComponent } from './pages/course/course-list/course-list.component';
 import { BackupViewComponent } from './pages/report/backup-view/backup-view.component';
+import { ChecklistFormComponent } from './pages/checklist/checklist-form/checklist-form.component';
+import { ChecklistListComponent } from './pages/checklist/checklist-list/checklist-list.component';
 
 const appName = 'CTrix';
 
@@ -380,6 +382,16 @@ const routes: Routes = [
     component: CourseListComponent,
     data: { title: `Cursos -  ${appName}`},
   },
+  {
+    path: 'checklist',
+    component: ChecklistListComponent,
+    data: { title: `CheckList -  ${appName}`},
+  },
+  {
+    path: 'checklist/:id',
+    component: ChecklistFormComponent,
+    data: { title: `Cadastro de CheckList -  ${appName}`},
+  }
 ]
 
 @NgModule({
@@ -457,7 +469,9 @@ const routes: Routes = [
     CteDocumentModalComponent,
     TaskBoardModalComponent,
     CourseListComponent,
-    BackupViewComponent
+    BackupViewComponent,
+    ChecklistFormComponent,
+    ChecklistListComponent
   ],
   imports: [
     CommonModule,
