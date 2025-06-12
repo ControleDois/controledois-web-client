@@ -328,6 +328,26 @@ export class SaleFormComponent implements OnInit {
         }
       }
 
+      if (value.checkLists && value.checkLists.length > 0) {
+        for (const checklist of value.checkLists) {
+          this.addCheckList(checklist);
+
+          // Adiciona os checks do checklist selecionado
+          if (checklist.checklist.checks && checklist.checklist.checks.length > 0) {
+            const checksArray = this.getChecksForCheckList(this.checklists.length - 1);
+
+            checklist.checklist.checks.forEach((check: any) => {
+              const checkControl = new FormGroup({
+                id: new FormControl(check.id),
+                name: new FormControl(check.name),
+                checked: new FormControl(value.checkListChecks.find(c => c.checklist_id === check.id) ? 1 : 0),
+              });
+              checksArray.push(checkControl);
+            });
+          }
+        }
+      }
+
       this.searchUser.searchFieldOn = value.user;
       this.searchUser.searchField.setValue(value.user.name);
       this.searchPeople.searchFieldOn = value.people;
@@ -526,6 +546,7 @@ export class SaleFormComponent implements OnInit {
           { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
           { text: 'Pagamentos', index: 2, icon: 'payment' },
           { text: 'Observações', index: 3, icon: 'description' },
+          { text: 'CheckLists', index: 4, icon: 'CheckList' },
         ],
         selectedItem: this.navigation.selectedItem
       }
@@ -535,6 +556,7 @@ export class SaleFormComponent implements OnInit {
           { text: 'Informações Gerais', index: 0, icon: 'info' },
           { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
           { text: 'Observações', index: 3, icon: 'description' },
+          { text: 'CheckLists', index: 4, icon: 'CheckList' },
         ],
         selectedItem: this.navigation.selectedItem == 2 ? 3 : this.navigation.selectedItem
       }
@@ -646,6 +668,10 @@ export class SaleFormComponent implements OnInit {
       validation: true,
       paramsArray: [
         {
+          param: 'primary',
+          value: true,
+        },
+        {
           param: 'checks',
           value: true,
         },
@@ -666,7 +692,7 @@ export class SaleFormComponent implements OnInit {
         const checkControl = new FormGroup({
           id: new FormControl(check.id),
           name: new FormControl(check.name),
-          checked: new FormControl(false),
+          checked: new FormControl(0),
         });
         checksArray.push(checkControl);
       });

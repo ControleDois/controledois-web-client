@@ -260,7 +260,7 @@
                           </button>
                         </div>
 
-                        <div class="basic-form-header" style="padding: 0 20px;">
+                        <div class="basic-form-header" style="padding: 0 20px;" *ngIf="getChecksForCheckList(i).controls.length > 0">
                           <h3>Lista</h3>
                         </div>
 
@@ -283,8 +283,8 @@
                                   <label>
                                     <span class="label-title">Obrigatório</span>
                                     <select formControlName="checked">
-                                      <option [value]="true">Sim</option>
-                                      <option [value]="false">Não</option>
+                                      <option [value]="1">Sim</option>
+                                      <option [value]="0">Não</option>
                                     </select>
                                   </label>
                                 </div>

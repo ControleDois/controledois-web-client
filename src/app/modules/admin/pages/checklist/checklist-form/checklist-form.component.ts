@@ -25,6 +25,7 @@ export class ChecklistFormComponent implements OnInit {
     company_id: new FormControl(''),
     checklist_id: new FormControl(''),
     name: new FormControl('', Validators.required),
+    primary: new FormControl(false),
   });
 
   @Output() searchChecklist: SearchLoadingUnique = {
@@ -36,7 +37,12 @@ export class ChecklistFormComponent implements OnInit {
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
-    paramsArray: [],
+    paramsArray: [
+      {
+        param: 'primary',
+        value: true,
+      },
+    ],
     validation: true
   };
 
@@ -112,7 +118,13 @@ export class ChecklistFormComponent implements OnInit {
 
     if (this.myForm.valid) {
       this.loadingFull.active = true;
-      this.myForm.value.checklist_id = this.searchChecklist?.searchFieldOn?.id || null;
+
+      //Se for check principal nao vincula o pai
+      if (this.myForm.value.primary) {
+        this.myForm.value.checklist_id = null;
+      } else {
+        this.myForm.value.checklist_id = this.searchChecklist?.searchFieldOn?.id || null;
+      }
 
       this.checklistService.save(this.formId, this.myForm.value).pipe(
         finalize(() => this.loadingFull.active = false),

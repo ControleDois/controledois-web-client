@@ -12,6 +12,14 @@
           </label>
 
           <app-search-loading-unique class="label-w50" [search]="searchChecklist"></app-search-loading-unique>
+
+          <label class="label-w30">
+            <span class="label-title">Principal?</span>
+            <select formControlName="primary">
+              <option [value]="true">Sim</option>
+              <option [value]="false">Não</option>
+            </select>
+          </label>
         </div>
       </form>
 
