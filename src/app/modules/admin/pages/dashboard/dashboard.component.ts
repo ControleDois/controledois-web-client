@@ -5,6 +5,7 @@ import { Chart, CategoryScale, BarController, BarElement, PointElement, LinearSc
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BackupsModalComponent } from '../modals/backups-modal/backups-modal.component';
+import { PurchaseNoteComponent } from '../modals/purchase-note/purchase-note.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,6 +33,9 @@ export class DashboardComponent implements OnInit {
     off: 0,
     error: 0
   }
+
+  private appChartBackup: any;
+  public activeRole = '1';
 
   constructor(
     private dashboardService: DashboardService,
@@ -100,7 +104,7 @@ export class DashboardComponent implements OnInit {
       })
     ).subscribe();
 
-    this.dashboardService.backups().pipe(
+    this.dashboardService.backups('1').pipe(
       map(res => {
         this.backups = res;
         if (this.backups.all > 0) {
@@ -111,16 +115,30 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  loadBackups(role: string): void {
+    this.activeRole = role;
+    this.dashboardService.backups(role).pipe(
+      map(res => {
+        this.backups = res;
+        this.showBackups();
+      })
+    ).subscribe();
+  }
+
   showBackups() {
-    new Chart(this.chartBackups.nativeElement, {
+    if (this.appChartBackup) {
+      this.appChartBackup.destroy();
+    }
+
+    this.appChartBackup = new Chart(this.chartBackups.nativeElement, {
       type: 'doughnut',
       data: {
         labels: ['Todos', 'Operacional', 'Alerta', 'Inoperante', 'Erro'],
         datasets: [
           {
             data: [this.backups.all, this.backups.on, this.backups.alert, this.backups.off, this.backups.error],
-            backgroundColor: ['#3ba9eee5', '#97fda4', '#f5d678c2', '#fb859c', '#607D8B'],
-            borderColor: ['#1587ce', '#4AB858', '#FFC107', '#F43E61', '#607D8B'],
+            backgroundColor: ['#3ba9eee5', '#97fda4', '#f5d678c2', '#607D8B', '#fb859c'],
+            borderColor: ['#1587ce', '#4AB858', '#FFC107', '#607D8B', '#F43E61', ],
             borderWidth: 1
           }
         ]
@@ -190,5 +208,14 @@ export class DashboardComponent implements OnInit {
     dialogConfig.width = '920px';
     dialogConfig.maxHeight = '550px';
     this.dialog.open(BackupsModalComponent, dialogConfig);
+  }
+
+  showPurchaseModel(): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '300px';
+    dialogConfig.maxHeight = '300px';
+    this.dialog.open(PurchaseNoteComponent, dialogConfig);
   }
 }

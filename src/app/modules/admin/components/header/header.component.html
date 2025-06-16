@@ -35,6 +35,9 @@
             <li (click)="menuMobileOn = !menuMobileOn">
               <a routerLink="/service">Serviços</a>
             </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/checklist">CheckLists</a>
+            </li>
           </article>
         </ul>
       </li>
@@ -99,13 +102,48 @@
               <a routerLink="/bill-payment">NFCe</a>
             </li>
             <li (click)="menuMobileOn = !menuMobileOn">
-              <a routerLink="/nfe-manifest">Manifesto</a>
+              <a routerLink="/purchase-note">Notas de Compras</a>
             </li>
           </article>
           <article>
             <li><span>Cadastro</span></li>
             <li (click)="menuMobileOn = !menuMobileOn">
               <a routerLink="/people">Pessoas</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/nfe-nature-operation">Natureza de Operação</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/nfe-taxation">Tributação</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/nfe-manifest">Manifesto</a>
+            </li>
+          </article>
+        </ul>
+      </li>
+      <li class="nav-ul-li">
+        <a class="menu-list">Transporte <mat-icon>keyboard_arrow_down</mat-icon></a>
+        <ul>
+          <article>
+            <li><span>Controle</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/cte">CT-e</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/mdfe">MDF-e</a>
+            </li>
+          </article>
+          <article>
+            <li><span>Cadastro</span></li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/transport-route">Rotas</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/transport-insurance">Seguros</a>
+            </li>
+            <li (click)="menuMobileOn = !menuMobileOn">
+              <a routerLink="/transport-vehicle">Veículos</a>
             </li>
           </article>
         </ul>
@@ -134,6 +172,15 @@
   </nav>
 
   <ul class="ul-config">
+    <li class="toggle">
+      <div class="toogle-theme">
+        <span>{{ auth.theme ? 'Modo escuro' : 'Modo claro'}}</span>
+        <div (click)="toggle()">
+          <mat-icon [ngClass]="{'active': !auth.theme}">light_mode</mat-icon>
+          <mat-icon [ngClass]="{'active': auth.theme}">dark_mode</mat-icon>
+        </div>
+      </div>
+    </li>
     <li class="ul-config-li">
       <a>
         <mat-icon>person</mat-icon>

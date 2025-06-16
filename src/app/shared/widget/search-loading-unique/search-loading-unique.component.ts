@@ -28,13 +28,13 @@ export class SearchLoadingUniqueComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.search.searchField.setValue(this.search.searchFieldOn?.[this.search.searchFieldOnCollum] || '');
+    this.search.searchField.setValue(this.search.searchFieldOn?.[this.search.searchFieldOnCollum.join(' - ')] || '');
     this.search.searchField.valueChanges
       .pipe(
         debounceTime(400),
         distinctUntilChanged(),
         map(() => {
-          if (!this.search.searchFieldOn?.[this.search.searchFieldOnCollum]) {
+          if (!this.search.searchFieldOn?.[this.search.searchFieldOnCollum.join(' - ')]) {
             this.load();
           }
         })
@@ -74,5 +74,12 @@ export class SearchLoadingUniqueComponent implements OnInit {
   removeItem(): void {
     this.search.searchFieldOn = null;
     this.search.searchField.setValue(null);
+  }
+
+  getDisplayValue(item: any): string {
+    return this.search.searchFieldOnCollum
+      .map(field => item[field] || '') // Obtem os valores das chaves
+      .filter(value => !!value) // Remove valores nulos ou indefinidos
+      .join(' - '); // Concatena com " - "
   }
 }

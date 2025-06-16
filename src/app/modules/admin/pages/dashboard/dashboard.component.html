@@ -22,6 +22,28 @@
       </div>
     </div>
 
+    <div class="card card-help" style="margin-bottom: 20px">
+      <div class="card-header">
+        <h4>Cadastrar NFC-e de compra?</h4>
+      </div>
+      <div class="card-content">
+        <div class="card-helper">
+          <div class="card-helper-img">
+            <img src="assets/qrcode.png" />
+          </div>
+          <div class="card-helper-description">
+            <p>Armazenar compras</p>
+            <h3>Basta ler o QrCode</h3>
+          </div>
+        </div>
+
+        <p style="margin-top: 20px; text-align: center">Clique para ler o QrCode da nota.</p>
+        <button (click)="showPurchaseModel()" class="button-add" mat-button style="color: #fff; background-color: #2687e9; width: 100%">
+          Ler QrCode
+        </button>
+      </div>
+    </div>
+
     <div class="card" [ngStyle]="{ display: backups.all > 0 ? 'block' : 'none'}">
       <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;">
         <h4>Backups</h4>
@@ -29,6 +51,11 @@
       </div>
       <div class="backups">
         <canvas #chartBackups></canvas>
+      </div>
+      <div class="backup-roles">
+        <p [ngClass]="{'active': activeRole === '1'}" (click)="loadBackups('1')">DB</p>
+        <p [ngClass]="{'active': activeRole === '2'}" (click)="loadBackups('2')">NFe</p>
+        <p [ngClass]="{'active': activeRole === '3'}" (click)="loadBackups('3')">NFCe</p>
       </div>
     </div>
 
@@ -43,6 +70,7 @@
       </div>
     </div>
   </div>
+
   <div class="dash-right">
     <div class="bill">
       <div class="card" style="padding: 30px">

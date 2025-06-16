@@ -50,7 +50,7 @@ export class CompanyService {
   }
 
   cnpj(cnpj: string): Observable<any> {
-    const url = "https://api-publica.speedio.com.br/buscarcnpj?cnpj=";
+    const url = "https://publica.cnpj.ws/cnpj/";
     return this.apiService.on(`${url}${cnpj}`, '', 'get-no-environment');
   }
 

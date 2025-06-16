@@ -14,4 +14,7 @@ export class BasicFormButtonsComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getButtons(navigation: boolean): BasicFormButtons["buttons"] {
+    return this.navigation.buttons.filter(button => button.navigation === navigation);
+  }
 }

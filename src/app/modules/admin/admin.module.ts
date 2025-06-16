@@ -54,6 +54,35 @@ import { BasicFormNavigationComponent } from './components/basic-form-navigation
 import { BasicFormButtonsComponent } from './components/basic-form-buttons/basic-form-buttons.component';
 import { ChatComponent } from './pages/chat/chat.component';
 import { BackupsModalComponent } from './pages/modals/backups-modal/backups-modal.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { NfeNatureOperationListComponent } from './pages/nfe-nature-operation/nfe-nature-operation-list/nfe-nature-operation-list.component';
+import { NfeNatureOperationFormComponent } from './pages/nfe-nature-operation/nfe-nature-operation-form/nfe-nature-operation-form.component';
+import { NfeTaxationListComponent } from './pages/nfe-taxation/nfe-taxation-list/nfe-taxation-list.component';
+import { NfeTaxationFormComponent } from './pages/nfe-taxation/nfe-taxation-form/nfe-taxation-form.component';
+import { NfeTaxationRuleFormComponent } from './pages/modals/nfe-taxation-rule-form/nfe-taxation-rule-form.component';
+import { MediaModalComponent } from './pages/modals/media-modal/media-modal.component';
+import { ConsoleMessageModalComponent } from './pages/modals/console-message-modal/console-message-modal.component';
+import { MdfeFormComponent } from './pages/mdfe/mdfe-form/mdfe-form.component';
+import { MdfeListComponent } from './pages/mdfe/mdfe-list/mdfe-list.component';
+import { TransportRouteListComponent } from './pages/transport-route/transport-route-list/transport-route-list.component';
+import { TransportRouteFormComponent } from './pages/transport-route/transport-route-form/transport-route-form.component';
+import { TransportInsuranceListComponent } from './pages/transport-insurance/transport-insurance-list/transport-insurance-list.component';
+import { TransportInsuranceFormComponent } from './pages/transport-insurance/transport-insurance-form/transport-insurance-form.component';
+import { TransportVehicleListComponent } from './pages/transport-vehicle/transport-vehicle-list/transport-vehicle-list.component';
+import { TransportVehicleFormComponent } from './pages/transport-vehicle/transport-vehicle-form/transport-vehicle-form.component';
+import { CteListComponent } from './pages/cte/cte-list/cte-list.component';
+import { CteFormComponent } from './pages/cte/cte-form/cte-form.component';
+import { PurchaseNoteComponent } from './pages/modals/purchase-note/purchase-note.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { PurchaseNotFormComponent } from './pages/purchase-note/purchase-not-form/purchase-not-form.component';
+import { PurchaseNotListComponent } from './pages/purchase-note/purchase-not-list/purchase-not-list.component';
+import { CteDocumentModalComponent } from './pages/modals/cte-document-modal/cte-document-modal.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TaskBoardModalComponent } from './pages/modals/task-board-modal/task-board-modal.component';
+import { CourseListComponent } from './pages/course/course-list/course-list.component';
+import { BackupViewComponent } from './pages/report/backup-view/backup-view.component';
+import { ChecklistFormComponent } from './pages/checklist/checklist-form/checklist-form.component';
+import { ChecklistListComponent } from './pages/checklist/checklist-list/checklist-list.component';
 
 const appName = 'Siace';
 
@@ -267,6 +296,101 @@ const routes: Routes = [
     path: 'chat',
     component: ChatComponent,
     data: { title: `Chat -  ${appName}`},
+  },
+  {
+    path: 'nfe-nature-operation',
+    component: NfeNatureOperationListComponent,
+    data: { title: `Natureza de Operação -  ${appName}`},
+  },
+  {
+    path: 'nfe-nature-operation/:id',
+    component: NfeNatureOperationFormComponent,
+    data: { title: `Cadastro de Natureza de Operação -  ${appName}`},
+  },
+  {
+    path: 'nfe-taxation',
+    component: NfeTaxationListComponent,
+    data: { title: `Tributação -  ${appName}`},
+  },
+  {
+    path: 'nfe-taxation/:id',
+    component: NfeTaxationFormComponent,
+    data: { title: `Cadastro de Tributação -  ${appName}`},
+  },
+  {
+    path: 'mdfe',
+    component: MdfeListComponent,
+    data: { title: `MDFe -  ${appName}`},
+  },
+  {
+    path: 'mdfe/:id',
+    component: MdfeFormComponent,
+    data: { title: `Cadastro de MDFe -  ${appName}`},
+  },
+  {
+    path: 'transport-route',
+    component: TransportRouteListComponent,
+    data: { title: `Rotas -  ${appName}`},
+  },
+  {
+    path: 'transport-route/:id',
+    component: TransportRouteFormComponent,
+    data: { title: `Cadastro de Rotas -  ${appName}`},
+  },
+  {
+    path: 'transport-insurance',
+    component: TransportInsuranceListComponent,
+    data: { title: `Seguros -  ${appName}`},
+  },
+  {
+    path: 'transport-insurance/:id',
+    component: TransportInsuranceFormComponent,
+    data: { title: `Cadastro de Seguros -  ${appName}`},
+  },
+  {
+    path: 'transport-vehicle',
+    component: TransportVehicleListComponent,
+    data: { title: `Veículos -  ${appName}`},
+  },
+  {
+    path: 'transport-vehicle/:id',
+    component: TransportVehicleFormComponent,
+    data: { title: `Cadastro de Veículos -  ${appName}`},
+  },
+  {
+    path: 'cte',
+    component: CteListComponent,
+    data: { title: `CT-e -  ${appName}`},
+  },
+  {
+    path: 'cte/:id',
+    component: CteFormComponent,
+    data: { title: `Cadastro de CT-e -  ${appName}`},
+  },
+  {
+    path: 'purchase-note',
+    component: PurchaseNotListComponent,
+    data: { title: `Nota de Compras -  ${appName}`},
+  },
+  {
+    path: 'purchase-note/:id',
+    component: PurchaseNotFormComponent,
+    data: { title: `Cadastro de Nota de Compras -  ${appName}`},
+  },
+  {
+    path: 'course',
+    component: CourseListComponent,
+    data: { title: `Cursos -  ${appName}`},
+  },
+  {
+    path: 'checklist',
+    component: ChecklistListComponent,
+    data: { title: `CheckList -  ${appName}`},
+  },
+  {
+    path: 'checklist/:id',
+    component: ChecklistFormComponent,
+    data: { title: `Cadastro de CheckList -  ${appName}`},
   }
 ]
 
@@ -321,6 +445,33 @@ const routes: Routes = [
     BasicFormButtonsComponent,
     ChatComponent,
     BackupsModalComponent,
+    SidenavComponent,
+    NfeNatureOperationListComponent,
+    NfeNatureOperationFormComponent,
+    NfeTaxationListComponent,
+    NfeTaxationFormComponent,
+    NfeTaxationRuleFormComponent,
+    MediaModalComponent,
+    ConsoleMessageModalComponent,
+    MdfeFormComponent,
+    MdfeListComponent,
+    TransportRouteListComponent,
+    TransportRouteFormComponent,
+    TransportInsuranceListComponent,
+    TransportInsuranceFormComponent,
+    TransportVehicleListComponent,
+    TransportVehicleFormComponent,
+    CteListComponent,
+    CteFormComponent,
+    PurchaseNoteComponent,
+    PurchaseNotFormComponent,
+    PurchaseNotListComponent,
+    CteDocumentModalComponent,
+    TaskBoardModalComponent,
+    CourseListComponent,
+    BackupViewComponent,
+    ChecklistFormComponent,
+    ChecklistListComponent
   ],
   imports: [
     CommonModule,
@@ -329,6 +480,8 @@ const routes: Routes = [
     WidgetModule,
     NgxMaskModule.forRoot(),
     CurrencyMaskModule,
+    ZXingScannerModule,
+    DragDropModule
   ],
 })
 export class AdminModule { }

@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <div class="label-group">
+
+          <label class="label-w50">
+            <span class="field">Nome</span>
+            <input formControlName="name" type="text">
+          </label>
+
+          <app-search-loading-unique class="label-w50" [search]="searchChecklist"></app-search-loading-unique>
+
+          <label class="label-w30">
+            <span class="label-title">Principal?</span>
+            <select formControlName="primary">
+              <option [value]="true">Sim</option>
+              <option [value]="false">Não</option>
+            </select>
+          </label>
+        </div>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

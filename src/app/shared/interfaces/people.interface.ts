@@ -5,6 +5,7 @@ export interface People {
   company_id: string;
   name: string;
   role: number;
+  people_type: number;
   social_name: string;
   simple: false;
   state_registration_indicator: number;

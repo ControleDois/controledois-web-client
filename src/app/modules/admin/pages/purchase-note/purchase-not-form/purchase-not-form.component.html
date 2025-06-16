@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="page-content">
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
+
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
+
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="label-group">
+                <label style="width: 50%">
+                  <span class="label-title">Chave de Acesso:</span>
+                  <input formControlName="document_key" type="text">
+                </label>
+
+                <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
+              </div>
+
+              <label style="width: 100%">
+                <span class="label-title">Descrição:</span>
+                <input formControlName="description" type="text">
+              </label>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid">
+                  <ul class="shopping-budget-grid-header">
+                    <li style="width: 25%">Produto/Serviço</li>
+                    <li style="width: 30%">Detalhes do item</li>
+                    <li style="text-align: right">Quantidade</li>
+                    <li style="text-align: right">Valor</li>
+                    <li style="text-align: right">Subtotal</li>
+                  </ul>
+
+                  <ng-container formArrayName="products">
+                    <div *ngFor="let product of products.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <app-search-loading-unique style="width: 25%" [search]="productsOutPut[i]" (eventEmit)="selectProduct($event, i)"></app-search-loading-unique>
+
+                          <label style="width: 30%">
+                            <span class="label-title">Detalhes do item</span>
+                            <input formControlName="description" type="text">
+                          </label>
+
+                          <label>
+                            <span class="label-title">Quantidade</span>
+                            <input formControlName="amount" type="number" style="text-align: right" (keyup)="sumProductDetails(i)">
+                          </label>
+
+                          <label>
+                            <span class="label-title">Valor</span>
+                            <input formControlName="cost_value" currencyMask type="text" style="text-align: right" (keyup)="sumProductDetails(i)">
+                          </label>
+
+                          <label>
+                            <span class="label-title">Subtotal</span>
+                            <input formControlName="subtotal" currencyMask type="text" style="text-align: right" readonly>
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removeProduct(i)" *ngIf="products.length > 1">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addProduct(null)">Adicionar mais uma linha</button>
+                    <div class="amount">
+                      <p>Valor total</p>
+                      <h2>{{myForm.value.total | currency}}</h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

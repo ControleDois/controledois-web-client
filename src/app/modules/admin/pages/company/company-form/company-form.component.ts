@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
@@ -10,6 +10,8 @@ import { DialogMessageService } from 'src/app/shared/services/dialog-message.ser
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
 
 @Component({
   selector: 'app-company-form',
@@ -36,10 +38,13 @@ export class CompanyFormComponent implements OnInit {
     inscription_suframa: new FormControl(''),
     document: new FormControl(''),
     general_record: new FormControl(''),
-    email: new FormControl(''),
-    phone_commercial: new FormControl(''),
-    phone_cell: new FormControl(''),
     birth: new FormControl(''),
+    certificate_path: new FormControl(''),
+    certificate_password: new FormControl(''),
+    phone: new FormControl(''),
+    email: new FormControl(''),
+    crt: new FormControl(0),
+    special_regime: new FormControl(0),
     address: new FormGroup({
       zip_code: new FormControl(''),
       address: new FormControl(''),
@@ -48,6 +53,7 @@ export class CompanyFormComponent implements OnInit {
       city: new FormControl(''),
       district: new FormControl(''),
       complement: new FormControl(''),
+      code_ibge: new FormControl(''),
     }),
     note: new FormControl(''),
   });
@@ -99,6 +105,27 @@ export class CompanyFormComponent implements OnInit {
     ]
   }
 
+  @ViewChild('fileInputCertificado') fileInputCertificado!: ElementRef<HTMLInputElement>;
+  public certificado: DropboxFile | undefined;
+
+  public crt = [
+    { name: '⦿ Simples Nacional', type: 0 },
+    { name: '⦿ Simples Nacional, Excesso sublimete de receita bruta', type: 1 },
+    { name: '⦿ Regime Normal', type: 2 },
+    { name: '⦿ Simples Nacional - Microempreendedor individual - MEI', type: 3 },
+  ];
+
+  public specialRegime = [
+    { name: '⦿ Sem Regime Especial', type: 0 },
+    { name: '⦿ Microempresa Municipal', type: 1 },
+    { name: '⦿ Estimativa', type: 2 },
+    { name: '⦿ Sociedade de Profissionais', type: 3 },
+    { name: '⦿ Cooperaiva', type: 4 },
+    { name: '⦿ Microempresário Individual (MEI)', type: 5 },
+    { name: '⦿ Microempresário e Empresa de Pequeo Porte(ME/EPP)', type: 6 },
+    { name: '⦿ Lucro real', type: 7 },
+  ];
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private peopleService: CompanyService,
@@ -106,6 +133,7 @@ export class CompanyFormComponent implements OnInit {
     private router: Router,
     private datePipe: DatePipe,
     private dialogMessageService: DialogMessageService,
+    private dropboxService: DropboxService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Empresa' : 'Editar Empresa';
@@ -137,6 +165,8 @@ export class CompanyFormComponent implements OnInit {
     if (value) {
       this.myForm.patchValue(value);
       this.myForm.controls['birth'].setValue(this.datePipe.transform(value.birth, 'yyyy-MM-dd'));
+
+      this.getCertificateDropBox();
     }
   }
 
@@ -202,23 +232,24 @@ export class CompanyFormComponent implements OnInit {
         return throwError(error);
       }),
       map((cnpj) => {
-        this.myForm.controls['name'].setValue(cnpj["NOME FANTASIA"]);
-        this.myForm.controls['social_name'].setValue(cnpj["RAZAO SOCIAL"]);
-        (this.myForm.get('address') as FormGroup).controls['zip_code'].setValue(cnpj["CEP"]);
+        this.myForm.controls['name'].setValue(cnpj["estabelecimento"]["nome_fantasia"]);
+        this.myForm.controls['social_name'].setValue(cnpj["razao_social"]);
+        (this.myForm.get('address') as FormGroup).controls['zip_code'].setValue(cnpj["estabelecimento"]["cep"]);
         const birth = new Date();
-        const birthGet = cnpj["DATA ABERTURA"].replace(/\D+/g, '');
-        birth.setDate(birthGet.substring(0, 2));
-        birth.setFullYear(birthGet.substring(4, 8));
-        birth.setMonth(birthGet.substring(2, 4) - 1);
+        const birthGet = cnpj["estabelecimento"]["data_inicio_atividade"].replace(/\D+/g, '');
+        birth.setDate(birthGet.substring(6, 8));
+        birth.setFullYear(birthGet.substring(0, 4));
+        birth.setMonth(birthGet.substring(4, 6) - 1);
         this.myForm.controls['birth'].setValue(this.datePipe.transform(birth, 'yyyy-MM-dd'));
-        this.myForm.controls['phone_commercial'].setValue(cnpj["DDD"] + cnpj["TELEFONE"]);
-        this.myForm.controls['email'].setValue(cnpj["EMAIL"]);
-        (this.myForm.get('address') as FormGroup).controls['address'].setValue(cnpj["LOGRADOURO"]);
-        (this.myForm.get('address') as FormGroup).controls['number'].setValue(cnpj["NUMERO"]);
-        (this.myForm.get('address') as FormGroup).controls['complement'].setValue(cnpj["COMPLEMENTO"]);
-        (this.myForm.get('address') as FormGroup).controls['district'].setValue(cnpj["BAIRRO"]);
-        (this.myForm.get('address') as FormGroup).controls['city'].setValue(cnpj["MUNICIPIO"]);
-        (this.myForm.get('address') as FormGroup).controls['state'].setValue(cnpj["UF"]);
+        this.myForm.controls['phone'].setValue(cnpj["estabelecimento"]["ddd1"] + cnpj["estabelecimento"]["telefone1"]);
+        this.myForm.controls['email'].setValue(cnpj["estabelecimento"]["email"]);
+        (this.myForm.get('address') as FormGroup).controls['address'].setValue(cnpj["estabelecimento"]["logradouro"]);
+        (this.myForm.get('address') as FormGroup).controls['number'].setValue(cnpj["estabelecimento"]["numero"]);
+        (this.myForm.get('address') as FormGroup).controls['complement'].setValue(cnpj["estabelecimento"]["complemento"]);
+        (this.myForm.get('address') as FormGroup).controls['district'].setValue(cnpj["estabelecimento"]["bairro"]);
+        (this.myForm.get('address') as FormGroup).controls['city'].setValue(cnpj["estabelecimento"]["cidade"]["nome"]);
+        (this.myForm.get('address') as FormGroup).controls['state'].setValue(cnpj["estabelecimento"]["estado"]["nome"]);
+        (this.myForm.get('address') as FormGroup).controls['code_ibge'].setValue(cnpj["estabelecimento"]["cidade"]["ibge_id"]);
       })
     ).subscribe();
   }
@@ -238,7 +269,91 @@ export class CompanyFormComponent implements OnInit {
         (this.myForm.get('address') as FormGroup).controls['district'].setValue(cep["bairro"]);
         (this.myForm.get('address') as FormGroup).controls['city'].setValue(cep["localidade"]);
         (this.myForm.get('address') as FormGroup).controls['state'].setValue(cep["uf"]);
+        (this.myForm.get('address') as FormGroup).controls['code_ibge'].setValue(cep["ibge"]);
       })
     ).subscribe();
+  }
+
+  getCertificateDropBox(): void {
+    const documentPath = this.myForm.controls['document'].value || '';
+    if (documentPath) {
+      this.dropboxService.getCertificate(documentPath).subscribe({
+        next: (response) => {
+          this.myForm.controls['certificate_path'].setValue(response?.path_display);
+          this.certificado = response;
+
+        },
+        error: (error) => {
+          console.error(error);
+          this.notificationService.error('Certificado não vinculado');
+        },
+      });
+    }
+  }
+
+  selectCertificadoButton(): void {
+    this.fileInputCertificado.nativeElement.click();
+  }
+
+  selectCertificado(event: Event): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const documentPath = this.myForm.controls['document'].value || '';
+      if (documentPath) {
+        const arquivo = input.files[0];
+
+        if (arquivo.name.endsWith('.pfx')) {
+          const path = `/Backups/${documentPath}/Certificado/certificado.pfx`; // Define o caminho no Dropbox
+
+          this.loadingFull.active = true;
+          this.dropboxService.uploadFile(arquivo, path).subscribe({
+            next: (response) => {
+              this.myForm.controls['certificate_path'].setValue(response.path_display);
+              this.certificado = response;
+              this.loadingFull.active = false;
+            },
+            error: (error) => {
+              console.error('Erro no upload:', error)
+              this.loadingFull.active = false;
+            },
+          });
+
+        } else {
+          alert('Por favor, selecione um arquivo .pfx');
+          input.value = ''; // Reseta o input
+        }
+      }
+    }
+  }
+
+  getDetailsCertificado(): string {
+    if (this.certificado) {
+      return this.certificado?.name + ' - ' + this.formatBytes(this.certificado?.size)
+    } else {
+      return ''
+    }
+  }
+
+  formatBytes(bytes, decimals = 2) {
+    if (!+bytes) return '0 Bytes';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = [
+      'Bytes',
+      'KiB',
+      'MiB',
+      'GiB',
+      'TiB',
+      'PiB',
+      'EiB',
+      'ZiB',
+      'YiB',
+    ];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   }
 }

@@ -41,12 +41,7 @@
 
                 <label>
                   <span class="field">Telefone comercial</span>
-                  <input formControlName="phone_commercial" type="text">
-                </label>
-
-                <label>
-                  <span class="field">Telefone celular</span>
-                  <input formControlName="phone_cell" type="text">
+                  <input formControlName="phone" type="text">
                 </label>
 
                 <label>
@@ -100,6 +95,47 @@
                   <input formControlName="inscription_suframa" type="text">
                 </label>
               </div>
+
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">CRT:</span>
+                  <select formControlName="crt">
+                    <option *ngFor="let options of crt" [value]="options.type">{{ options.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Regime Especial:</span>
+                  <select formControlName="special_regime">
+                    <option *ngFor="let options of specialRegime" [value]="options.type">{{ options.name }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="basic-form-header" style="padding: 0 20px; margin-bottom: 20px;">
+                <h3>Certificado</h3>
+              </div>
+
+              <div class="certificado">
+                <div class="label-group">
+                  <label>
+                    <div class="double-spans">
+                      <span class="field">Certificado</span>
+                      <span class="field-right-search" (click)="selectCertificadoButton()">Selecionar</span>
+                    </div>
+                    <input readonly [value]="getDetailsCertificado()"  type="text" placeholder="Selecione o certificado">
+                  </label>
+
+                  <label>
+                    <span class="field">Senha:</span>
+                    <input formControlName="certificate_password" type="text" placeholder="Senha do certificado">
+                  </label>
+                </div>
+
+                <input #fileInputCertificado type="file" accept=".pfx" (change)="selectCertificado($event)" hidden>
+              </div>
             </mat-tab>
 
             <mat-tab>
@@ -132,6 +168,11 @@
                   <label>
                     <span class="field">Cidade</span>
                     <input formControlName="city" type="text">
+                  </label>
+
+                  <label>
+                    <span class="field">Cidade IBGE:</span>
+                    <input formControlName="code_ibge" type="text" placeholder="Código ibge...">
                   </label>
 
                   <label class="label-w30">

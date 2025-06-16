@@ -49,4 +49,10 @@ export class TaskService {
   upload(body: Object): Observable<any> {
     return this.apiService.on(`task-files`, body, 'post-token');
   }
+
+  updateBoard(taskId, boardId: string): Observable<any> {
+    return this.apiService.on(`task/update-board/${taskId}`, {
+      boardId: boardId
+    }, 'post-token');
+  }
 }

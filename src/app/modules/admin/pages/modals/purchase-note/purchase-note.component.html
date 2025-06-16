@@ -1,0 +1,3 @@
+<zxing-scanner *ngIf="scannerEnabled" (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>
+

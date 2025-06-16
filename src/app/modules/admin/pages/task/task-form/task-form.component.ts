@@ -1,14 +1,18 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, finalize, map, throwError } from 'rxjs';
+import { catchError, finalize, lastValueFrom, map, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TaskService } from 'src/app/shared/services/task.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
-import { FirebaseService } from 'src/app/shared/services/firebase.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
+import { Auth } from 'src/app/shared/interfaces/auth.interface';
+import { DropboxService } from 'src/app/shared/services/dropbox.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MediaModalComponent } from '../../modals/media-modal/media-modal.component';
 
 @Component({
   selector: 'app-task-form',
@@ -29,6 +33,7 @@ export class TaskFormComponent implements OnInit {
     status: new FormControl(0),
     priority: new FormControl(0),
     files: new FormControl(''),
+    users: new FormArray([]),
   });
 
   public filesUpload: Array<any> = [];
@@ -73,15 +78,20 @@ export class TaskFormComponent implements OnInit {
     ]
   }
 
+  private auth: Auth;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private taskService: TaskService,
     private notificationService: NotificationService,
     private router: Router,
-    private firebaseService: FirebaseService,
+    private storageService: StorageService,
+    private dropboxService: DropboxService,
+    private dialog: MatDialog
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Tarefa' : 'Editar Tarefa';
+    this.auth = this.storageService.getAuth();
   }
 
   ngOnInit(): void {
@@ -118,6 +128,24 @@ export class TaskFormComponent implements OnInit {
   save(): void {
     this.loadingFull.active = true;
 
+    if (this.formId !== 'new') {
+      const isCreator = this.myForm.value.users.filter((user) => user.id === this.auth.user.people.id).length > 0;
+
+      if (!isCreator) {
+        this.myForm.value.users.push({
+          userId: this.auth.user.people.id,
+          roles: [2]
+        })
+      }
+    } else {
+      this.myForm.value.users = [
+        {
+          userId: this.auth.user.people.id,
+          roles: [0]
+        }
+      ]
+    }
+
     this.validateForm();
 
     if (
@@ -129,20 +157,24 @@ export class TaskFormComponent implements OnInit {
           return throwError(error);
         }),
         map(async (res) => {
-          let firebaseFiles: Array<string> = [];
+          let files: Array<string> = [];
 
-          for (let index = 0; index < this.filesUpload.length; index++) {
-            await this.firebaseService.uploadStorageTasks(`tasks/${res.id}`,this.filesUpload[index]).then(res => {
-              firebaseFiles.push({
-                size: this.filesUpload[index].size,
-                ...res
-              })
-            })
+          const path = `/Tasks/${this.auth.company.id}/${res.id}`
+
+          for (const file of this.filesUpload) {
+            try {
+              const response = await lastValueFrom(
+                this.dropboxService.uploadFile(file, `${path}/${file.name}`)
+              );
+              files.push(response);
+            } catch (error) {
+              console.error('Erro no upload:', error);
+            }
           }
 
           const body = {
             id: res.id,
-            files: firebaseFiles
+            files
           }
 
           this.taskService.upload(body).pipe(
@@ -176,13 +208,39 @@ export class TaskFormComponent implements OnInit {
 
   openFile(file) {
     this.loadingFull.active = true;
-    this.firebaseService.getStorageURL(file).then((res) => {
-      window.open(res, '_blank');
-      this.loadingFull.active = false;
-    }).catch(() => {
-      this.loadingFull.active = false;
-      this.notificationService.warn('Arquivo inexistente.');
-    })
+    this.dropboxService.getTemporaryLink(file).subscribe({
+      next: (response: any) => {
+        this.openMedia(response.link, response?.metadata?.name.split('.').pop() || '');
+        this.loadingFull.active = false;
+      },
+      error: (error) => {
+        console.error('Erro ao mostrar:', error)
+        this.loadingFull.active = false;
+      },
+    });
+  }
+
+  openMedia(url: string, type: string): void {
+    const typeSelect = this.getFileCategory(type);
+
+    this.dialog.open(MediaModalComponent, {
+      width: '80%',
+      data: { url, typeSelect }
+    });
+  }
+
+  getFileCategory(fileType: string): string {
+    const imageTypes = ['png', 'jpg', 'jpeg', 'svg', 'bmp', 'gif', 'webp'];
+    const videoTypes = ['mp4', 'avi', 'mkv', 'mov', 'wmv'];
+
+    if (imageTypes.includes(fileType.toLowerCase())) {
+      return 'image';
+    }
+    if (videoTypes.includes(fileType.toLowerCase())) {
+      return 'video';
+    }
+
+    return 'other';
   }
 
   deleteFileForm(index) {

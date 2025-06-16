@@ -22,6 +22,9 @@
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
     "@ngrx/store": "^9.2.0",
+    "@zxing/browser": "^0.1.5",
+    "@zxing/library": "^0.21.3",
+    "@zxing/ngx-scanner": "^3.6.2",
     "chart.js": "^4.0.1",
     "crypto-js": "^4.1.1",
     "html2pdf.js": "^0.10.1",
@@ -30,6 +33,7 @@
     "ngx-mask": "^14.2.4",
     "ngx-qrcode2": "^9.0.0",
     "rxjs": "~7.5.0",
+    "socket.io-client": "^4.8.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },

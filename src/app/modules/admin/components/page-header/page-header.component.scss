@@ -13,8 +13,23 @@
     }
 
     p {
-      color: #666;
+      color: var(--color-primary-font);
       font-size: 0.875em;
+    }
+  }
+}
+
+@media (max-width: 52em) {
+  .page-header {
+    display: block;
+    text-align: center;
+
+    .title {
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
     }
   }
 }

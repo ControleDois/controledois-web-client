@@ -8,4 +8,5 @@ export interface Auth {
   user: User;
   config: Config;
   company: Company;
+  theme?: boolean;
 }

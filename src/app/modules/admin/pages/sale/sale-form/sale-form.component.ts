@@ -64,6 +64,7 @@ export class SaleFormComponent implements OnInit {
     contract_portion: new FormControl(''),
     products: new FormArray([]),
     plots: new FormArray([]),
+    checklists: new FormArray([]),
   });
 
   public contractDateBilling = 0;
@@ -72,6 +73,9 @@ export class SaleFormComponent implements OnInit {
   @Output() public productsOutPut: Array<SearchLoadingUnique>;
 
   public plots = this.myForm.get('plots') as FormArray;
+
+  public checklists = this.myForm.get('checklists') as FormArray;
+  @Output() public checkListsOutPut: Array<SearchLoadingUnique>;
 
   public statusList = [
     { name: '⦿ Em orçamento', type: 0 },
@@ -145,6 +149,7 @@ export class SaleFormComponent implements OnInit {
       { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
       { text: 'Pagamentos', index: 2, icon: 'payment' },
       { text: 'Observações', index: 3, icon: 'description' },
+      { text: 'CheckList', index: 4, icon: 'checklist' },
     ],
     selectedItem: 0
   }
@@ -152,16 +157,25 @@ export class SaleFormComponent implements OnInit {
   @Output() public navigationButtons: BasicFormButtons = {
     buttons: [
       {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
         text: 'Salvar',
         icon: 'save',
         action: () => this.save(false),
         class: 'c2-btn c2-btn-green',
-      },
-      {
-        text: 'Salvar e Continuar',
-        icon: 'save_as',
-        action: () => this.save(true),
-        class: 'c2-btn c2-btn-green',
+        navigation: false,
       },
     ]
   }
@@ -171,7 +185,7 @@ export class SaleFormComponent implements OnInit {
     title: 'Cliente',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -189,7 +203,7 @@ export class SaleFormComponent implements OnInit {
     title: 'Categoria',
     url: 'category',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -207,7 +221,7 @@ export class SaleFormComponent implements OnInit {
     title: 'Conta',
     url: 'bank',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -220,7 +234,7 @@ export class SaleFormComponent implements OnInit {
     title: 'Usuário',
     url: 'people',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),
@@ -245,6 +259,7 @@ export class SaleFormComponent implements OnInit {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Venda' : 'Editar Venda';
     this.productsOutPut = [];
+    this.checkListsOutPut = [];
   }
 
   ngOnInit(): void {
@@ -310,6 +325,26 @@ export class SaleFormComponent implements OnInit {
       if (value.bills && value.bills.length > 0) {
         for (const portion of value.bills) {
           this.addPortion(portion);
+        }
+      }
+
+      if (value.checkLists && value.checkLists.length > 0) {
+        for (const checklist of value.checkLists) {
+          this.addCheckList(checklist);
+
+          // Adiciona os checks do checklist selecionado
+          if (checklist.checklist.checks && checklist.checklist.checks.length > 0) {
+            const checksArray = this.getChecksForCheckList(this.checklists.length - 1);
+
+            checklist.checklist.checks.forEach((check: any) => {
+              const checkControl = new FormGroup({
+                id: new FormControl(check.id),
+                name: new FormControl(check.name),
+                checked: new FormControl(value.checkListChecks.find(c => c.checklist_id === check.id) ? 1 : 0),
+              });
+              checksArray.push(checkControl);
+            });
+          }
         }
       }
 
@@ -414,10 +449,10 @@ export class SaleFormComponent implements OnInit {
     this.products.push(control);
     this.productsOutPut.push({
       noTitle: true,
-      title: 'Usuário',
+      title: 'Produto / Serviço',
       url: 'product',
       searchFieldOn: value?.product || null,
-      searchFieldOnCollum: 'name',
+      searchFieldOnCollum: ['name'],
       sortedBy: 'name',
       orderBy: 'name',
       searchField: new FormControl(''),
@@ -446,17 +481,19 @@ export class SaleFormComponent implements OnInit {
   }
 
   sumProductDetails(i: any): void {
-    this.products.at(i).setValue({
-      product_id: this.products.at(i).value.product_id,
-      description: this.products.at(i).value.description,
-      amount: this.products.at(i).value.amount,
-      cost_value: this.products.at(i).value.cost_value,
-      subtotal:
-        this.products.at(i).value.amount * this.products.at(i).value.cost_value,
-    });
+    setTimeout(() => {
+      this.products.at(i).setValue({
+        product_id: this.products.at(i).value.product_id,
+        description: this.products.at(i).value.description,
+        amount: this.products.at(i).value.amount,
+        cost_value: this.products.at(i).value.cost_value,
+        subtotal:
+          this.products.at(i).value.amount * this.products.at(i).value.cost_value,
+      });
 
-    this.sumValues();
-    this.changePortion();
+      this.sumValues();
+      this.changePortion();
+    }, 1000);
   }
 
   sumValues(): void {
@@ -509,8 +546,9 @@ export class SaleFormComponent implements OnInit {
           { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
           { text: 'Pagamentos', index: 2, icon: 'payment' },
           { text: 'Observações', index: 3, icon: 'description' },
+          { text: 'CheckLists', index: 4, icon: 'CheckList' },
         ],
-        selectedItem: 0
+        selectedItem: this.navigation.selectedItem
       }
     } else {
       this.navigation = {
@@ -518,8 +556,9 @@ export class SaleFormComponent implements OnInit {
           { text: 'Informações Gerais', index: 0, icon: 'info' },
           { text: 'Produtos e Serviços', index: 1, icon: 'shopping_cart' },
           { text: 'Observações', index: 3, icon: 'description' },
+          { text: 'CheckLists', index: 4, icon: 'CheckList' },
         ],
-        selectedItem: 0
+        selectedItem: this.navigation.selectedItem == 2 ? 3 : this.navigation.selectedItem
       }
     }
   }
@@ -585,5 +624,78 @@ export class SaleFormComponent implements OnInit {
       (validity.getFullYear() - initial.getFullYear()) * 12 +
       (validity.getMonth() - initial.getMonth()) +
       1;
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
+  }
+
+  removeCheckList(index: any): void {
+    this.checklists.controls.splice(index, 1);
+    this.checklists.value.splice(index, 1);
+  }
+
+  getChecksForCheckList(index: any): FormArray {
+    return this.checklists.at(index).get('checks') as FormArray;
+  }
+
+  addCheckList(value: any): void {
+    const control = new FormGroup({
+      checklist_id: new FormControl(value?.checklist?.id || null),
+      checks: new FormArray([]),
+    });
+
+    this.checklists.push(control);
+    this.checkListsOutPut.push({
+      noTitle: true,
+      title: 'CheckList',
+      url: 'checklist',
+      searchFieldOn: value?.checklist || null,
+      searchFieldOnCollum: ['name'],
+      sortedBy: 'name',
+      orderBy: 'name',
+      searchField: new FormControl(''),
+      validation: true,
+      paramsArray: [
+        {
+          param: 'primary',
+          value: true,
+        },
+        {
+          param: 'checks',
+          value: true,
+        },
+      ],
+    });
+  }
+
+  selectCheckList(event: any, i: any): void {
+    this.checklists.at(i).setValue({
+      checklist_id: event.id,
+      checks: [],
+    });
+
+    // Adiciona os checks do checklist selecionado
+    if (event.checks && event.checks.length > 0) {
+      const checksArray = this.getChecksForCheckList(i);
+      event.checks.forEach((check: any) => {
+        const checkControl = new FormGroup({
+          id: new FormControl(check.id),
+          name: new FormControl(check.name),
+          checked: new FormControl(0),
+        });
+        checksArray.push(checkControl);
+      });
+    }
   }
 }

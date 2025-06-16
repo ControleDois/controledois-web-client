@@ -1,7 +1,7 @@
 <div class="container">
   <div class="page-content">
     <div class="basic">
-      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
+      <app-basic-form-navigation [navigation]="navigation" class="hide-62em"></app-basic-form-navigation>
 
       <div class="basic-form">
         <app-page-header [header]="pageHeader"></app-page-header>
@@ -9,7 +9,74 @@
         <form [formGroup]="myForm">
           <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
             <mat-tab label="Dados do produto">
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Código de Barras</span>
+                  <input formControlName="barcode" type="text">
+                </label>
 
+                <label class="label-w100">
+                  <span class="field">Nome*</span>
+                  <input formControlName="name" type="text" placeholder="Ex: Itaipava">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Unidade*</span>
+                  <select formControlName="unit">
+                    <option *ngFor="let unit of listUnit" [value]="unit.type">{{ unit.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <label>
+                  <span class="field">Valor</span>
+                  <input formControlName="sale_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Origem*</span>
+                  <select formControlName="icms_origin">
+                    <option *ngFor="let icms of listIcmsOrigem" [value]="icms.type">{{ icms.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <app-search-loading-unique class="label-w30" [search]="searchNCM"></app-search-loading-unique>
+
+                <label class="label-w30">
+                  <span class="field">Cod. Combustível (ANP)</span>
+                  <input formControlName="fuel_anp" type="text">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Peso Bruto (KG)</span>
+                  <input formControlName="gross_weighy" mask="separator.2" thousandSeparator="." decimalSeparator="," type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">CEST</span>
+                  <input formControlName="code_cest" type="text">
+                </label>
+
+                <app-search-loading-unique class="label-w50" [search]="searchTaxation"></app-search-loading-unique>
+
+                <label class="label-w30">
+                  <span class="field">CFOP interno*</span>
+                  <input formControlName="cfop_state" type="text">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">CFOP Externo*</span>
+                  <input formControlName="cfop_interstate" type="text">
+                </label>
+              </div>
+            </mat-tab>
+
+            <mat-tab label="Dados de Shop" formGroupName="shop">
               <div class="photo">
                 <img onerror="this.src = 'assets/product-no.svg'" class="rounded" [src]="
                       myForm.value.img_url
@@ -24,28 +91,6 @@
                 </span>
               </div>
 
-              <div class="label-group">
-                <label class="label-w100">
-                  <span class="field">Nome</span>
-                  <input formControlName="name" type="text" placeholder="Ex: Itaipava">
-                </label>
-
-                <label>
-                  <span class="field">Valor</span>
-                  <input formControlName="sale_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
-                </label>
-              </div>
-
-              <div class="basic-form-header">
-                <h3>Categorias vinculadas ao produto</h3>
-              </div>
-
-              <div class="label-group" style="margin-bottom: 10px; padding: 0 20px;">
-                <app-search-loading-chips class="label-w100" [search]="searchCategory"></app-search-loading-chips>
-              </div>
-            </mat-tab>
-
-            <mat-tab label="Dados de Shop" formGroupName="shop">
               <div class="label-group">
                 <div class="label-group-check" style="min-width: 135px;">
                   <span class="title">Shop Delivery</span>
@@ -96,6 +141,13 @@
                 </label>
               </div>
 
+              <div class="basic-form-header" style="margin-top: 10px;">
+                <h3>Categorias vinculadas ao produto</h3>
+              </div>
+
+              <div class="label-group" style="margin-bottom: 10px; padding: 0 20px;">
+                <app-search-loading-chips class="label-w100" [search]="searchCategory"></app-search-loading-chips>
+              </div>
             </mat-tab>
 
             <mat-tab label="Complementos de Produto">

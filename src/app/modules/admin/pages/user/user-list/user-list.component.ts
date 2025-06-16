@@ -8,6 +8,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { LibraryService } from 'src/app/shared/services/library.service';
 
 @Component({
   selector: 'app-user-list',
@@ -39,7 +40,8 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private widGetService: WidgetService
+    private widGetService: WidgetService,
+    public libraryService: LibraryService
   ) {
    }
 

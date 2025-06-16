@@ -9,7 +9,7 @@ export interface SearchLoadingChips{
   searchFieldOnCollum: string; // Coluna da tabela que mostrara Filtro/Objeto da api já setado
   sortedBy: string;
   orderBy: string;
-  paramsArray: [];
+  paramsArray: any[];
   searchField: FormControl;
-  validation: true;
+  validation: boolean;
 }

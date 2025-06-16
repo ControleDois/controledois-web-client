@@ -1,0 +1,152 @@
+<div class="nav">
+  <div class="company-selected">
+    <div class="selected" (click)="selectedCompany = !selectedCompany">
+      <div class="logo">
+        <mat-icon>store</mat-icon>
+      </div>
+      <div class="details">
+        <h2>{{libraryService.getMaxString(auth.company.people.name, 18)}}</h2>
+        <p>{{auth.company.people.document | mask: auth.company.people.people_type == 0 ? '000.000.000-00' : '00.000.000/0000-00'}}</p>
+      </div>
+      <mat-icon class="arrow-select">keyboard_arrow_down</mat-icon>
+    </div>
+
+    <div class="search" [ngClass]="{'show-search': selectedCompany}">
+      <app-search-loading-unique [search]="searchCompany" (eventEmit)="selectCompany($event)"></app-search-loading-unique>
+    </div>
+  </div>
+
+  <ul>
+    <li routerLink="/dash" routerLinkActive="active">
+      <a>
+        <div class="border-active"></div>
+        <mat-icon>home</mat-icon>
+        <span>Visão Geral</span>
+      </a>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[0]}">
+      <a (click)="menuShow[0] = !menuShow[0]">
+        <mat-icon>library_add</mat-icon>
+        <span>Cadastros</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[0]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[0]}">
+        <li routerLink="/people" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Pessoas</span>
+          </a>
+        </li>
+        <li routerLink="/contact" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Contatos</span>
+          </a>
+        </li>
+        <li routerLink="/product" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Produtos</span>
+          </a>
+        </li>
+        <li routerLink="/service" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Serviços</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[1]}">
+      <a (click)="menuShow[1] = !menuShow[1]">
+        <mat-icon>shopping_bag</mat-icon>
+        <span>Vendas</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[1]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[1]}">
+        <li routerLink="/os" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Ordens de Serviço</span>
+          </a>
+        </li>
+        <li routerLink="/sale" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Vendas e Orçamentos</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[2]}">
+      <a (click)="menuShow[2] = !menuShow[2]">
+        <mat-icon>shopping_cart_checkout</mat-icon>
+        <span>Compras</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[2]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[2]}">
+        <li routerLink="/purchase" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Compras e Orçamentos</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[3]}">
+      <a (click)="menuShow[3] = !menuShow[3]">
+        <mat-icon>bar_chart</mat-icon>
+        <span>Financeiro</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[3]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[3]}">
+        <li routerLink="/bank" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Conta</span>
+          </a>
+        </li>
+        <li routerLink="/bill-payment" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Conta a Pagar</span>
+          </a>
+        </li>
+        <li routerLink="/bill-receivement" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Conta a Receber</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[4]}">
+      <a (click)="menuShow[4] = !menuShow[4]">
+        <mat-icon>receipt</mat-icon>
+        <span>Fiscal</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[4]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[4]}">
+        <li>
+          <a>NFe</a>
+        </li>
+        <li>
+          <a>NFCe</a>
+        </li>
+        <li routerLink="/nfe-manifest" routerLinkActive="active">
+          <a>
+            <div class="border-active"></div>
+            <span>Manifesto</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

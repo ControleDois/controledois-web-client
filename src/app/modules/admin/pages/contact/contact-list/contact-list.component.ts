@@ -8,6 +8,7 @@ import { ContactService } from 'src/app/shared/services/contact.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { FormControl } from '@angular/forms';
+import { LibraryService } from 'src/app/shared/services/library.service';
 
 @Component({
   selector: 'app-contact-list',
@@ -46,6 +47,7 @@ export class ContactListComponent implements OnInit, AfterViewInit {
   constructor(
     private contactService: ContactService,
     private widGetService: WidgetService,
+    public libraryService: LibraryService
   ) {
   }
 

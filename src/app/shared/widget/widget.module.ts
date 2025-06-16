@@ -11,6 +11,7 @@ import { DialogMessageFullComponent } from './dialog-message-full/dialog-message
 import { DialogWhatsappConnectComponent } from './dialog-whatsapp-connect/dialog-whatsapp-connect.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { SelectOptionSimpleComponent } from './select-option-simple/select-option-simple.component';
+import { SearchLoadingChipsObjectComponent } from './search-loading-chips-object/search-loading-chips-object.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { SelectOptionSimpleComponent } from './select-option-simple/select-optio
     SearchDateMonthComponent,
     DialogMessageFullComponent,
     DialogWhatsappConnectComponent,
-    SelectOptionSimpleComponent
+    SelectOptionSimpleComponent,
+    SearchLoadingChipsObjectComponent
   ],
     exports: [
         LoadingFullComponent,
@@ -32,7 +34,8 @@ import { SelectOptionSimpleComponent } from './select-option-simple/select-optio
         SearchLoadingUniqueComponent,
         SearchDateMonthComponent,
         DialogMessageFullComponent,
-        SelectOptionSimpleComponent
+        SelectOptionSimpleComponent,
+        SearchLoadingChipsObjectComponent
     ],
   imports: [
     CommonModule,

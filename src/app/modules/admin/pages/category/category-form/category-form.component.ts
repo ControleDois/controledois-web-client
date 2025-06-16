@@ -36,7 +36,7 @@ export class CategoryFormComponent implements OnInit {
     title: 'Aparecer dentro de',
     url: 'category',
     searchFieldOn: null,
-    searchFieldOnCollum: 'name',
+    searchFieldOnCollum: ['name'],
     sortedBy: 'name',
     orderBy: 'name',
     searchField: new FormControl(''),

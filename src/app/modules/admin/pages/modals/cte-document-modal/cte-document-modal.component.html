@@ -1,0 +1,157 @@
+<div class="container" style="padding: 0; margin: 0;">
+  <div class="page-content" style="height: 100%;">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <label class="label-w30">
+            <span class="field">Doc. transportados pelo CT-e</span>
+            <select formControlName="role">
+              <option *ngFor="let role of roles" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="label-w100" *ngIf="myForm.value.role == 2">
+            <span class="field">Chave de acesso da NF-e</span>
+            <input formControlName="access_key" type="text" maxlength="44">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role != 0 && myForm.value.role != 2">
+            <span class="field">Descrição do documento</span>
+            <input formControlName="description_document" type="text" maxlength="60">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role != 0 && myForm.value.role != 2">
+            <span class="field">Número Documento</span>
+            <input formControlName="number" type="text" maxlength="60">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role != 0 && myForm.value.role != 2">
+            <span class="field">Data Emissão</span>
+            <input formControlName="issue_date" type="date">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Número do Romaneio</span>
+            <input formControlName="mailing_number" type="text" maxlength="60">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Número do pedido</span>
+            <input formControlName="order_number" type="text" maxlength="60">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Série</span>
+            <input formControlName="series" type="text" maxlength="60">
+          </label>
+        </div>
+
+        <div class="label-group">
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Número Documento</span>
+            <input formControlName="number" type="text" maxlength="60">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Data Emissão</span>
+            <input formControlName="issue_date" type="date">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Valor Base de Cálculo do ICMS</span>
+            <input formControlName="icms_calculation_base_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Valor Total do ICMS</span>
+            <input formControlName="total_icms_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+          </label>
+        </div>
+
+        <div class="label-group" *ngIf="myForm.value.role == 0">
+          <label class="label-w30">
+            <span class="field">Valor da Base de Cálculo do ICMS ST</span>
+            <input formControlName="base_value_calculation_icms_st" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Valor Total do ICMS ST</span>
+            <input formControlName="icms_st_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Valor Total dos Produtos</span>
+            <input formControlName="total_products" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Valor Total da NF</span>
+            <input formControlName="total_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+          </label>
+        </div>
+
+        <div class="label-group">
+          <app-search-loading-unique class="label-w30" [search]="searchCfop" *ngIf="myForm.value.role == 0"></app-search-loading-unique>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0">
+            <span class="field">Peso total em Kg</span>
+            <input formControlName="weight" type="text" maxlength="60">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role == 0 || myForm.value.role == 2">
+            <span class="field">PIN SUFRAMA</span>
+            <input formControlName="pin_suframa" type="text" maxlength="60">
+          </label>
+
+          <label class="label-w30" *ngIf="myForm.value.role != 0 && myForm.value.role != 2">
+            <span class="field">Valor do documento</span>
+            <input formControlName="total_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Data Prevista de entrega</span>
+            <input formControlName="delivery_forecast" type="date">
+          </label>
+        </div>
+
+        <div class="basic-form-header" style="margin-bottom: 20px;">
+          <h3>Informações das Unidades de Carga (Containeres/ULD/Outros)</h3>
+        </div>
+
+        <div formGroupName="loadUnit">
+          <div class="label-group">
+            <label class="label-w30">
+              <span class="field">Tipo da Unidade de Carga</span>
+              <select formControlName="role">
+                <option *ngFor="let role of roleLoadUnit" [value]="role.type">{{ role.name }}
+                </option>
+              </select>
+            </label>
+
+            <label class="label-w30">
+              <span class="field">Identificação da Unidade de Carga</span>
+              <input formControlName="identification" type="text">
+            </label>
+
+            <label class="label-w30">
+              <span class="field">Data Prevista de entrega</span>
+              <input formControlName="prorated_quantity" type="text">
+            </label>
+
+            <label class="label-w30">
+              <span class="field">Quantidade rateada(Peso, Volume)</span>
+              <input formControlName="taxed_weight" type="text">
+            </label>
+          </div>
+        </div>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

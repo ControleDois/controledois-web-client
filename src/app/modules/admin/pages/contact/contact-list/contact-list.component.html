@@ -9,17 +9,17 @@
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Nome </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        <td mat-cell *matCellDef="let element"> {{libraryService.getMaxString(element.name, 32)}} <div class="break-div-52em">{{element.phone}}</div></td>
       </ng-container>
 
       <ng-container matColumnDef="email">
-        <th mat-header-cell *matHeaderCellDef> Email </th>
-        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        <th mat-header-cell *matHeaderCellDef class="hide-62em"> Email </th>
+        <td mat-cell *matCellDef="let element" class="hide-62em"> {{element.email}} </td>
       </ng-container>
 
       <ng-container matColumnDef="phone">
-        <th mat-header-cell *matHeaderCellDef> Telefone </th>
-        <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+        <th mat-header-cell *matHeaderCellDef class="hide-62em"> Telefone </th>
+        <td mat-cell *matCellDef="let element" class="hide-62em"> {{element.phone}} </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">

@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <label class="label-w50">
+            <span class="field">Origem</span>
+            <select formControlName="uf_origin">
+              <option *ngFor="let role of stateList" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+
+          <label class="label-w50">
+            <span class="field">Destino</span>
+            <select formControlName="uf_destination">
+              <option *ngFor="let role of stateList" [value]="role.type">{{ role.name }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div class="shopping-budget">
+          <div class="shopping-budget-grid">
+            <ul class="shopping-budget-grid-header">
+              <li style="width: 50%">Percurso</li>
+            </ul>
+
+            <ng-container formArrayName="routeList">
+              <div *ngFor="let route of routes.controls; index as i" class="shopping-budget-grid-list">
+                <ng-container [formGroupName]="i">
+                  <div class="label-group">
+                    <label style="width: 50%">
+                      <span class="field">Estado</span>
+                      <select formControlName="uf">
+                        <option *ngFor="let role of stateList" [value]="role.type">{{ role.name }}
+                        </option>
+                      </select>
+                    </label>
+
+                    <button class="add-item" mat-icon-button (click)="removeRoute(i)" *ngIf="routes.length > 1">
+                      <mat-icon>clear</mat-icon>
+                    </button>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+
+          <div class="shopping-budget-footer">
+            <div class="amount-button-add">
+              <button mat-button (click)="addRoute(null)">Adicionar uma rota</button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

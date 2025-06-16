@@ -1,0 +1,268 @@
+<div class="container">
+  <div class="page-content">
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation"></app-basic-form-navigation>
+
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
+
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="label-group">
+                <div class="label-group-check" style="width: 200px;">
+                  <span class="title">CT-e Globalizado</span>
+                  <div class="checks">
+                    <label class="check">
+                      <input type="checkbox" formControlName="globalized">
+                      <span>Sim</span>
+                    </label>
+                  </div>
+                </div>
+
+                <label class="label-w30">
+                  <span class="field">Tipo de CT-e</span>
+                  <select formControlName="document_type">
+                    <option *ngFor="let role of documentTypes" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <app-search-loading-unique class="label-w100" [search]="searchCfop"></app-search-loading-unique>
+
+                <label class="label-w30">
+                  <span class="field">Tipo de Serviço</span>
+                  <select formControlName="service_type">
+                    <option *ngFor="let role of serviceTypes" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Tomador do Serviço</span>
+                  <select formControlName="service_taker">
+                    <option *ngFor="let role of serviceTanker" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+
+                <app-search-loading-unique class="label-w50" [search]="searchCountiesStart"></app-search-loading-unique>
+                <app-search-loading-unique class="label-w50" [search]="searchCountiesEnd"></app-search-loading-unique>
+
+                <label class="label-w30">
+                  <span class="field">Data de Envio</span>
+                  <input formControlName="issue_date" type="date">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <app-search-loading-unique class="label-w50" [search]="searchSender"></app-search-loading-unique>
+                <app-search-loading-unique class="label-w50" [search]="searchConsignor"></app-search-loading-unique>
+              </div>
+
+              <div class="label-group">
+                <app-search-loading-unique class="label-w50" [search]="searchRecipient"></app-search-loading-unique>
+                <app-search-loading-unique class="label-w50" [search]="searchReceiver"></app-search-loading-unique>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Produto Predominante</span>
+                  <input formControlName="load_predominant_product" type="text" maxlength="60">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Valor da carga</span>
+                  <input formControlName="load_value_total" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Outras características da carga</span>
+                  <input formControlName="load_other_characteristics" type="text" maxlength="60">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Unidade de medida</span>
+                  <select formControlName="load_unit_measure">
+                    <option *ngFor="let role of codeUnitMeasureGrossWeightList" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Tipo da Medida</span>
+                  <input formControlName="load_unit_type" type="text" maxlength="60">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Quantidade</span>
+                  <input formControlName="load_amount" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">RNTRC/Cod. ANTT</span>
+                  <input formControlName="load_rntrc" type="text" maxlength="60">
+                </label>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Valor total do serviço</span>
+                  <input formControlName="total_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Valor total a receber</span>
+                  <input formControlName="total_receive" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">CST do ICMS</span>
+                  <select formControlName="icms_tax_situation">
+                    <option *ngFor="let role of icmsTaxSituation" [value]="role.type">{{ role.name }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Número da fatura</span>
+                  <input formControlName="invoice_number" type="text" maxlength="60">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Valor original da fatura</span>
+                  <input (change)="sumInvoiceValue()" formControlName="original_invoice_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Valor do desconto da fatura</span>
+                  <input (change)="sumInvoiceValue()" formControlName="invoice_discount_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+
+                <label class="label-w50">
+                  <span class="field">Valor líquido da fatura</span>
+                  <input formControlName="net_invoice_value" mask="separator.2" thousandSeparator="." decimalSeparator="," prefix="R$ " currency="BRL" type="text">
+                </label>
+              </div>
+
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Quantidade de Parcelas</span>
+                  <input (change)="changeAmountDuplicates()" formControlName="invoice_installments" type="number">
+                </label>
+              </div>
+
+              <div class="shopping-budget" style="margin-bottom: 10px">
+                <div class="shopping-budget-grid">
+                  <ul class="shopping-budget-grid-header">
+                    <li style="width: 10%">Número</li>
+                    <li style="width: 23.3%">Vencimento</li>
+                    <li style="text-align: right; width: 23.3%">Valor</li>
+                  </ul>
+
+                  <ng-container formArrayName="duplicates">
+                    <div *ngFor="let duplicate of duplicates.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <p style="font-weight: bold; margin-top: 10px; width: 10%; text-align: center; color: #395a7a">{{duplicate.value.number}} / {{duplicates.length}}</p>
+
+                          <label style="width: 23.3%">
+                            <input type="date" formControlName="date_due">
+                          </label>
+
+                          <label style="width: 23.3%">
+                            <input formControlName="value" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right">
+                          </label>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="basic-form-header" style="margin-bottom: 20px;">
+                <h3>Documentos transportados pelo CT-e</h3>
+              </div>
+
+              <div class="shopping-budget" style="margin-bottom: 10px">
+                <div class="shopping-budget-grid">
+                  <ng-container formArrayName="documents">
+                    <div *ngFor="let document of documents.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <p style="font-weight: bold; margin-top: 30px; width: 30%; text-align: center; color: #395a7a">{{getRoleDocument(document.value.role)}}</p>
+
+                          <label style="width: 30%" *ngIf="document.value.role == 0">
+                            <span class="field">Série</span>
+                            <input type="text" formControlName="series">
+                          </label>
+
+                          <label style="width: 60%" *ngIf="document.value.role == 2">
+                            <span class="field">Chave de acesso</span>
+                            <input type="text" formControlName="access_key">
+                          </label>
+
+                          <label style="width: 30%" *ngIf="document.value.role != 0 && document.value.role != 2">
+                            <span class="field">Número do documento</span>
+                            <input type="text" formControlName="number">
+                          </label>
+
+                          <label style="width: 30%" *ngIf="document.value.role != 0 && document.value.role != 2">
+                            <span class="field">Descrição do documento</span>
+                            <input type="text" formControlName="description_document">
+                          </label>
+
+                          <label style="width: 30%">
+                            <span class="field">Data prevista de entrega</span>
+                            <input type="date" formControlName="delivery_forecast">
+                          </label>
+
+                          <label style="width: 30%" *ngIf="document.value.role == 0">
+                            <span class="field">Valor Total da NF</span>
+                            <input formControlName="total_value" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right">
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removeDocument(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addDocumentModal()">Adicionar documento</button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

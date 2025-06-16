@@ -1,0 +1,26 @@
+<div class="container" style="padding: 0; margin: 0;">
+  <div class="page-content" style="height: 100%;">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <div class="label-group">
+
+          <label class="label-w30">
+            <span class="field">Titulo</span>
+            <input formControlName="title" type="text">
+          </label>
+
+          <label class="label-w100">
+            <span class="field">Descrição</span>
+            <input formControlName="description" type="text">
+          </label>
+        </div>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>
