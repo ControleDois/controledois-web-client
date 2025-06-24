@@ -83,6 +83,8 @@ import { CourseListComponent } from './pages/course/course-list/course-list.comp
 import { BackupViewComponent } from './pages/report/backup-view/backup-view.component';
 import { ChecklistFormComponent } from './pages/checklist/checklist-form/checklist-form.component';
 import { ChecklistListComponent } from './pages/checklist/checklist-list/checklist-list.component';
+import { VehicleFormComponent } from './pages/vehicle/vehicle-form/vehicle-form.component';
+import { VehicleListComponent } from './pages/vehicle/vehicle-list/vehicle-list.component';
 
 const appName = 'CTrix';
 
@@ -391,6 +393,16 @@ const routes: Routes = [
     path: 'checklist/:id',
     component: ChecklistFormComponent,
     data: { title: `Cadastro de CheckList -  ${appName}`},
+  },
+  {
+    path: 'vehicle',
+    component: VehicleListComponent,
+    data: { title: `Veículos -  ${appName}`},
+  },
+  {
+    path: 'vehicle/:id',
+    component: VehicleFormComponent,
+    data: { title: `Cadastro de Veículos -  ${appName}`},
   }
 ]
 
@@ -471,7 +483,9 @@ const routes: Routes = [
     CourseListComponent,
     BackupViewComponent,
     ChecklistFormComponent,
-    ChecklistListComponent
+    ChecklistListComponent,
+    VehicleFormComponent,
+    VehicleListComponent
   ],
   imports: [
     CommonModule,
