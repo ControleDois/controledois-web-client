@@ -71,6 +71,7 @@ export class PeopleFormComponent implements OnInit {
     contacts: new FormArray([]),
     backups: new FormArray([]),
     remoteAccess: new FormArray([]),
+    vehicles: new FormArray([]),
   });
 
   @Output() public pageHeader: PageHeader = {
@@ -117,6 +118,9 @@ export class PeopleFormComponent implements OnInit {
   public backups = this.myForm.get('backups') as FormArray;
   public remoteAccess = this.myForm.get('remoteAccess') as FormArray;
 
+  public vehicles = this.myForm.get('vehicles') as FormArray;
+  @Output() public vehiclesOutPut: Array<SearchLoadingUnique> = [];
+
   public peopleRole = [
     { name: '⦿ Física', type: 0 },
     { name: '⦿ Juridíca', type: 1 },
@@ -143,6 +147,7 @@ export class PeopleFormComponent implements OnInit {
       { text: 'Fiscal', index: 1, icon: 'info' },
       { text: 'Endereço', index: 2, icon: 'info' },
       { text: 'Contatos', index: 3, icon: 'contacts' },
+      { text: 'Veículos', index: 4, icon: 'contacts' },
     ],
     selectedItem: 0
   }
@@ -193,11 +198,11 @@ export class PeopleFormComponent implements OnInit {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Pessoa' : 'Editar Pessoa';
     if (this.formId !== 'new') {
-      this.navigation.items.push({ text: 'Chaves', index: 4, icon: 'vpn_key' });
-      this.navigation.items.push({ text: 'Backups', index: 5, icon: 'backup' });
+      this.navigation.items.push({ text: 'Chaves', index: 5, icon: 'vpn_key' });
+      this.navigation.items.push({ text: 'Backups', index: 6, icon: 'backup' });
     }
-    this.navigation.items.push({ text: 'Acesso Remoto', index: 6, icon: 'folder' });
-    this.navigation.items.push({ text: 'Observações', index: 7, icon: 'folder' });
+    this.navigation.items.push({ text: 'Acesso Remoto', index: 7, icon: 'folder' });
+    this.navigation.items.push({ text: 'Observações', index: 8, icon: 'folder' });
   }
 
   validateForm(): void {
@@ -239,6 +244,12 @@ export class PeopleFormComponent implements OnInit {
         }
       }
 
+      if (value.vehicles && value.vehicles.length > 0) {
+        for (const vehicle of value.vehicles) {
+          this.addVehicle({ vehicle });
+        }
+      }
+
       if (value.backups && value.backups.length > 0) {
         for (const backup of value.backups) {
           this.addBackup(backup);
@@ -266,6 +277,10 @@ export class PeopleFormComponent implements OnInit {
 
       this.myForm.value.contacts = this.myForm.value.contacts.map(
         (contact) => contact.contact_id
+      );
+
+      this.myForm.value.vehicles = this.myForm.value.vehicles.map(
+        (vehicle) => vehicle.vehicle_id
       );
 
       this.peopleService.save(this.formId, this.myForm.value).pipe(
@@ -447,6 +462,51 @@ export class PeopleFormComponent implements OnInit {
   removeContact(index: any): void {
     this.contacts.controls.splice(index, 1);
     this.contactsOutPut.splice(index, 1);
+  }
+
+  selectVehicle(event: any, i: any): void {
+    if (this.vehicles.value.find((v: any) => v.vehicle_id === event.id)) {
+      this.removeVehicle(i);
+      return;
+    }
+
+    this.vehicles.at(i).setValue({
+      vehicle_id: event.id,
+      brand: event.brand,
+      model: event.model,
+      year: event.year,
+      license_plate: event.license_plate,
+    });
+  }
+
+  addVehicle(value: any): void {
+    const control = new FormGroup({
+      vehicle_id: new FormControl(value?.vehicle?.id || null),
+      brand: new FormControl(value?.vehicle?.brand || ''),
+      model: new FormControl(value?.vehicle?.model || ''),
+      year: new FormControl(value?.vehicle?.year || ''),
+      license_plate: new FormControl(value?.vehicle?.license_plate || ''),
+    });
+
+    this.vehicles.push(control);
+
+    this.vehiclesOutPut.push({
+      noTitle: true,
+      title: 'Veículos',
+      url: 'vehicle',
+      searchFieldOn: value?.vehicle || null,
+      searchFieldOnCollum: ['brand', 'model', 'year'],
+      sortedBy: 'model',
+      orderBy: 'model',
+      searchField: new FormControl(''),
+      validation: true,
+      paramsArray: [],
+    });
+  }
+
+  removeVehicle(index: any): void {
+    this.vehicles.controls.splice(index, 1);
+    this.vehiclesOutPut.splice(index, 1);
   }
 
   addBackup(value: any): void {

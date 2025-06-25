@@ -44,4 +44,5 @@ export class VehicleService {
   save(id: string, body: Object): Observable<any> {
     return id === 'new' ? this.store(body) : this.update(id, body);
   }
+
 }

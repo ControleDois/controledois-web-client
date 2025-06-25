@@ -1,1 +1,64 @@
-<p>vehicle-form works!</p>
+<div class="container">
+  <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <div class="label-group">
+          <label class="label-w30">
+            <span class="field">Tipo</span>
+            <select formControlName="role">
+              <option *ngFor="let role of roleList" [value]="role.type">{{ role.name }}</option>
+            </select>
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Marca</span>
+            <input formControlName="brand" type="text" placeholder="Ex: Toyota">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Modelo</span>
+            <input formControlName="model" type="text" placeholder="Ex: Etios">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Ano</span>
+            <input formControlName="year" type="text">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Placa</span>
+            <input formControlName="license_plate" type="text">
+          </label>
+        </div>
+
+        <div class="label-group">
+          <label class="label-w30">
+            <span class="field">Cor</span>
+            <input formControlName="color" type="text" placeholder="Ex: branco">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Chassi</span>
+            <input formControlName="vin_number" type="text" placeholder="Ex: 9BWZZZ377VT004251">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Número do motor</span>
+            <input formControlName="engine_number" type="text">
+          </label>
+
+          <label class="label-w30">
+            <span class="field">Quilometragem</span>
+            <input formControlName="mileage" type="number" placeholder="Ex: 10000">
+          </label>
+        </div>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>
