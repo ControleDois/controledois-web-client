@@ -267,25 +267,30 @@
                         <div class="shopping-budget" style="padding: 0 20px;">
                           <div class="shopping-budget-grid">
                             <ul class="shopping-budget-grid-header">
-                              <li style="width: 75%">Nome</li>
-                              <li style="width: 25%">Check</li>
+                              <li style="width: 25%">Nome</li>
+                              <li style="width: 25%">Status</li>
+                              <li style="width: 50%">Descrição</li>
                             </ul>
 
                             <ng-container formArrayName="checks">
                               <div *ngFor="let check of getChecksForCheckList(i).controls; index as p" class="shopping-budget-grid-list">
                                 <ng-container [formGroupName]="p">
                                 <div class="label-group">
-                                  <label style="width: 55%">
+                                  <label style="width: 25%">
                                     <span class="label-title">Nome</span>
                                     <input formControlName="name" type="text" readonly>
                                   </label>
 
-                                  <label>
-                                    <span class="label-title">Obrigatório</span>
-                                    <select formControlName="checked">
-                                      <option [value]="1">Sim</option>
-                                      <option [value]="0">Não</option>
-                                    </select>
+                                  <div class="status-checklist" style="width: 25%; margin-bottom: 10px;">
+                                    <button mat-icon-button class="checklist-check" [ngClass]="{'selected-check': getStatusCheck(0, i, p)}" (click)="setStatusCheck(0, i, p)"><mat-icon>check</mat-icon></button>
+                                    <button mat-icon-button class="checklist-warning" [ngClass]="{'selected-warning': getStatusCheck(1, i, p)}" (click)="setStatusCheck(1, i, p)"><mat-icon>error</mat-icon></button>
+                                    <button mat-icon-button class="checklist-noting" [ngClass]="{'selected-noting': getStatusCheck(2, i, p)}" (click)="setStatusCheck(2, i, p)"><mat-icon>close</mat-icon></button>
+                                    <button mat-icon-button class="checklist-na" [ngClass]="{'selected-na': getStatusCheck(3, i, p)}" (click)="setStatusCheck(3, i, p)"><mat-icon>settings_power</mat-icon></button>
+                                  </div>
+
+                                  <label style="width: 50%">
+                                    <span class="label-title">Descrição</span>
+                                    <input formControlName="description" type="text">
                                   </label>
                                 </div>
                                 </ng-container>

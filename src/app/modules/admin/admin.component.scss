@@ -10,3 +10,10 @@
 .admin-content {
   margin-top: 70px;
 }
+
+@media (max-width: 62em) {
+  .admin-container {
+    width: 100%;
+  }
+}
+

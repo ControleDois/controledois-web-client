@@ -28,7 +28,10 @@ export class SearchLoadingUniqueComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.search.searchField.setValue(this.search.searchFieldOn?.[this.search.searchFieldOnCollum.join(' - ')] || '');
+    if (this.search.searchFieldOn) {
+      this.search.searchField.setValue(this.getDisplayValue(this.search.searchFieldOn));
+    }
+
     this.search.searchField.valueChanges
       .pipe(
         debounceTime(400),

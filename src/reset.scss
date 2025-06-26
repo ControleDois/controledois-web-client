@@ -782,6 +782,58 @@ option {
   display: none;
 }
 
+.status-checklist {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+
+  button {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin: 0 5px;
+  }
+
+  .checklist-check {
+    color: #4AB858;
+    border-color: #4AB858;
+  }
+
+  .checklist-warning {
+    color: #FFC200;
+    border-color: #FFC200;
+  }
+
+  .checklist-noting {
+    color: #F43E61;
+    border-color: #F43E61;
+  }
+
+  .checklist-na {
+    color: #7A7A7F;
+    border-color: #7A7A7F;
+  }
+
+  .selected-check {
+    background-color: #4AB858;
+    color: #fff;
+  }
+
+  .selected-warning {
+    background-color: #FFC200;
+    color: #fff;
+  }
+
+  .selected-noting {
+    background-color: #F43E61;
+    color: #fff;
+  }
+
+  .selected-na {
+    background-color: #7A7A7F;
+    color: #fff;
+  }
+}
+
 @media (max-width: 62em) {
   .label-group-check {
     .checks {
@@ -812,7 +864,6 @@ option {
     display: block !important;
   }
 }
-
 
 @media (max-width: 52em) {
   .table-actions {
