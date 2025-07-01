@@ -308,7 +308,7 @@ export class SaleFormComponent implements OnInit {
         auth.company.config.sale_bank_account_default?.name
       );
 
-      this.myForm.controls['status'].setValue(3);
+      this.myForm.controls['status'].setValue(0);
       this.addProduct(null);
       this.addPortion(null);
     }
@@ -634,10 +634,22 @@ export class SaleFormComponent implements OnInit {
       this.navigation.selectedItem--;
     }
 
+    if (!this.myForm.value.is_contract && this.myForm.value.status != 3) {
+      if ((this.navigation.selectedItem == 2) && (nextOrBack)) {
+        this.navigation.selectedItem = 3;
+      } else if ((this.navigation.selectedItem == 2) && (!nextOrBack)) {
+        this.navigation.selectedItem = 1;
+      }
+    }
+
     if (this.navigation.selectedItem < 0) {
       this.navigation.selectedItem = 0;
     } else if (this.navigation.selectedItem >= this.navigation.items.length) {
-      this.navigation.selectedItem = this.navigation.items.length - 1;
+      if (!this.myForm.value.is_contract && this.myForm.value.status != 3) {
+        this.navigation.selectedItem = 4;
+      } else {
+        this.navigation.selectedItem = this.navigation.items.length - 1;
+      }
     }
   }
 

@@ -174,7 +174,7 @@
             </mat-tab>
 
             <mat-tab>
-              <div class="label-group" *ngIf="!myForm.value.is_contract && myForm.value.status === 3">
+              <div class="label-group" *ngIf="!myForm.value.is_contract && myForm.value.status == 3">
                 <app-search-loading-unique class="label-w30" [search]="searchBank"></app-search-loading-unique>
 
                 <label class="label-w30">
@@ -186,7 +186,7 @@
                 </label>
               </div>
 
-              <div class="shopping-budget" style="margin-bottom: 10px" *ngIf="myForm.value.status === 3 && !myForm.value.is_contract">
+              <div class="shopping-budget" style="margin-bottom: 10px" *ngIf="myForm.value.status == 3 && !myForm.value.is_contract">
                 <div class="shopping-budget-grid">
                   <ul class="shopping-budget-grid-header">
                     <li style="width: 10%">Parcela</li>
