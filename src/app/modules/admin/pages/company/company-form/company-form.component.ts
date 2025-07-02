@@ -97,10 +97,25 @@ export class CompanyFormComponent implements OnInit {
   @Output() public navigationButtons: BasicFormButtons = {
     buttons: [
       {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
         text: 'Salvar',
         icon: 'save',
         action: () => this.save(),
         class: 'c2-btn c2-btn-green',
+        navigation: false,
       }
     ]
   }
@@ -248,7 +263,7 @@ export class CompanyFormComponent implements OnInit {
         (this.myForm.get('address') as FormGroup).controls['complement'].setValue(cnpj["estabelecimento"]["complemento"]);
         (this.myForm.get('address') as FormGroup).controls['district'].setValue(cnpj["estabelecimento"]["bairro"]);
         (this.myForm.get('address') as FormGroup).controls['city'].setValue(cnpj["estabelecimento"]["cidade"]["nome"]);
-        (this.myForm.get('address') as FormGroup).controls['state'].setValue(cnpj["estabelecimento"]["estado"]["nome"]);
+        (this.myForm.get('address') as FormGroup).controls['state'].setValue(cnpj["estabelecimento"]["estado"]["sigla"]);
         (this.myForm.get('address') as FormGroup).controls['code_ibge'].setValue(cnpj["estabelecimento"]["cidade"]["ibge_id"]);
       })
     ).subscribe();
@@ -355,5 +370,19 @@ export class CompanyFormComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
   }
 }
