@@ -308,7 +308,7 @@ export class SaleFormComponent implements OnInit {
         auth.company.config.sale_bank_account_default?.name
       );
 
-      this.myForm.controls['status'].setValue(3);
+      this.myForm.controls['status'].setValue(0);
       this.addProduct(null);
       this.addPortion(null);
     }
@@ -340,7 +340,8 @@ export class SaleFormComponent implements OnInit {
               const checkControl = new FormGroup({
                 id: new FormControl(check.id),
                 name: new FormControl(check.name),
-                checked: new FormControl(value.checkListChecks.find(c => c.checklist_id === check.id) ? 1 : 0),
+                status: new FormControl(value.checkListChecks.find(c => c.checklist_id === check.id).status),
+                description: new FormControl(value.checkListChecks.find(c => c.checklist_id === check.id).description),
               });
               checksArray.push(checkControl);
             });
@@ -633,10 +634,22 @@ export class SaleFormComponent implements OnInit {
       this.navigation.selectedItem--;
     }
 
+    if (!this.myForm.value.is_contract && this.myForm.value.status != 3) {
+      if ((this.navigation.selectedItem == 2) && (nextOrBack)) {
+        this.navigation.selectedItem = 3;
+      } else if ((this.navigation.selectedItem == 2) && (!nextOrBack)) {
+        this.navigation.selectedItem = 1;
+      }
+    }
+
     if (this.navigation.selectedItem < 0) {
       this.navigation.selectedItem = 0;
     } else if (this.navigation.selectedItem >= this.navigation.items.length) {
-      this.navigation.selectedItem = this.navigation.items.length - 1;
+      if (!this.myForm.value.is_contract && this.myForm.value.status != 3) {
+        this.navigation.selectedItem = 4;
+      } else {
+        this.navigation.selectedItem = this.navigation.items.length - 1;
+      }
     }
   }
 
@@ -692,10 +705,35 @@ export class SaleFormComponent implements OnInit {
         const checkControl = new FormGroup({
           id: new FormControl(check.id),
           name: new FormControl(check.name),
-          checked: new FormControl(0),
+          status: new FormControl(3),
+          description: new FormControl(check.description || ''),
         });
         checksArray.push(checkControl);
       });
+    }
+  }
+
+  getStatusCheck(status: number, indexCheck: number, indexList: number): boolean {
+    const checksArray = this.getChecksForCheckList(indexCheck);
+
+    if (checksArray && checksArray.length > 0) {
+      const check = checksArray.at(indexList);
+      if (check && check.value.status !== undefined) {
+        return check.value.status === status;
+      }
+    }
+
+    return false;
+  }
+
+  setStatusCheck(status: number, indexCheck: number, indexList: number): void {
+    const checksArray = this.getChecksForCheckList(indexCheck);
+
+    if (checksArray && checksArray.length > 0) {
+      const check = checksArray.at(indexList);
+      if (check) {
+        check.patchValue({ status: status });
+      }
     }
   }
 }

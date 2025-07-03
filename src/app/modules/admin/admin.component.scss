@@ -1,6 +1,19 @@
 .admin {
   display: flex;
-  padding-top: 70px;
-  margin: 0 auto;
-  max-width: 1300px;
+  justify-content: space-between;
 }
+
+.admin-container {
+  width: calc(100% - 280px);
+}
+
+.admin-content {
+  margin-top: 70px;
+}
+
+@media (max-width: 62em) {
+  .admin-container {
+    width: 100%;
+  }
+}
+

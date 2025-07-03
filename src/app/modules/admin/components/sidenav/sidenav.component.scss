@@ -3,13 +3,15 @@
   height: 100%;
   box-shadow: 0 0 10px 0 var(--overlay-shadow);
   border: 1px solid var(--overlay-border);
-  border-radius: 10px;
   display: block;
   position: relative;
   box-sizing: border-box;
   padding: 20px;
   color: var(--color-primary-font);
   width: 280px;
+  position: fixed;
+  top: 50px;
+  left: 0;
 }
 
 .company-selected {
@@ -27,7 +29,7 @@
       padding: 2px;
       background-color: var(--primary-color);
       border-radius: 100%;
-      width: 40px;
+      width: 45px;
       text-align: center;
       color: #fff;
     }
