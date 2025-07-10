@@ -28,6 +28,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   public myForm: FormGroup = new FormGroup({
+    taskBoardId: new FormControl('bb47b629-2b63-40ae-a99a-81237b3e6e94'),
     title: new FormControl('', Validators.required),
     description: new FormControl(''),
     status: new FormControl(0),
@@ -74,6 +75,7 @@ export class TaskFormComponent implements OnInit {
         icon: 'save',
         action: () => this.save(),
         class: 'c2-btn c2-btn-green',
+        navigation: false,
       }
     ]
   }
