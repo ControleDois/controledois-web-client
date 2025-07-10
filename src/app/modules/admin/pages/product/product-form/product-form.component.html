@@ -74,6 +74,10 @@
                   <input formControlName="cfop_interstate" type="text">
                 </label>
               </div>
+
+              <div class="label-group">
+                <app-search-loading-unique class="label-w50" [search]="searchBrand"></app-search-loading-unique>
+              </div>
             </mat-tab>
 
             <mat-tab label="Dados de Shop" formGroupName="shop">

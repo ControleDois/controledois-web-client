@@ -1,21 +1,21 @@
-import {Component, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute, Router} from "@angular/router";
-import {catchError, finalize, map} from "rxjs/operators";
-import {throwError} from "rxjs";
-import { CategoryService } from 'src/app/shared/services/category.service';
-import { NotificationService } from 'src/app/shared/services/notification.service';
-import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
+import { Component, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
-import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BrandService } from 'src/app/shared/services/brand.service';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { catchError, finalize, map, throwError } from 'rxjs';
 
 @Component({
-  selector: 'app-category-form',
-  templateUrl: './category-form.component.html',
+  selector: 'app-brand-form',
+  templateUrl: './brand-form.component.html',
 })
-export class CategoryFormComponent implements OnInit {
+export class BrandFormComponent implements OnInit {
+
   private formId: string;
 
   public loadingFull: LoadingFull = {
@@ -24,41 +24,19 @@ export class CategoryFormComponent implements OnInit {
   }
   public myForm: FormGroup = new FormGroup({
     company_id: new FormControl(''),
-    category_id: new FormControl(''),
-    role: new FormControl(0, Validators.required),
     name: new FormControl('', Validators.required),
   });
-
-  public roles = [{ name: '⦿ Despesa', type: 0 }, { name: '⦿ Receita', type: 1 }];
-
-  @Output() searchCategory: SearchLoadingUnique = {
-    noTitle: false,
-    title: 'Aparecer dentro de',
-    url: 'category',
-    searchFieldOn: null,
-    searchFieldOnCollum: ['name'],
-    sortedBy: 'name',
-    orderBy: 'name',
-    searchField: new FormControl(''),
-    paramsArray: [
-      {
-        param: 'role',
-        value: 0
-      }
-    ],
-    validation: true
-  };
 
   public validationFields: Array<any> = [
     { name: 'name', validation: true, msg: 'É necessário informar o nome'},
   ];
 
   @Output() public pageHeader: PageHeader = {
-    title: `Categoria`,
-    description: 'Cadastro de Categoria',
+    title: `Marca`,
+    description: 'Cadastro de Marca',
     button: {
       text: 'Voltar',
-      routerLink: '/category',
+      routerLink: '/brand',
       icon: 'arrow_back',
     },
   };
@@ -77,13 +55,13 @@ export class CategoryFormComponent implements OnInit {
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private categoryService: CategoryService,
+    private brandService: BrandService,
     private notificationService: NotificationService,
     private dialogMessageService: DialogMessageService,
     private router: Router,
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
-    this.pageHeader.title = this.formId === 'new' ? 'Nova Categoria' : 'Editar Categoria';
+    this.pageHeader.title = this.formId === 'new' ? 'Nova Marca' : 'Editar Marca';
   }
 
   validateForm(): void {
@@ -93,11 +71,11 @@ export class CategoryFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.formId !== 'new') {
       this.loadingFull.active = true;
-      this.categoryService.show(this.formId).pipe(
+      this.brandService.show(this.formId).pipe(
         finalize(() => this.loadingFull.active = false),
         catchError((error) => {
           this.notificationService.warn('Dados não encontrados...');
-          this.router.navigate(['category']);
+          this.router.navigate(['brand']);
           return throwError(error);
         }),
         map((res) => {
@@ -110,10 +88,6 @@ export class CategoryFormComponent implements OnInit {
   setForm(value: any): void {
     if (value) {
       this.myForm.patchValue(value);
-
-      this.getRole();
-      this.searchCategory.searchFieldOn = value?.category;
-      this.searchCategory.searchField.setValue(value?.category?.name);
     }
   }
 
@@ -122,9 +96,8 @@ export class CategoryFormComponent implements OnInit {
 
     if (this.myForm.valid) {
       this.loadingFull.active = true;
-      this.myForm.value.category_id = this.searchCategory?.searchFieldOn?.id || null;
 
-      this.categoryService.save(this.formId, this.myForm.value).pipe(
+      this.brandService.save(this.formId, this.myForm.value).pipe(
         finalize(() => this.loadingFull.active = false),
         catchError((res) => {
           let title = 'Atenção';
@@ -134,7 +107,7 @@ export class CategoryFormComponent implements OnInit {
             if (res?.error?.errors?.[0]?.field === 'name') {
               title = 'Campo Nome';
               message = res.error.errors[0].message;
-              message_next = 'É essecial que o nome da categoria seja informado. Sempre valide se a categoria que você está cadastrando já não está em nossa base de dados.';
+              message_next = 'É essecial que o nome da marca seja informado. Sempre valide se a marca que você está cadastrando já não está em nossa base de dados.';
             }
 
             this.dialogMessageService.openDialog({
@@ -148,7 +121,7 @@ export class CategoryFormComponent implements OnInit {
         }),
         map(() => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['category']);
+          this.router.navigate(['brand']);
         })
       ).subscribe();
     } else {
@@ -162,14 +135,4 @@ export class CategoryFormComponent implements OnInit {
     }
   }
 
-  getRole(): void {
-    this.searchCategory.searchFieldOn = null;
-    this.searchCategory.searchField.setValue('');
-    this.searchCategory.paramsArray = [
-      {
-        param: 'role',
-        value: this.myForm.value.role
-      }
-    ];
-  }
 }

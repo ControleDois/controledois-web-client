@@ -31,6 +31,7 @@ export class ProductFormComponent implements OnInit {
     company_id: new FormControl(0),
     ncm_id: new FormControl('', Validators.required),
     nfe_taxation_id: new FormControl('', Validators.required),
+    brand_id: new FormControl(''),
     role: new FormControl(0, Validators.required),
     name: new FormControl('', Validators.required),
     sale_value: new FormControl('', Validators.required),
@@ -199,6 +200,19 @@ export class ProductFormComponent implements OnInit {
     paramsArray: [],
   };
 
+  @Output() searchBrand: SearchLoadingUnique = {
+    noTitle: false,
+    title: 'Marca',
+    url: 'brand',
+    searchFieldOn: null,
+    searchFieldOnCollum: ['name'],
+    sortedBy: 'name',
+    orderBy: 'name',
+    searchField: new FormControl(''),
+    validation: true,
+    paramsArray: [],
+  };
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private productService: ProductService,
@@ -248,10 +262,13 @@ export class ProductFormComponent implements OnInit {
       }
 
       this.searchTaxation.searchFieldOn = value.taxation;
-      this.searchTaxation.searchField.setValue(value.taxation.name);
+      this.searchTaxation.searchField.setValue(value?.taxation?.name);
 
-      this.searchNCM.searchFieldOn = value.ncm;
-      this.searchNCM.searchField.setValue(value.ncm.code);
+      this.searchNCM.searchFieldOn = value?.ncm;
+      this.searchNCM.searchField.setValue(value?.ncm?.code);
+
+      this.searchBrand.searchFieldOn = value?.brand;
+      this.searchBrand.searchField.setValue(value?.brand?.name);
     }
   }
 
@@ -260,6 +277,7 @@ export class ProductFormComponent implements OnInit {
 
     this.myForm.value.ncm_id = this.searchNCM?.searchFieldOn?.id;
     this.myForm.value.nfe_taxation_id = this.searchTaxation?.searchFieldOn?.id;
+    this.myForm.value.brand_id = this.searchBrand?.searchFieldOn?.id;
 
     if (!this.myForm.value.img_url) {
       await this.uploadPhoto();
