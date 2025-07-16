@@ -85,6 +85,8 @@ import { ChecklistFormComponent } from './pages/checklist/checklist-form/checkli
 import { ChecklistListComponent } from './pages/checklist/checklist-list/checklist-list.component';
 import { VehicleFormComponent } from './pages/vehicle/vehicle-form/vehicle-form.component';
 import { VehicleListComponent } from './pages/vehicle/vehicle-list/vehicle-list.component';
+import { BrandListComponent } from './pages/brand/brand-list/brand-list.component';
+import { BrandFormComponent } from './pages/brand/brand-form/brand-form.component';
 
 const appName = 'Siace';
 
@@ -403,6 +405,16 @@ const routes: Routes = [
     path: 'vehicle/:id',
     component: VehicleFormComponent,
     data: { title: `Cadastro de Veículos -  ${appName}`},
+  },
+  {
+    path: 'brand',
+    component: BrandListComponent,
+    data: { title: `Marcas -  ${appName}`},
+  },
+  {
+    path: 'brand/:id',
+    component: BrandFormComponent,
+    data: { title: `Cadastro de Marcas -  ${appName}`},
   }
 ]
 
@@ -485,7 +497,9 @@ const routes: Routes = [
     ChecklistFormComponent,
     ChecklistListComponent,
     VehicleFormComponent,
-    VehicleListComponent
+    VehicleListComponent,
+    BrandListComponent,
+    BrandFormComponent
   ],
   imports: [
     CommonModule,
