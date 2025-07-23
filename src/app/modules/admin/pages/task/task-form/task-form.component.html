@@ -1,82 +1,114 @@
 <div class="container">
   <div class="page-content">
-    <app-page-header [header]="pageHeader"></app-page-header>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation" class="hide-62em"></app-basic-form-navigation>
 
-    <div class="basic-form">
-      <form [formGroup]="myForm">
-        <div class="label-group">
-          <label class="label-w30">
-            <span class="field">Prioridade</span>
-            <select formControlName="priority">
-              <option *ngFor="let priority of priorityType" [value]="priority.type">{{ priority.name }}
-              </option>
-            </select>
-          </label>
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
 
-          <label class="label-w30">
-            <span class="field">Status</span>
-            <select formControlName="status">
-              <option *ngFor="let status of statusType" [value]="status.type">{{ status.name }}
-              </option>
-            </select>
-          </label>
-        </div>
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="label-group">
+                <app-search-loading-unique [search]="searchBoard" class="label-w30"></app-search-loading-unique>
 
-        <label class="label-w100">
-          <span class="field">Titulo</span>
-          <input formControlName="title" type="text">
-        </label>
+                <label class="label-w30">
+                  <span class="field">Prioridade</span>
+                  <select formControlName="priority">
+                    <option *ngFor="let priority of priorityType" [value]="priority.type">{{ priority.name }}
+                    </option>
+                  </select>
+                </label>
 
-        <label class="label-w100">
-          <span class="field">Descrição</span>
-          <textarea formControlName="description"></textarea>
-        </label>
-
-        <section class="drag-files">
-          <mat-icon>cloud_upload</mat-icon>
-
-          <h3>Importe seus arquivos</h3>
-          <p>Arraste ou clique para fazer upload</p>
-
-          <input type="file" (change)="getFile($event)"/>
-        </section>
-
-        <section class="files">
-          <div *ngFor="let file of myForm.value.files as i" class="box done">
-            <div class="icon">
-              <mat-icon>insert_drive_file</mat-icon>
-            </div>
-            <div class="info">
-              <div class="filename-link" (click)="openFile(file.file_url)">{{ file.file_name }}</div>
-              <div class="filesize">
-                <span>{{ formatBytes(file.file_size) }}</span>
+                <label class="label-w100">
+                  <span class="field">Titulo</span>
+                  <input formControlName="title" type="text">
+                </label>
               </div>
-            </div>
-            <div class="action" (click)="deleteFileForm(file)">
-              <mat-icon>delete</mat-icon>
-            </div>
-          </div>
-        </section>
 
-        <section class="files">
-          <div *ngFor="let file of filesUpload as i" class="box done" >
-            <div class="icon">
-              <mat-icon>insert_drive_file</mat-icon>
-            </div>
-            <div class="info">
-              <div class="filename">{{ file.name }}</div>
-              <div class="filesize">
-                <span>{{ formatBytes(file.size) }}</span>
-              </div>
-            </div>
-            <div class="action" (click)="deleteFile(file)">
-              <mat-icon>delete</mat-icon>
-            </div>
-          </div>
-        </section>
-      </form>
+              <label class="label-w100">
+                <span class="field">Descrição</span>
+                <textarea formControlName="description" style="min-height: 200px;"></textarea>
+              </label>
+            </mat-tab>
 
-      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+            <mat-tab>
+              <section class="drag-files">
+                <mat-icon>cloud_upload</mat-icon>
+
+                <h3>Importe seus arquivos</h3>
+                <p>Arraste ou clique para fazer upload</p>
+
+                <input type="file" (change)="getFile($event)"/>
+              </section>
+
+              <section class="files">
+                <div *ngFor="let file of myForm.value.files as i" class="box done">
+                  <div class="icon">
+                    <mat-icon>insert_drive_file</mat-icon>
+                  </div>
+                  <div class="info">
+                    <div class="filename-link" (click)="openFile(file.file_url)">{{ file.file_name }}</div>
+                    <div class="filesize">
+                      <span>{{ formatBytes(file.file_size) }}</span>
+                    </div>
+                  </div>
+                  <div class="action" (click)="deleteFileForm(file)">
+                    <mat-icon>delete</mat-icon>
+                  </div>
+                </div>
+              </section>
+
+              <section class="files">
+                <div *ngFor="let file of filesUpload as i" class="box done" >
+                  <div class="icon">
+                    <mat-icon>insert_drive_file</mat-icon>
+                  </div>
+                  <div class="info">
+                    <div class="filename">{{ file.name }}</div>
+                    <div class="filesize">
+                      <span>{{ formatBytes(file.size) }}</span>
+                    </div>
+                  </div>
+                  <div class="action" (click)="deleteFile(file)">
+                    <mat-icon>delete</mat-icon>
+                  </div>
+                </div>
+              </section>
+            </mat-tab>
+
+            <mat-tab>
+              <section class="users">
+                <div class="user-card" *ngFor="let user of myForm.value.users as i">
+                  <div class="user-info">
+                    <img class="avatar" src="assets/avatar.jpg" alt="Avatar">
+                    <div class="user-text">
+                      <div class="user-names">
+                        {{ user?.user?.name || 'Nome do Usuário' }}
+                      </div>
+                      <div class="user-subtext">
+                        {{ user?.user?.email || 'Email do Usuário' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="user-tags">
+                    <span
+                      *ngFor="let role of getUserRoles(user)"
+                      class="tag"
+                      [ngClass]="roleMap[role]?.class">
+                      {{ roleMap[role]?.label }}
+                    </span>
+                  </div>
+                </div>
+              </section>
+
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+      </div>
     </div>
   </div>
 </div>

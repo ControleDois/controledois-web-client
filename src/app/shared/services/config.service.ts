@@ -24,6 +24,6 @@ export class ConfigService {
   }
 
   whatsappConnect(id: string): Observable<any> {
-    return this.apiService.on(`https://whatsapp.ctrix.com.br/session/${id}`, '', 'get-no-environment');
+    return this.apiService.on(`https://boot.wwebj.001.ctrix.com.br/session/${id}`, '', 'get-no-environment');
   }
 }

@@ -13,6 +13,8 @@ import { Auth } from 'src/app/shared/interfaces/auth.interface';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MediaModalComponent } from '../../modals/media-modal/media-modal.component';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
 
 @Component({
   selector: 'app-task-form',
@@ -28,13 +30,13 @@ export class TaskFormComponent implements OnInit {
   }
 
   public myForm: FormGroup = new FormGroup({
-    taskBoardId: new FormControl('bb47b629-2b63-40ae-a99a-81237b3e6e94'),
+    taskBoardId: new FormControl('', Validators.required),
     title: new FormControl('', Validators.required),
     description: new FormControl(''),
     status: new FormControl(0),
     priority: new FormControl(0),
     files: new FormControl(''),
-    users: new FormArray([]),
+    users: new FormControl(''),
   });
 
   public filesUpload: Array<any> = [];
@@ -71,6 +73,20 @@ export class TaskFormComponent implements OnInit {
   @Output() public navigationButtons: BasicFormButtons = {
     buttons: [
       {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
         text: 'Salvar',
         icon: 'save',
         action: () => this.save(),
@@ -80,7 +96,38 @@ export class TaskFormComponent implements OnInit {
     ]
   }
 
+  @Output() public navigation: BasicFormNavigation = {
+      items: [
+        { text: 'Dados', index: 0, icon: 'info' },
+        { text: 'Arquivos', index: 1, icon: 'info' },
+        { text: 'Usuários', index: 2, icon: 'info' },
+      ],
+      selectedItem: 0
+    }
+
+
   private auth: Auth;
+
+  roleMap: { [key: number]: { label: string; class: string } } = {
+    0: { label: 'Criador', class: 'tag-criador' },
+    1: { label: 'Responsável', class: 'tag-responsavel' },
+    2: { label: 'Colaborador', class: 'tag-colaborador' },
+    3: { label: 'Observador', class: 'tag-observador' },
+    4: { label: 'Revisor', class: 'tag-revisor' },
+  };
+
+  @Output() searchBoard: SearchLoadingUnique = {
+    noTitle: false,
+    title: 'Quadro',
+    url: 'task-board',
+    searchFieldOn: null,
+    searchFieldOnCollum: ['title'],
+    sortedBy: 'title',
+    orderBy: 'title',
+    searchField: new FormControl(''),
+    validation: true,
+    paramsArray: [],
+  };
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -115,6 +162,9 @@ export class TaskFormComponent implements OnInit {
 
   setForm(value: any): void {
     if (value) {
+      this.searchBoard.searchFieldOn = value?.board;
+      this.searchBoard.searchField.setValue(value?.board?.title);
+
       this.myForm.patchValue(value);
     }
   }
@@ -130,12 +180,14 @@ export class TaskFormComponent implements OnInit {
   save(): void {
     this.loadingFull.active = true;
 
+    this.myForm.value.taskBoardId = this.searchBoard?.searchFieldOn?.id;
+
     if (this.formId !== 'new') {
-      const isCreator = this.myForm.value.users.filter((user) => user.id === this.auth.user.people.id).length > 0;
+      const isCreator = this.myForm.value.users.filter((user) => user.user_id === this.auth.user.people.id).length > 0;
 
       if (!isCreator) {
         this.myForm.value.users.push({
-          userId: this.auth.user.people.id,
+          id: this.auth.user.people.id,
           roles: [2]
         })
       }
@@ -263,5 +315,23 @@ export class TaskFormComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k))
 
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
+  }
+
+  getUserRoles(user: any) {
+    return (user.roles || []) as number[];
   }
 }
