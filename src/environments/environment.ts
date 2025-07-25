@@ -1,7 +1,8 @@
 export const environment = {
   production: true,
   api: 'http://localhost:3333',
-  ws: 'wss://localhost:3333',
+  ws: 'ws://localhost:3333',
+  whatsapp: 'http://localhost:3000',
   firebase: {
     apiKey: "AIzaSyA7Rb1Eh33X8fd8XU284V0_zxt2tWHBXEk",
     authDomain: "controledois-br.firebaseapp.com",

@@ -2,6 +2,7 @@ import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +25,6 @@ export class ConfigService {
   }
 
   whatsappConnect(id: string): Observable<any> {
-    return this.apiService.on(`https://boot.wwebj.001.ctrix.com.br/session/${id}`, '', 'get-no-environment');
+    return this.apiService.on(`${environment.whatsapp}/session/${id}`, '', 'get-no-environment');
   }
 }

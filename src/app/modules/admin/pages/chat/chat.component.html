@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container" style="margin: 0 !important;">
   <div class="page-content" style="padding: 0 !important;">
-    <div class="basic">
+    <div class="basic" style="height: calc(100vh - 90px);">
 
       <div class="dialogs">
         <app-search-simple [search]="search"></app-search-simple>
@@ -19,7 +19,7 @@
         </ul>
       </div>
 
-      <div class="chatOn" *ngIf="dialogSelected">
+      <div class="chatOn" *ngIf="dialogSelected" >
         <div class="contact">
           <div class="avatar">
             <img src="assets/avatar.jpg">
@@ -32,7 +32,7 @@
         </div>
 
         <div class="messages">
-          <ul>
+          <ul id="messageScroll">
             <li *ngFor="let message of dialogSelected.messages" [ngClass]="{'message-left': message.from_me}">
               <div class="line-dialog"></div>
               <div class="avatar">
@@ -66,3 +66,5 @@
     </div>
   </div>
 </div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

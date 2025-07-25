@@ -18,7 +18,7 @@
 
   .list {
     margin-top: 20px;
-    max-height: 400px;
+    max-height: calc(100vh - 165px);
     overflow: auto;
     overflow-x: hidden;
     width: 100%;
@@ -107,7 +107,7 @@
   .messages {
     flex: 1;
     display: flex;
-    max-height: 400px;
+    max-height: calc(100vh - 216px);
     position: relative;
 
     .message-left {
