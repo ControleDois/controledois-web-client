@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
@@ -24,6 +24,8 @@ export class ChatComponent implements OnInit {
   private messageSubscription!: Subscription;
   public scrollHeight: number = 0;
 
+  @ViewChild('messageInput', {static: false}) messageInput!: ElementRef<HTMLInputElement>;
+
   constructor(
     private dialogService: DialogService,
     private ws: WebsocketService,
@@ -45,8 +47,18 @@ export class ChatComponent implements OnInit {
     // Inscreve-se para receber mensagens
     this.messageSubscription = this.ws.getMessage().subscribe((response) => {
       if (response && response.type === 'whatsapp-message') {
-        if (this.dialogSelected && this.dialogSelected.id === response.data.dialog_id) {
-          this.dialogSelected.messages.push(response.data);
+        //Verifica se o dialog existe nos dialogs
+        const dialogIndex = this.dialogs.findIndex(dialog => dialog.id === response.data.dialog_id);
+        if (dialogIndex === -1) {
+          // Se não existir, adiciona o novo diálogo
+          this.dialogs.push({
+            ...response.data.dialog,
+            messages: [response.data.message]
+          });
+        }
+
+        if (this.dialogSelected && this.dialogSelected.id === response.data.message.dialog_id) {
+          this.dialogSelected.messages.push(response.data.message);
           this.scroll();
         }
       }
@@ -68,24 +80,64 @@ export class ChatComponent implements OnInit {
   }
 
   showDialog(id: string): void {
+    //Se o dialog já estiver selecionado, não faz nada
+    if (this.dialogSelected && this.dialogSelected.id === id) {
+      return;
+    }
+
     this.loadingFull.active = true;
     this.dialogService.show(id).subscribe((response) => {
       this.dialogSelected = response;
-
-      //precisar de um timeout para o scroll funcionar
-      setTimeout(() => {
-        this.scroll();
-      }, 100);
-
+      this.scroll();
       this.loadingFull.active = false;
     });
   }
 
   scroll() {
-    const objScrDiv = document.getElementById('messageScroll');
-    if (objScrDiv && objScrDiv.scrollHeight > this.scrollHeight) {
-      objScrDiv.scrollTop = objScrDiv.scrollHeight + 200;
-      this.scrollHeight = objScrDiv.scrollHeight;
+    setTimeout(() => {
+      const objScrDiv = document.getElementById('messageScroll');
+      if (objScrDiv && objScrDiv.scrollHeight > this.scrollHeight) {
+        objScrDiv.scrollTop = objScrDiv.scrollHeight + 200;
+        this.scrollHeight = objScrDiv.scrollHeight;
+      }
+    }, 100);
+  }
+
+  sendMessage(): void {
+    const message = this.messageInput.nativeElement.value.trim();
+    this.messageInput.nativeElement.value = '';
+
+    if (message.trim() === '') {
+      return;
     }
+
+    this.dialogService.sendMessage(this.dialogSelected.id, { body: message }).subscribe((response) => {
+      if (response && response.data) {
+        console.log('Mensagem enviada:', response.data);
+      }
+    });
+  }
+
+  startDialog(): void {
+    this.loadingFull.active = true;
+    this.dialogService.startDialog(this.dialogSelected.id).subscribe((response) => {
+      console.log('Dialog started:', response);
+      this.dialogSelected.status = 1; // Atualiza o status do diálogo para iniciado
+      this.scroll();
+      this.loadingFull.active = false;
+    });
+  }
+
+  desconsiderDialog(): void {
+    this.loadingFull.active = true;
+    this.dialogService.disconsiderDialog(this.dialogSelected.id).subscribe((response) => {
+      if (response){
+        //Remover dialogo da lista de aguardando atendimento
+        this.dialogs = this.dialogs.filter(dialog => dialog.id !== this.dialogSelected.id);
+        this.dialogSelected = null; // Limpa o diálogo selecionado
+      }
+
+      this.loadingFull.active = false;
+    });
   }
 }

@@ -32,7 +32,26 @@
         </div>
 
         <div class="messages">
+          <div class="bgChat"></div>
           <ul id="messageScroll">
+            <div class="cotainer-timeline">
+              <div class="circle-timeline" [ngClass]="{
+                  'circle-timeline-disregard':
+                    dialogSelected.finalized_at && dialogSelected.status === 3
+                }"></div>
+              <div class="text-timeline">
+                <span *ngIf="dialogSelected.status == 3">Atendimento Desconsiderado por
+                  <strong>Thiago</strong>
+                  às {{ dialogSelected.attendance_at }}</span>
+
+                <span *ngIf="dialogSelected.attendance_at && dialogSelected.status !== 3">Atendimento Iniciado por
+                  <strong>Thiago Ribeiro</strong>
+                  às {{ dialogSelected.attendance_at }}</span>
+                <span *ngIf="!dialogSelected.attendance_at && dialogSelected.status !== 3">Aguardando Atendimento</span>
+              </div>
+              <div></div>
+            </div>
+
             <li *ngFor="let message of dialogSelected.messages" [ngClass]="{'message-left': message.from_me}">
               <div class="line-dialog"></div>
               <div class="avatar">
@@ -43,19 +62,46 @@
                 <p>{{message.body}}</p>
               </div>
             </li>
+
+            <div class="cotainer-timeline">
+              <div class="circle-timeline-bottom" [ngClass]="{
+                  'circle-timeline-disregard':
+                    dialogSelected.finalized_at && dialogSelected.status === 3
+                }"></div>
+              <div class="text-timeline">
+                <span *ngIf="dialogSelected.status == 3">Atendimento Desconsiderado por
+                  <strong>Thiago</strong>
+                  às {{ dialogSelected.attendance_at }}</span>
+
+                <span *ngIf="dialogSelected.attendance_at && dialogSelected.status !== 3">Atendimento Iniciado por
+                  <strong>Thiago Ribeiro</strong>
+                  às {{ dialogSelected.attendance_at }}</span>
+                <span *ngIf="!dialogSelected.attendance_at && dialogSelected.status !== 3">Aguardando Atendimento</span>
+              </div>
+              <div></div>
+            </div>
           </ul>
         </div>
 
-        <div class="send-message">
+        <div class="send-message" *ngIf="dialogSelected.status !== 0">
           <button mat-icon-button>
             <mat-icon>sentiment_satisfied</mat-icon>
           </button>
           <button mat-icon-button>
             <mat-icon>attach_file</mat-icon>
           </button>
-          <textarea placeholder="Digite sua mensagem"></textarea>
+          <textarea placeholder="Digite sua mensagem" #messageInput (keyup.enter)="sendMessage()"></textarea>
           <button mat-icon-button>
             <mat-icon>send</mat-icon>
+          </button>
+        </div>
+
+        <div class="dialog-start" *ngIf="dialogSelected.status == 0">
+          <button (click)="desconsiderDialog()" class="c2-btn c2-btn-red" mat-button>
+            <mat-icon>cancel_schedule_send</mat-icon>Desconsiderar Atendimento
+          </button>
+          <button (click)="startDialog()" class="c2-btn c2-btn-blue" mat-button>
+            <mat-icon>rocket_launch</mat-icon>Iniciar Atendimento
           </button>
         </div>
       </div>

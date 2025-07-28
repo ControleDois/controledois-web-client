@@ -15,6 +15,7 @@
   --overlay-bg-hover-2: #b7cdfd;
   --overlay-shadow: rgb(201 211 221 / 40%);
   --color-green: #4AB858;
+  --color-red: #eb506a;
   --color-primary-font: #666;
   --overlay-bg-hover-sidenav: rgb(232 240 248);
 }
@@ -29,6 +30,7 @@
   --overlay-bg-hover-2: #b7cdfd;
   --overlay-shadow: rgb(201 211 221 / 1%);
   --color-green: #4AB858;
+  --color-red: #eb506a;
   --color-primary-font: #fff;
   --overlay-bg-hover-sidenav: #353535;
 }
@@ -92,6 +94,15 @@ a {
 
 .c2-btn-green:active {
   box-shadow: 0 1px #3A8F4F;
+}
+
+.c2-btn-red {
+  background-color: var(--color-red);
+  box-shadow: 0 3px #c72e48;
+}
+
+.c2-btn-red:active {
+  box-shadow: 0 1px #c72e48;
 }
 
 .c2-btn-bg-no-color {
