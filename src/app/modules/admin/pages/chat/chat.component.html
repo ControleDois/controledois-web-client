@@ -5,8 +5,30 @@
       <div class="dialogs">
         <app-search-simple [search]="search"></app-search-simple>
 
+        <div class="filter-chips">
+          <mat-chip-list>
+            <mat-chip
+              [matBadge]="QtdDialogsWaiting > 0 ? QtdDialogsWaiting : null"
+              [ngClass]="{'selected-chip': selectedTab === 0}" (click)="selectedTab = 0">
+              Aguardando
+            </mat-chip>
+
+            <mat-chip
+              [matBadge]="QtdDialogsAttending > 0 ? QtdDialogsAttending : null"
+              [ngClass]="{'selected-chip': selectedTab === 1}" (click)="selectedTab = 1">
+              Atendimento
+            </mat-chip>
+
+            <mat-chip
+              [matBadge]="QtdDialogsGroups > 0 ? QtdDialogsGroups : null"
+              [ngClass]="{'selected-chip': selectedTab === 2}" (click)="selectedTab = 2">
+              Grupos
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+
         <ul class="list">
-          <li *ngFor="let dialog of dialogs" (click)="showDialog(dialog.id)">
+          <li *ngFor="let dialog of getSelectedTabClass()" (click)="showDialog(dialog.id)">
             <div class="avatar">
               <img src="assets/avatar.jpg">
             </div>
@@ -45,8 +67,8 @@
                   às {{ dialogSelected.attendance_at }}</span>
 
                 <span *ngIf="dialogSelected.attendance_at && dialogSelected.status !== 3">Atendimento Iniciado por
-                  <strong>Thiago Ribeiro</strong>
-                  às {{ dialogSelected.attendance_at }}</span>
+                  <strong>{{getStartedUser()?.people?.name}}</strong>
+                  às {{ updateDate(dialogSelected.attendance_at) }}</span>
                 <span *ngIf="!dialogSelected.attendance_at && dialogSelected.status !== 3">Aguardando Atendimento</span>
               </div>
               <div></div>
@@ -54,12 +76,41 @@
 
             <li *ngFor="let message of dialogSelected.messages" [ngClass]="{'message-left': message.from_me}">
               <div class="line-dialog"></div>
+
               <div class="avatar">
                 <img src="assets/avatar.jpg">
               </div>
 
               <div class="info">
-                <p>{{message.body}}</p>
+                <p [innerHTML]="show_live_preview(message.body)" *ngIf="message.type == 0"></p>
+
+                <img *ngIf="message.type == 1 && message.temporaryLink" [src]="message.temporaryLink" class="file-image">
+                <button mat-icon-button *ngIf="message.type == 1" (click)="getLinkPath(message)">
+                  <mat-icon>image</mat-icon>
+                </button>
+                <button mat-icon-button *ngIf="message.type == 2" (click)="getLinkPath(message)">
+                  <mat-icon>play_circle</mat-icon>
+                </button>
+              </div>
+
+              <div class="message-footer-from" [ngClass]="{'message-footer-me': message.from_me}">
+                <small class="text-muted">
+                  {{
+                  message.people
+                  ? message.people.name + " às "
+                  : message.user
+                  ? message.user.name + " às "
+                  : "Bot"
+                  }}
+                  {{
+                  !message.from_me
+                  ? updateDate(message.created_at)
+                  : updateDate(message.created_at)
+                  }}
+                  <mat-icon *ngIf="message.from_me"
+                    [ngClass]="{ viewedMessage: message.status == 3 }">
+                    {{ getStatusIconMessage(message.status) }}</mat-icon>
+                </small>
               </div>
             </li>
 
@@ -74,8 +125,8 @@
                   às {{ dialogSelected.attendance_at }}</span>
 
                 <span *ngIf="dialogSelected.attendance_at && dialogSelected.status !== 3">Atendimento Iniciado por
-                  <strong>Thiago Ribeiro</strong>
-                  às {{ dialogSelected.attendance_at }}</span>
+                  <strong>{{getStartedUser()?.people?.name}}</strong>
+                  às {{ updateDate(dialogSelected.attendance_at) }}</span>
                 <span *ngIf="!dialogSelected.attendance_at && dialogSelected.status !== 3">Aguardando Atendimento</span>
               </div>
               <div></div>

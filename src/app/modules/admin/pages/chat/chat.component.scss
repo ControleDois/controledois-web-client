@@ -1,6 +1,6 @@
 .dialogs {
   border-right: 1px solid #c9d3dd;
-  width: 350px;
+  width: 450px;
   padding: 10px;
 
   .list::-webkit-scrollbar {
@@ -18,7 +18,7 @@
 
   .list {
     margin-top: 20px;
-    max-height: calc(100vh - 165px);
+    max-height: calc(100vh - 220px);
     overflow: auto;
     overflow-x: hidden;
     width: 100%;
@@ -157,6 +157,18 @@
       margin-right: 10px;
       margin-top: 10px;
       position: relative;
+
+      .message-footer-me{
+        position: absolute;
+        top: 70% !important;
+        margin: 0 20px 0 0;
+      }
+
+      .message-footer-from{
+        position: absolute;
+        top: 100%;
+        margin: 0 0 0 20px;
+      }
 
       .line-dialog {
         position: absolute;
@@ -321,4 +333,26 @@
 
 .circle-timeline-disregard {
   background-color: #f65125 !important;
+}
+
+.filter-chips {
+  margin: 15px 0 10px 0;
+
+  mat-chip {
+    cursor: pointer;
+  }
+
+  .selected-chip {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+  }
+}
+
+.mat-badge-content {
+  color: #fff;
+  background: #525255;
+}
+
+.viewedMessage {
+  color: var(--primary-color);
 }
