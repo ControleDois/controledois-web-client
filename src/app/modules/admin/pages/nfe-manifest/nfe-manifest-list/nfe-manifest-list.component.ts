@@ -9,6 +9,7 @@ import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { NfeManifestService } from 'src/app/shared/services/nfe-manifest.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
 
 @Component({
   selector: 'app-nfe-manifest-list',
@@ -29,6 +30,11 @@ export class NfeManifestListComponent implements OnInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Lista de Manifestos de NFe',
+    description: 'Visualize e gerencie os manifestos de NFe',
+  };
 
   constructor(
     private nfeManifestService: NfeManifestService,

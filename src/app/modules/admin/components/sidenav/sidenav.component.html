@@ -24,7 +24,7 @@
         <span>Visão Geral</span>
       </a>
     </li>
-    <li class="menu-show" [ngClass]="{'show': menuShow[0]}">
+    <!-- <li class="menu-show" [ngClass]="{'show': menuShow[0]}">
       <a (click)="menuShow[0] = !menuShow[0]">
         <mat-icon>library_add</mat-icon>
         <span>Cadastros</span>
@@ -32,129 +32,389 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[0]}">
-        <li routerLink="/people" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Pessoas</span>
-          </a>
-        </li>
-        <li routerLink="/contact" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Contatos</span>
-          </a>
-        </li>
-        <li routerLink="/product" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Produtos</span>
-          </a>
-        </li>
-        <li routerLink="/service" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Serviços</span>
-          </a>
-        </li>
-        <li routerLink="/vehicle" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Veículos</span>
-          </a>
-        </li>
-        <li routerLink="/brand" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Marcas</span>
-          </a>
-        </li>
+
       </ul>
-    </li>
-    <li class="menu-show" [ngClass]="{'show': menuShow[1]}">
-      <a (click)="menuShow[1] = !menuShow[1]">
+    </li> -->
+    <li class="menu-show" [ngClass]="{'show': menuShow[0]}">
+      <a (click)="menuShow[0] = !menuShow[0]">
         <mat-icon>shopping_bag</mat-icon>
         <span>Vendas</span>
-        <mat-icon [ngClass]="{'icon-show': menuShow[1]}" >keyboard_arrow_down</mat-icon>
+        <mat-icon [ngClass]="{'icon-show': menuShow[0]}" >keyboard_arrow_down</mat-icon>
       </a>
 
-      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[1]}">
-        <li routerLink="/os" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Ordens de Serviço</span>
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[0]}">
+        <li class="menu-show" [ngClass]="{'show': menuShow[1]}">
+          <a (click)="menuShow[1] = !menuShow[1]">
+            <mat-icon>games</mat-icon>
+            <span>Controle</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[1]}" >keyboard_arrow_down</mat-icon>
           </a>
-        </li>
-        <li routerLink="/sale" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Vendas e Orçamentos</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <li class="menu-show" [ngClass]="{'show': menuShow[2]}">
-      <a (click)="menuShow[2] = !menuShow[2]">
-        <mat-icon>shopping_cart_checkout</mat-icon>
-        <span>Compras</span>
-        <mat-icon [ngClass]="{'icon-show': menuShow[2]}" >keyboard_arrow_down</mat-icon>
-      </a>
 
-      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[2]}">
-        <li routerLink="/purchase" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Compras e Orçamentos</span>
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[1]}">
+            <li routerLink="/os" routerLinkActive="active">
+              <a>
+                <mat-icon>home_repair_service</mat-icon>
+                <div class="border-active"></div>
+                <span>Ordens de Serviço</span>
+              </a>
+            </li>
+            <li routerLink="/sale" routerLinkActive="active">
+              <a>
+                <mat-icon>add_shopping_cart</mat-icon>
+                <div class="border-active"></div>
+                <span>Vendas e Orçamentos</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-show" [ngClass]="{'show': menuShow[2]}">
+          <a (click)="menuShow[2] = !menuShow[2]">
+            <mat-icon>library_add</mat-icon>
+            <span>Cadastros</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[2]}" >keyboard_arrow_down</mat-icon>
           </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[2]}">
+            <li routerLink="/people" routerLinkActive="active">
+              <a>
+                <mat-icon>people</mat-icon>
+                <div class="border-active"></div>
+                <span>Pessoas</span>
+              </a>
+            </li>
+            <li routerLink="/product" routerLinkActive="active">
+              <a>
+                <mat-icon>inventory</mat-icon>
+                <div class="border-active"></div>
+                <span>Produtos</span>
+              </a>
+            </li>
+            <li routerLink="/service" routerLinkActive="active">
+              <a>
+                <mat-icon>handyman</mat-icon>
+                <div class="border-active"></div>
+                <span>Serviços</span>
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </li>
     <li class="menu-show" [ngClass]="{'show': menuShow[3]}">
       <a (click)="menuShow[3] = !menuShow[3]">
-        <mat-icon>bar_chart</mat-icon>
-        <span>Financeiro</span>
+        <mat-icon>shopping_cart_checkout</mat-icon>
+        <span>Compras</span>
         <mat-icon [ngClass]="{'icon-show': menuShow[3]}" >keyboard_arrow_down</mat-icon>
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[3]}">
-        <li routerLink="/bank" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Conta</span>
+        <li class="menu-show" [ngClass]="{'show': menuShow[4]}">
+          <a (click)="menuShow[4] = !menuShow[4]">
+            <mat-icon>games</mat-icon>
+            <span>Controle</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[4]}" >keyboard_arrow_down</mat-icon>
           </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[4]}">
+            <li routerLink="/purchase" routerLinkActive="active">
+              <a>
+                <mat-icon>shopping_basket</mat-icon>
+                <div class="border-active"></div>
+                <span>Compras e Orçamentos</span>
+              </a>
+            </li>
+          </ul>
         </li>
-        <li routerLink="/bill-payment" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Conta a Pagar</span>
+        <li class="menu-show" [ngClass]="{'show': menuShow[5]}">
+          <a (click)="menuShow[5] = !menuShow[5]">
+            <mat-icon>library_add</mat-icon>
+            <span>Cadastros</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[5]}" >keyboard_arrow_down</mat-icon>
           </a>
-        </li>
-        <li routerLink="/bill-receivement" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Conta a Receber</span>
-          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[5]}">
+            <li routerLink="/people" routerLinkActive="active">
+              <a>
+                <mat-icon>people</mat-icon>
+                <div class="border-active"></div>
+                <span>Pessoas</span>
+              </a>
+            </li>
+            <li routerLink="/product" routerLinkActive="active">
+              <a>
+                <mat-icon>inventory</mat-icon>
+                <div class="border-active"></div>
+                <span>Produtos</span>
+              </a>
+            </li>
+            <li routerLink="/service" routerLinkActive="active">
+              <a>
+                <mat-icon>handyman</mat-icon>
+                <div class="border-active"></div>
+                <span>Serviços</span>
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </li>
-    <li class="menu-show" [ngClass]="{'show': menuShow[4]}">
-      <a (click)="menuShow[4] = !menuShow[4]">
-        <mat-icon>receipt</mat-icon>
-        <span>Fiscal</span>
-        <mat-icon [ngClass]="{'icon-show': menuShow[4]}" >keyboard_arrow_down</mat-icon>
+    <li class="menu-show" [ngClass]="{'show': menuShow[6]}">
+      <a (click)="menuShow[6] = !menuShow[6]">
+        <mat-icon>bar_chart</mat-icon>
+        <span>Financeiro</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[6]}" >keyboard_arrow_down</mat-icon>
       </a>
 
-      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[4]}">
-        <li>
-          <a>NFe</a>
-        </li>
-        <li>
-          <a>NFCe</a>
-        </li>
-        <li routerLink="/nfe-manifest" routerLinkActive="active">
-          <a>
-            <div class="border-active"></div>
-            <span>Manifesto</span>
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[6]}">
+        <li class="menu-show" [ngClass]="{'show': menuShow[7]}">
+          <a (click)="menuShow[7] = !menuShow[7]">
+            <mat-icon>games</mat-icon>
+            <span>Controle</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[7]}" >keyboard_arrow_down</mat-icon>
           </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[7]}">
+            <li routerLink="/bank" routerLinkActive="active">
+              <a>
+                <mat-icon>account_balance</mat-icon>
+                <div class="border-active"></div>
+                <span>Conta</span>
+              </a>
+            </li>
+            <li routerLink="/bill-payment" routerLinkActive="active">
+              <a>
+                <mat-icon>receipt</mat-icon>
+                <div class="border-active"></div>
+                <span>Contas a Pagar</span>
+              </a>
+            </li>
+            <li routerLink="/bill-receivement" routerLinkActive="active">
+              <a>
+                <mat-icon>price_check</mat-icon>
+                <div class="border-active"></div>
+                <span>Contas a Receber</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-show" [ngClass]="{'show': menuShow[8]}">
+          <a (click)="menuShow[8] = !menuShow[8]">
+            <mat-icon>library_add</mat-icon>
+            <span>Cadastros</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[8]}" >keyboard_arrow_down</mat-icon>
+          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[8]}">
+            <li routerLink="/category" routerLinkActive="active">
+              <a>
+                <mat-icon>category</mat-icon>
+                <div class="border-active"></div>
+                <span>Categorias</span>
+              </a>
+            </li>
+            <li routerLink="/cost-center" routerLinkActive="active">
+              <a>
+                <mat-icon>align_vertical_center</mat-icon>
+                <div class="border-active"></div>
+                <span>Centro de custo</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[9]}">
+      <a (click)="menuShow[9] = !menuShow[9]">
+        <mat-icon>receipt</mat-icon>
+        <span>Fiscal</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[9]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[9]}">
+        <li class="menu-show" [ngClass]="{'show': menuShow[10]}">
+          <a (click)="menuShow[10] = !menuShow[10]">
+            <mat-icon>games</mat-icon>
+            <span>Controle</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[10]}" >keyboard_arrow_down</mat-icon>
+          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[10]}">
+            <li routerLink="/nfe" routerLinkActive="active">
+              <a>
+                <mat-icon>text_snippet</mat-icon>
+                <div class="border-active"></div>
+                <span>NF-e</span>
+              </a>
+            </li>
+            <li routerLink="/nfce" routerLinkActive="active">
+              <a>
+                <mat-icon>receipt</mat-icon>
+                <div class="border-active"></div>
+                <span>NFC-e</span>
+              </a>
+            </li>
+            <li routerLink="/purchase-note" routerLinkActive="active">
+              <a>
+                <mat-icon>attach_money</mat-icon>
+                <div class="border-active"></div>
+                <span>Notas de compras</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-show" [ngClass]="{'show': menuShow[11]}">
+          <a (click)="menuShow[11] = !menuShow[11]">
+            <mat-icon>library_add</mat-icon>
+            <span>Cadastros</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[11]}" >keyboard_arrow_down</mat-icon>
+          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[11]}">
+            <li routerLink="/people" routerLinkActive="active">
+              <a>
+                <mat-icon>people</mat-icon>
+                <div class="border-active"></div>
+                <span>Pessoas</span>
+              </a>
+            </li>
+            <li routerLink="/nfe-nature-operation" routerLinkActive="active">
+              <a>
+                <mat-icon>dashboard_customize</mat-icon>
+                <div class="border-active"></div>
+                <span>Natureza de Operação</span>
+              </a>
+            </li>
+            <li routerLink="/nfe-taxation" routerLinkActive="active">
+              <a>
+                <mat-icon>balance</mat-icon>
+                <div class="border-active"></div>
+                <span>Tributação</span>
+              </a>
+            </li>
+            <li routerLink="/nfe-manifest" routerLinkActive="active">
+              <a>
+                <mat-icon>vertical_split</mat-icon>
+                <div class="border-active"></div>
+                <span>Manifesto</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[12]}">
+      <a (click)="menuShow[12] = !menuShow[12]">
+        <mat-icon>commute</mat-icon>
+        <span>Transporte</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[12]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[12]}">
+        <li class="menu-show" [ngClass]="{'show': menuShow[13]}">
+          <a (click)="menuShow[13] = !menuShow[13]">
+            <mat-icon>games</mat-icon>
+            <span>Controle</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[13]}" >keyboard_arrow_down</mat-icon>
+          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[13]}">
+            <li routerLink="/cte" routerLinkActive="active">
+              <a>
+                <mat-icon>text_snippet</mat-icon>
+                <div class="border-active"></div>
+                <span>CT-e</span>
+              </a>
+            </li>
+            <li routerLink="/mdfe" routerLinkActive="active">
+              <a>
+                <mat-icon>receipt</mat-icon>
+                <div class="border-active"></div>
+                <span>MDF-e</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-show" [ngClass]="{'show': menuShow[14]}">
+          <a (click)="menuShow[14] = !menuShow[14]">
+            <mat-icon>library_add</mat-icon>
+            <span>Cadastros</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[14]}" >keyboard_arrow_down</mat-icon>
+          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[14]}">
+            <li routerLink="/transport-route" routerLinkActive="active">
+              <a>
+                <mat-icon>route</mat-icon>
+                <div class="border-active"></div>
+                <span>Rotas</span>
+              </a>
+            </li>
+            <li routerLink="/transport-insurance" routerLinkActive="active">
+              <a>
+                <mat-icon>car_crash</mat-icon>
+                <div class="border-active"></div>
+                <span>Seguros</span>
+              </a>
+            </li>
+            <li routerLink="/transport-vehicle" routerLinkActive="active">
+              <a>
+                <mat-icon>directions_car</mat-icon>
+                <div class="border-active"></div>
+                <span>Veículos</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[15]}">
+      <a (click)="menuShow[15] = !menuShow[15]">
+        <mat-icon>network_check</mat-icon>
+        <span>Conexão</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[15]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[15]}">
+        <li class="menu-show" [ngClass]="{'show': menuShow[16]}">
+          <a (click)="menuShow[16] = !menuShow[16]">
+            <mat-icon>games</mat-icon>
+            <span>Controle</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[16]}" >keyboard_arrow_down</mat-icon>
+          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[16]}">
+            <li routerLink="/post" routerLinkActive="active">
+              <a>
+                <mat-icon>sensors</mat-icon>
+                <div class="border-active"></div>
+                <span>Transmissão</span>
+              </a>
+            </li>
+            <li routerLink="/chat" routerLinkActive="active">
+              <a>
+                <mat-icon>chat</mat-icon>
+                <div class="border-active"></div>
+                <span>Chat</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="menu-show" [ngClass]="{'show': menuShow[17]}">
+          <a (click)="menuShow[17] = !menuShow[17]">
+            <mat-icon>library_add</mat-icon>
+            <span>Cadastros</span>
+            <mat-icon [ngClass]="{'icon-show': menuShow[17]}" >keyboard_arrow_down</mat-icon>
+          </a>
+
+          <ul class="menu-1" [ngClass]="{'ul-show': menuShow[17]}">
+            <li routerLink="/contact" routerLinkActive="active">
+              <a>
+                <mat-icon>assignment_ind</mat-icon>
+                <div class="border-active"></div>
+                <span>Contatos</span>
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </li>

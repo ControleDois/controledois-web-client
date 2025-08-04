@@ -7,6 +7,9 @@ import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PostService } from 'src/app/shared/services/post.service';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 
 @Component({
   selector: 'app-post-form',
@@ -48,6 +51,50 @@ export class PostFormComponent implements OnInit {
     validation: true,
     paramsArray: [],
   };
+
+  @Output() public pageHeader: PageHeader = {
+    title: `Tributação`,
+    description: 'Cadastro de Tributação',
+    button: {
+      text: 'Voltar',
+      routerLink: '/post',
+      icon: 'arrow_back',
+    },
+  };
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+        navigation: false,
+      }
+    ]
+  }
+
+  @Output() public navigation: BasicFormNavigation = {
+    items: [
+      { text: 'Dados da Transmissão', index: 0, icon: 'info' },
+      { text: 'Contatos', index: 1, icon: 'info' },
+    ],
+    selectedItem: 0
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -150,5 +197,19 @@ export class PostFormComponent implements OnInit {
   removeContact(index: any): void {
     this.messages.removeAt(index);
     this.contactsOutPut.splice(index, 1);
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
   }
 }

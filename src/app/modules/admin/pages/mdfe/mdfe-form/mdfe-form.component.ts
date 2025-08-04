@@ -225,6 +225,20 @@ export class MdfeFormComponent implements OnInit {
   @Output() public navigationButtons: BasicFormButtons = {
     buttons: [
       {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
         text: 'Salvar',
         icon: 'save',
         action: () => this.save(),
@@ -458,5 +472,19 @@ export class MdfeFormComponent implements OnInit {
 
   getProdutsDocument(index: any): FormArray {
     return this.documents.at(index).get('products') as FormArray;
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
   }
 }

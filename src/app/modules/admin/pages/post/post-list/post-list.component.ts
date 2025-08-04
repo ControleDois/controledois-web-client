@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,17 +6,19 @@ import { catchError, finalize, map, merge, tap, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PostService } from 'src/app/shared/services/post.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-post-list',
   templateUrl: './post-list.component.html',
 })
 export class PostListComponent implements OnInit {
-
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
   }
+
   public displayedColumns: string[] = [
     'title',
     'actions'
@@ -27,6 +29,17 @@ export class PostListComponent implements OnInit {
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   public sort!: MatSort;
+  @Output() search = new FormControl('');
+
+  @Output() public pageHeader: PageHeader = {
+    title: 'Transmissões',
+    description: 'Listagem de transmissões.',
+    button: {
+      text: 'Nova Transmissão',
+      routerLink: '/post/new',
+      icon: 'add',
+    },
+  };
 
   constructor(
     private postService: PostService,

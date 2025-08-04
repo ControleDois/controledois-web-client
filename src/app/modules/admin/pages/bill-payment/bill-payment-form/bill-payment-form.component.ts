@@ -172,10 +172,25 @@ export class BillPaymentFormComponent implements OnInit {
   @Output() public navigationButtons: BasicFormButtons = {
     buttons: [
       {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
         text: 'Salvar',
         icon: 'save',
         action: () => this.save(false),
         class: 'c2-btn c2-btn-green',
+        navigation: false
       },
     ]
   }
@@ -279,6 +294,20 @@ export class BillPaymentFormComponent implements OnInit {
       const netTotal = (amount - discount) + fees;
 
       this.myForm.controls['bill_value'].setValue(parseFloat(netTotal.toString()).toFixed(2));
+    }
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
     }
   }
 }
