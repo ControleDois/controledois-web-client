@@ -115,6 +115,7 @@ export class TransportRouteFormComponent implements OnInit {
         icon: 'save',
         action: () => this.save(),
         class: 'c2-btn c2-btn-green',
+        navigation: false
       }
     ]
   }

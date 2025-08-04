@@ -64,6 +64,12 @@ export class ApiService {
         return this.http.delete(
           `${environment.api}/${url}?companyId=${this.storageAuth.company.id}`, this.getHttpHeaders()
         );
+      case 'post-token-no-company':
+        return this.http.post(
+          `${environment.api}/${url}`,
+          body,
+          this.getHttpHeaders()
+        );
       default:
         return this.http.get('', body);
     }

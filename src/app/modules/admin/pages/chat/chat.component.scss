@@ -1,6 +1,6 @@
 .dialogs {
   border-right: 1px solid #c9d3dd;
-  width: 350px;
+  width: 450px;
   padding: 10px;
 
   .list::-webkit-scrollbar {
@@ -18,7 +18,7 @@
 
   .list {
     margin-top: 20px;
-    max-height: 400px;
+    max-height: calc(100vh - 220px);
     overflow: auto;
     overflow-x: hidden;
     width: 100%;
@@ -107,7 +107,7 @@
   .messages {
     flex: 1;
     display: flex;
-    max-height: 400px;
+    max-height: calc(100vh - 216px);
     position: relative;
 
     .message-left {
@@ -157,6 +157,18 @@
       margin-right: 10px;
       margin-top: 10px;
       position: relative;
+
+      .message-footer-me{
+        position: absolute;
+        top: 70% !important;
+        margin: 0 20px 0 0;
+      }
+
+      .message-footer-from{
+        position: absolute;
+        top: 100%;
+        margin: 0 0 0 20px;
+      }
 
       .line-dialog {
         position: absolute;
@@ -238,4 +250,109 @@
       color: #9e9e9e;
     }
   }
+
+  .dialog-start {
+    padding: 10px;
+    background-color: rgb(247, 247, 247);
+    border-top: 1px solid #c9d3dd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.time-line {
+  position: absolute;
+  height: calc(100% - 60px);
+  padding: 2px;
+  background: var(--primary-color);
+  left: 10px;
+  top: 40px;
+}
+
+.time-line-end {
+  background: var(--color-fifth) !important;
+}
+
+.time-line-end-disregard {
+  background: #f65125 !important;
+}
+
+.bgChat {
+  background-image: url("/assets/bg-chat.png");
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0.06;
+}
+
+.cotainer-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text-timeline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  height: 35px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+
+  span {
+    color: #fff;
+  }
+}
+
+.circle-timeline {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: 5px solid #ddd;
+  margin-left: 2px;
+  position: relative;
+  top: 57px;
+}
+
+.circle-timeline-bottom {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: 5px solid #ddd;
+  margin-left: 2px;
+  position: relative;
+  top: -10px;
+}
+
+.circle-timeline-disregard {
+  background-color: #f65125 !important;
+}
+
+.filter-chips {
+  margin: 15px 0 10px 0;
+
+  mat-chip {
+    cursor: pointer;
+  }
+
+  .selected-chip {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+  }
+}
+
+.mat-badge-content {
+  color: #fff;
+  background: #525255;
+}
+
+.viewedMessage {
+  color: var(--primary-color);
 }

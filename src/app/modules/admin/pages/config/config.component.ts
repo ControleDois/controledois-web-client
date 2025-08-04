@@ -508,7 +508,7 @@ export class ConfigComponent implements OnInit {
       map((res) => {
         console.log(res);
         this.dialog.open(DialogWhatsappConnectComponent, {
-          data: { id: whatsappId, qr: res.qr },
+          data: { id: whatsappId, qr: res.qrcode },
         });
       })
     ).subscribe();

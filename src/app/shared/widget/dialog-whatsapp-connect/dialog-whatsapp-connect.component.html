@@ -2,5 +2,7 @@
   <h1>ue</h1>
   <p>{{data?.id}}</p>
 
-  <ngx-qrcode [value]="data?.qr"></ngx-qrcode>
+  <img [src]="data?.qr" alt="QR Code Image" class="qr-image" />
+
+  <!-- <ngx-qrcode [value]="data?.qr"></ngx-qrcode> -->
 </div>
