@@ -53,8 +53,8 @@ export class PostFormComponent implements OnInit {
   };
 
   @Output() public pageHeader: PageHeader = {
-    title: `Tributação`,
-    description: 'Cadastro de Tributação',
+    title: `Transmissão de Mensagem`,
+    description: 'Cadastre uma nova transmissão de mensagem',
     button: {
       text: 'Voltar',
       routerLink: '/post',

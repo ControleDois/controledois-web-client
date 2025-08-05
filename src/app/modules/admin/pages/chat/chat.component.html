@@ -30,7 +30,12 @@
         <ul class="list">
           <li *ngFor="let dialog of getSelectedTabClass()" (click)="showDialog(dialog.id)">
             <div class="avatar">
-              <img src="assets/avatar.jpg">
+              <img [src]="
+                  dialog?.contact?.file_url
+                    ? dialog.contact.file_url
+                    : 'assets/avatar.jpg'
+                "
+                onerror="this.src='assets/avatar.jpg';"/>
             </div>
 
             <div class="info">
@@ -44,7 +49,12 @@
       <div class="chatOn" *ngIf="dialogSelected" >
         <div class="contact">
           <div class="avatar">
-            <img src="assets/avatar.jpg">
+            <img [src]="
+                  dialogSelected?.contact?.file_url
+                    ? dialogSelected.contact.file_url
+                    : 'assets/avatar.jpg'
+                "
+                onerror="this.src='assets/avatar.jpg';"/>
           </div>
 
           <div class="info">
@@ -78,7 +88,22 @@
               <div class="line-dialog"></div>
 
               <div class="avatar">
-                <img src="assets/avatar.jpg">
+                <img [src]="
+                  message?.contact?.file_url
+                    ? message.contact.file_url
+                    : 'assets/avatar.jpg'
+                "
+                onerror="this.src='assets/avatar.jpg';" *ngIf="!message.from_me" />
+
+
+                <img  [src]="
+                message.user
+                  ? message?.user?.file_url
+                    ? message?.user.file_url
+                    : 'assets/avatar.jpg'
+                  : 'assets/avatar.jpg'
+              "
+              onerror="this.src='assets/avatar.jpg';" *ngIf="message.from_me" />
               </div>
 
               <div class="info">
@@ -96,8 +121,8 @@
               <div class="message-footer-from" [ngClass]="{'message-footer-me': message.from_me}">
                 <small class="text-muted">
                   {{
-                  message.people
-                  ? message.people.name + " às "
+                  message.contact
+                  ? message.contact.name + " às "
                   : message.user
                   ? message.user.name + " às "
                   : "Bot"
