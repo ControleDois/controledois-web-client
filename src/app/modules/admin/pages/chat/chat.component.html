@@ -39,8 +39,39 @@
             </div>
 
             <div class="info">
-              <h2>{{dialog.contact.name}}</h2>
-              <p>{{ (dialog.messages.length > 0 ? maxBodyMessage(dialog.messages[0].body, 32) : '')}}</p>
+              <div class="details-name-timer">
+                <span>{{ libraryService.getMaxString(dialog.contact.name, 32) }}</span>
+                <i>{{ dialog.created_at ? updateDate(dialog.created_at) : '' }}</i>
+              </div>
+              <div class="body-no-ready">
+                <span [innerHTML]="getLastInteration(dialog)?.last_body"
+                  *ngIf="getLastInteration(dialog)?.last_type == 0"></span>
+
+                <span *ngIf="getLastInteration(dialog)?.last_type == 7">
+                  <mat-icon>perm_phone_msg</mat-icon><strong>Chamada de voz não atendida.</strong>
+                </span>
+                <span *ngIf="getLastInteration(dialog)?.last_type == 1">
+                  <mat-icon>image</mat-icon><strong>imagem</strong>
+                </span>
+                <span *ngIf="getLastInteration(dialog)?.last_type == 5">
+                  <mat-icon>play_circle_outline</mat-icon><strong>video</strong>
+                </span>
+                <span *ngIf="getLastInteration(dialog)?.last_type == [2, 4] ">
+                  <mat-icon>audiotrack</mat-icon><strong>audio</strong>
+                </span>
+                <span *ngIf="getLastInteration(dialog)?.last_type == 3">
+                  <mat-icon>attach_file</mat-icon><strong>documeto</strong>
+                </span>
+                <span *ngIf="getLastInteration(dialog)?.last_type == 6">
+                  <mat-icon>map</mat-icon><strong>localização</strong>
+                </span>
+                <span *ngIf="getLastInteration(dialog)?.last_type == 8">
+                  <mat-icon>contact_phone</mat-icon><strong>contato</strong>
+                </span>
+                <aside *ngIf="dialog.messages_count > 0">
+                  <strong>{{ dialog.messages_count }}</strong>
+                </aside>
+              </div>
             </div>
           </li>
         </ul>
@@ -59,7 +90,7 @@
 
           <div class="info">
             <h2>{{dialogSelected.contact.name}}</h2>
-            <p>Ultima mensagem as ...</p>
+            <p>{{ getLastInteration(dialogSelected)?.last_date }}</p>
           </div>
         </div>
 

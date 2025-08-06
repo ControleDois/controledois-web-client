@@ -5,6 +5,7 @@ import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
+import { LibraryService } from 'src/app/shared/services/library.service';
 import { WebsocketService } from 'src/app/shared/services/websocket.service';
 
 @Component({
@@ -40,6 +41,7 @@ export class ChatComponent implements OnInit {
     private ws: WebsocketService,
     private datePipe: DatePipe,
     private dropboxService: DropboxService,
+    public libraryService: LibraryService
   ) { }
 
   ngOnInit(): void {
@@ -360,6 +362,34 @@ export class ChatComponent implements OnInit {
         return 'done_all';
       default:
         return 'error';
+    }
+  }
+
+  getLastInteration(dialog: any): any {
+    // let messageContact = dialog.messages.filter(
+    //   (message) => message.from_me === false
+    // );
+
+    if (dialog && dialog.messages.length > 0) {
+      const message = dialog.messages[dialog.messages.length - 1];
+
+      console.log('Ultima mensagem:', message);
+      console.log('Ultima mensagem data:', dialog.messages[dialog.messages.length]);
+
+
+      return {
+        last_date: `Última mensagem enviada às ${this.updateDate(
+          message.created_at
+        )}`,
+        last_body: this.libraryService.getMaxString(message.body, 32),
+        last_type: message.type
+      }
+    } else {
+      return {
+        last_date: `Sem mensagens`,
+        last_body: `Nenhuma mensagem enviada ainda.`,
+        last_type: 1
+      }
     }
   }
 }
