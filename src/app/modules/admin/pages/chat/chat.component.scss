@@ -87,6 +87,34 @@
             color: #777777;
             font-style: italic;
             font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            mat-icon {
+              font-size: 22px;
+              margin: 0 !important;
+            }
+          }
+
+          aside {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 16px;
+            height: 16px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+
+            strong {
+              color: #fff;
+              font-size: 11px;
+            }
+          }
+
+          mat-icon {
+            font-size: 16px;
+            margin-right: 5px;
           }
         }
       }

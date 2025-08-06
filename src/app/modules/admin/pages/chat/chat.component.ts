@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
@@ -36,11 +36,18 @@ export class ChatComponent implements OnInit {
 
   public audio: HTMLAudioElement | null = null;
 
+  $player?: HTMLAudioElement;
+
+  @ViewChild('notification') set playerRef(ref: ElementRef<HTMLAudioElement>) {
+    this.$player = ref.nativeElement;
+  }
+
   constructor(
     private dialogService: DialogService,
     private ws: WebsocketService,
     private datePipe: DatePipe,
     private dropboxService: DropboxService,
+    private cdr: ChangeDetectorRef,
     public libraryService: LibraryService
   ) { }
 
@@ -60,7 +67,6 @@ export class ChatComponent implements OnInit {
     // Inscreve-se para receber mensagens
     this.messageSubscription = this.ws.getMessage().subscribe((response) => {
       if (response && response.type === 'whatsapp-message') {
-
         //Verifica se o dialog existe nos dialogs
         const dialogIndex = this.dialogs.findIndex(dialog => dialog.id === response.data.dialog.id);
         if (dialogIndex === -1 && response.data.dialog.status === 0) {
@@ -69,6 +75,14 @@ export class ChatComponent implements OnInit {
             ...response.data.dialog,
             messages: [response.data.message]
           });
+        } else if (dialogIndex >= 0 && response.data.dialog.status === 0) {
+          //se existir e status for 0 adiciona
+          this.dialogs[dialogIndex].messages.push(response.data.message)
+
+          //Necessário fazer som de notificação
+
+          //Ativa notificação
+          this.notification(response.data);
         }
 
         // Verifica se o diálogo está na lista de atendimentos
@@ -79,12 +93,32 @@ export class ChatComponent implements OnInit {
             ...response.data.dialog,
             messages: [response.data.message]
           });
+        } else if (attendingIndex >= 0 && response.data.dialog.status === 1) {
+          //se existir e status for 1 adiciona
+          this.dialogsAttending[attendingIndex].messages.push(response.data.message)
+
+          //Necessário fazer som de notificação
+
+          //Ativa notificação
+          this.notification(response.data);
         }
 
         if (this.dialogSelected && this.dialogSelected.id === response.data.dialog.id) {
           this.dialogSelected.messages.push(response.data.message);
           this.scroll();
         }
+
+        this.dialogs.sort((a, b) => {
+          const lastMessageA = a.messages[a.messages.length - 1]?.created_at ?? '';
+          const lastMessageB = b.messages[b.messages.length - 1]?.created_at ?? '';
+          return new Date(lastMessageB).getTime() - new Date(lastMessageA).getTime();
+        });
+
+        this.dialogsAttending.sort((a, b) => {
+          const lastMessageA = a.messages[a.messages.length - 1]?.created_at ?? '';
+          const lastMessageB = b.messages[b.messages.length - 1]?.created_at ?? '';
+          return new Date(lastMessageB).getTime() - new Date(lastMessageA).getTime();
+        });
 
         this.sumDialogsCount();
       }
@@ -138,6 +172,11 @@ export class ChatComponent implements OnInit {
         { param: 'status', value: '0' }
       ]).subscribe((response) => {
         this.dialogs = response.data;
+        this.dialogs.sort((a, b) => {
+          const lastMessageA = a.messages[a.messages.length - 1]?.created_at ?? '';
+          const lastMessageB = b.messages[b.messages.length - 1]?.created_at ?? '';
+          return new Date(lastMessageB).getTime() - new Date(lastMessageA).getTime();
+        });
         this.sumDialogsCount();
       });
 
@@ -146,6 +185,11 @@ export class ChatComponent implements OnInit {
         { param: 'status', value: '1' }
       ]).subscribe((response) => {
         this.dialogsAttending = response.data;
+        this.dialogsAttending.sort((a, b) => {
+          const lastMessageA = a.messages[a.messages.length - 1]?.created_at ?? '';
+          const lastMessageB = b.messages[b.messages.length - 1]?.created_at ?? '';
+          return new Date(lastMessageB).getTime() - new Date(lastMessageA).getTime();
+        });
         this.sumDialogsCount();
       });
 
@@ -165,14 +209,16 @@ export class ChatComponent implements OnInit {
   }
 
   showDialog(id: string): void {
+
     //Se o dialog já estiver selecionado, não faz nada
     if (this.dialogSelected && this.dialogSelected.id === id) {
       return;
     }
 
     this.loadingFull.active = true;
+    this.cdr.detectChanges();
+
     this.dialogService.show(id).subscribe((response) => {
-      console.log('Dialog selecionado:', response);
       this.dialogSelected = response;
       this.scroll();
       this.loadingFull.active = false;
@@ -366,29 +412,89 @@ export class ChatComponent implements OnInit {
   }
 
   getLastInteration(dialog: any): any {
-    // let messageContact = dialog.messages.filter(
-    //   (message) => message.from_me === false
-    // );
-
     if (dialog && dialog.messages.length > 0) {
-      const message = dialog.messages[dialog.messages.length - 1];
+      // Ordena as mensagens pelo campo "code"
+      const sortedMessages = [...dialog.messages].sort((a, b) => a.code - b.code);
 
-      console.log('Ultima mensagem:', message);
-      console.log('Ultima mensagem data:', dialog.messages[dialog.messages.length]);
+      // Pega a última mensagem com maior "code"
+      const message = sortedMessages[sortedMessages.length - 1];
 
+      // Se o dialogo for de grupo
+      if (dialog.contact.is_group) {
+        const contactName = message.contact
+          ? message.contact.name
+          : message.user
+          ? message.user.name
+          : "Bot";
 
-      return {
-        last_date: `Última mensagem enviada às ${this.updateDate(
-          message.created_at
-        )}`,
-        last_body: this.libraryService.getMaxString(message.body, 32),
-        last_type: message.type
+        return {
+          last_date: `${this.updateDate(message.created_at)}`,
+          last_body: `${contactName}: ${this.libraryService.getMaxString(message.body, 32)}`,
+          last_type: message.type
+        };
+      } else {
+        return {
+          last_date: `${this.updateDate(message.created_at)}`,
+          last_body: this.libraryService.getMaxString(message.body, 32),
+          last_type: message.type
+        };
       }
     } else {
       return {
         last_date: `Sem mensagens`,
         last_body: `Nenhuma mensagem enviada ainda.`,
         last_type: 1
+      };
+    }
+  }
+
+  getUnreadCount(dialog: any): number {
+    if (!dialog || !dialog.messages || dialog.messages.length === 0) {
+      return 0;
+    }
+
+    let count = 0;
+
+    // Percorre de trás para frente
+    for (let i = dialog.messages.length - 1; i >= 0; i--) {
+      const message = dialog.messages[i];
+
+      if (message.from_me) {
+        // Parou no primeiro envio seu
+        break;
+      }
+
+      count++;
+    }
+
+    return count;
+  }
+
+  notification(notification: any): void {
+    let body = notification.message.body;
+    if (notification.message.type !== 0) {
+      body = 'Enviou um documento';
+    }
+
+    if ((this.dialogSelected && this.dialogSelected.id !== notification.dialog.id) || !this.dialogSelected) {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission();
+      } else {
+        var notif = new Notification(notification.message?.contact?.name || '', {
+          icon: notification.message?.contact?.file_url || '',
+          body,
+        });
+        notif.onclick = () => {
+          window.focus();
+          setTimeout(() => {
+            this.showDialog(notification.dialog.id);
+          }, 500);
+        };
+      }
+
+      if (this.$player) {
+        this.$player.currentTime = 0.1;
+        this.$player.play();
       }
     }
   }
