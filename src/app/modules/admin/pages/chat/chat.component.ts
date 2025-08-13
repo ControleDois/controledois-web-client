@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, Output, ViewChild } f
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { AudioRecorderService } from 'src/app/shared/services/audio.record.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { LibraryService } from 'src/app/shared/services/library.service';
@@ -38,6 +39,8 @@ export class ChatComponent implements OnInit {
 
   $player?: HTMLAudioElement;
 
+  public isRecording = false;
+
   @ViewChild('notification') set playerRef(ref: ElementRef<HTMLAudioElement>) {
     this.$player = ref.nativeElement;
   }
@@ -48,7 +51,8 @@ export class ChatComponent implements OnInit {
     private datePipe: DatePipe,
     private dropboxService: DropboxService,
     private cdr: ChangeDetectorRef,
-    public libraryService: LibraryService
+    public libraryService: LibraryService,
+    private audioService: AudioRecorderService
   ) { }
 
   ngOnInit(): void {
@@ -277,6 +281,20 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  closeDialog(): void {
+    this.loadingFull.active = true;
+    this.dialogService.closeDialog(this.dialogSelected.id).subscribe((response) => {
+      if (response){
+        //Remover dialogo da lista de aguardando atendimento
+        this.dialogsAttending = this.dialogsAttending.filter(dialog => dialog.id !== this.dialogSelected.id);
+        this.dialogSelected = null; // Limpa o diálogo selecionado
+        this.sumDialogsCount();
+      }
+
+      this.loadingFull.active = false;
+    });
+  }
+
   getStartedUser(): any {
     const user = this.dialogSelected.users.find(user => user.roles && user.roles.includes(0));
     return user ? user : null;
@@ -497,5 +515,20 @@ export class ChatComponent implements OnInit {
         this.$player.play();
       }
     }
+  }
+
+  async start() {
+    this.isRecording = true;
+    await this.audioService.startRecording();
+  }
+
+  async stopAndSend() {
+    this.isRecording = false;
+    const audioBlob = await this.audioService.stopRecording();
+
+    this.audioService.sendAudioToApi(audioBlob, this.dialogSelected.id).subscribe({
+      next: (res) => console.log('✅ Áudio enviado:', res),
+      error: (err) => console.error('❌ Erro ao enviar áudio:', err)
+    });
   }
 }

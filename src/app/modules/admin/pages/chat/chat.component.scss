@@ -132,6 +132,11 @@
     align-items: center;
     border-bottom: 1px solid #c9d3dd;
     padding: 5px 10px;
+    justify-content: space-between;
+
+    .contact-info {
+      display: flex;
+    }
 
     .avatar {
       img {

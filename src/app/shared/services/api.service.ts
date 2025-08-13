@@ -18,7 +18,7 @@ export class ApiService {
     this.storageAuth = this.storageService.getAuth();
   }
 
-  on(url: string, body: Object, method: string, params?: HttpParams): Observable<any> {
+  on(url: string, body: Object, method: string, params?: HttpParams, formData?: FormData): Observable<any> {
     this.storageAuth = this.storageService.getAuth();
 
     if (body?.hasOwnProperty('company_id')) {
@@ -70,6 +70,12 @@ export class ApiService {
           body,
           this.getHttpHeaders()
         );
+    case 'post-token-no-company-formdata':
+      return this.http.post(
+        `${environment.api}/${url}`,
+        formData,
+        this.getHttpHeaders()
+      );
       default:
         return this.http.get('', body);
     }
