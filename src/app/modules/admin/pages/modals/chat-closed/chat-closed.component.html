@@ -1,0 +1,30 @@
+<div class="container" style="padding: 0; margin: 0;">
+  <div class="page-content" style="height: 100%;">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <label class="label-w30">
+          <span class="field">Descrição do atendimento</span>
+          <textarea formControlName="description"></textarea>
+        </label>
+
+        <app-search-loading-unique [search]="searchPeople"></app-search-loading-unique>
+        <!-- <app-search-loading-unique [search]="searchClassification"></app-search-loading-unique> -->
+
+        <div class="label-group">
+          <label class="check label-w30">
+            <input type="checkbox" formControlName="transferred">
+            <span>Transferir atendimento</span>
+          </label>
+
+          <app-search-loading-unique *ngIf="myForm.value.transferred" class="label-w100" [search]="searchUser"></app-search-loading-unique>
+        </div>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

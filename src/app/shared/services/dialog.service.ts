@@ -59,8 +59,8 @@ export class DialogService {
     return this.apiService.on(`${this.resource}/${id}/disconsider-dialog`, '', 'post-token-no-company');
   }
 
-  closeDialog(id: string): Observable<any> {
-    return this.apiService.on(`${this.resource}/${id}/close-dialog`, '', 'post-token-no-company');
+  closeDialog(id: string, body: Object): Observable<any> {
+    return this.apiService.on(`${this.resource}/${id}/close-dialog`, body, 'post-token-no-company');
   }
 
   sendMessage(id: string, body: Object): Observable<any> {

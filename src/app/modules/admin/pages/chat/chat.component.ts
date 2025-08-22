@@ -1,13 +1,17 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
+import { Auth } from 'src/app/shared/interfaces/auth.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { AudioRecorderService } from 'src/app/shared/services/audio.record.service';
 import { DialogService } from 'src/app/shared/services/dialog.service';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { LibraryService } from 'src/app/shared/services/library.service';
+import { StorageService } from 'src/app/shared/services/storage.service';
 import { WebsocketService } from 'src/app/shared/services/websocket.service';
+import { ChatClosedComponent } from '../modals/chat-closed/chat-closed.component';
 
 @Component({
   selector: 'app-chat',
@@ -15,6 +19,7 @@ import { WebsocketService } from 'src/app/shared/services/websocket.service';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
+  public auth?: Auth;
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
@@ -52,8 +57,12 @@ export class ChatComponent implements OnInit {
     private dropboxService: DropboxService,
     private cdr: ChangeDetectorRef,
     public libraryService: LibraryService,
-    private audioService: AudioRecorderService
-  ) { }
+    private audioService: AudioRecorderService,
+    private storageService: StorageService,
+    private dialog: MatDialog,
+  ) {
+    this.auth = this.storageService.getAuth();
+  }
 
   ngOnInit(): void {
     this.search.valueChanges
@@ -70,7 +79,7 @@ export class ChatComponent implements OnInit {
 
     // Inscreve-se para receber mensagens
     this.messageSubscription = this.ws.getMessage().subscribe((response) => {
-      if (response && response.type === 'whatsapp-message') {
+      if (response && response.type === `whatsapp-message:${this.auth?.company.id}`) {
         //Verifica se o dialog existe nos dialogs
         const dialogIndex = this.dialogs.findIndex(dialog => dialog.id === response.data.dialog.id);
         if (dialogIndex === -1 && response.data.dialog.status === 0) {
@@ -92,12 +101,18 @@ export class ChatComponent implements OnInit {
         // Verifica se o diálogo está na lista de atendimentos
         const attendingIndex = this.dialogsAttending.findIndex(dialog => dialog.id === response.data.dialog.id);
         if (attendingIndex === -1 && response.data.dialog.status === 1) {
-          // Se não existir, adiciona o novo diálogo
-          this.dialogsAttending.push({
-            ...response.data.dialog,
-            messages: [response.data.message]
-          });
-        } else if (attendingIndex >= 0 && response.data.dialog.status === 1) {
+          //Verificar se o usuário está vinculado ao dialogo para mostra-lo
+          const userIndex = response.data.dialog.users.findIndex(user => user.user_id === this.auth?.user.people.id);
+
+          //Se o usuário estiver no dialogo
+          if (userIndex !== -1) {
+            // Adiciona o novo diálogo
+            this.dialogsAttending.push({
+              ...response.data.dialog,
+              messages: [response.data.message]
+            });
+          }
+        } else if (attendingIndex >= 0 && response.data.dialog.status === 1 && this.dialogSelected.id !== response.data.dialog.id) {
           //se existir e status for 1 adiciona
           this.dialogsAttending[attendingIndex].messages.push(response.data.message)
 
@@ -127,7 +142,7 @@ export class ChatComponent implements OnInit {
         this.sumDialogsCount();
       }
 
-      if (response && response.type === 'whatsapp-ack') {
+      if (response && response.type === `whatsapp-ack:${this.auth?.company.id}`) {
         if (this.dialogSelected && this.dialogSelected.id === response.data.dialog.id) {
           // Atualiza o status da mensagem no diálogo selecionado
           this.dialogSelected.messages = this.dialogSelected.messages.map(msg => {
@@ -142,23 +157,51 @@ export class ChatComponent implements OnInit {
         }
       }
 
-      if (response && response.type === 'dialog-start') {
+      //Mensagem de Dialogo inciado
+      if (response && response.type === `dialog-start:${this.auth?.company.id}`) {
+        // Remove o diálogo da lista de aguardando e adiciona na lista de atendendo
+        this.dialogs = this.dialogs.filter(dialog => dialog.id !== response.data.dialog.id);
+
+        //Verificar se o diálogo já está na lista de atendimentos
+        const attendingIndex = this.dialogsAttending.findIndex(dialog => dialog.id === response.data.dialog.id);
+
+        if (attendingIndex === -1 && this.dialogSelected?.id !== response.data.dialog.id) {
+          //Verificar se o usuário está vinculado ao dialogo para mostra-lo
+          const userIndex = response.data.dialog.users.findIndex(user => user.user_id === this.auth?.user.people.id);
+
+          //Se o usuário estiver no dialogo
+          if (userIndex !== -1) {
+            // Adiciona o novo diálogo
+            this.dialogsAttending.push({
+              ...response.data.dialog,
+              messages: [response.data.message]
+            })
+
+            // Atualiza o status do diálogo selecionado
+            if (this.dialogSelected && this.dialogSelected.id === response.data.dialog.id) {
+              console.log('oxi')
+              this.dialogSelected = {
+                ...response.data.dialog,
+              }
+
+              this.dialogSelected.messages.push(response.data.message);
+            }
+          }
+        }
+
+        this.sumDialogsCount();
+      }
+
+      //Mensagem de Dialogo desconciderado
+      if (response && response.type === `dialog-disconsider:${this.auth?.company.id}`) {
         // Atualiza o status do diálogo selecionado
-        if (this.dialogSelected && this.dialogSelected.id === response.data.id) {
-          //Nada a fazer no momento
+        if (this.dialogSelected && this.dialogSelected.id === response.data.dialogId) {
+          this.dialogSelected = null;
         }
 
         // Remove o diálogo da lista de aguardando e adiciona na lista de atendendo
-        this.dialogs = this.dialogs.filter(dialog => dialog.id !== response.data.id);
+        this.dialogs = this.dialogs.filter(dialog => dialog.id !== response.data.dialogId);
 
-        //Verificar se o diálogo já está na lista de atendimentos
-        const attendingIndex = this.dialogsAttending.findIndex(dialog => dialog.id === response.data.id);
-        if (attendingIndex === -1) {
-          this.dialogSelected = {
-            ...response.data.dialog,
-            messages: [response.data.message]
-          };
-        }
         this.sumDialogsCount();
       }
     });
@@ -186,7 +229,8 @@ export class ChatComponent implements OnInit {
 
     this.dialogService.index(this.search.value ? this.search.value : '',
       'name', 'name', '1', '100', [
-        { param: 'status', value: '1' }
+        { param: 'status', value: '1' },
+        { param: 'userId', value: this.auth?.user.people.id}
       ]).subscribe((response) => {
         this.dialogsAttending = response.data;
         this.dialogsAttending.sort((a, b) => {
@@ -249,7 +293,7 @@ export class ChatComponent implements OnInit {
 
     this.dialogService.sendMessage(this.dialogSelected.id, { body: message }).subscribe((response) => {
       if (response && response.data) {
-        console.log('Mensagem enviada:', response.data);
+        //
       }
     });
   }
@@ -259,8 +303,8 @@ export class ChatComponent implements OnInit {
     this.dialogService.startDialog(this.dialogSelected.id).subscribe((response) => {
       //remove dialog from waiting list and add to attending list
       this.dialogs = this.dialogs.filter(dialog => dialog.id !== this.dialogSelected.id);
-      this.dialogSelected.status = 1;
-      this.dialogsAttending.push(this.dialogSelected);
+      this.dialogSelected = response;
+      this.dialogsAttending.push(response);
       this.scroll();
       this.loadingFull.active = false;
       this.sumDialogsCount();
@@ -272,8 +316,11 @@ export class ChatComponent implements OnInit {
     this.dialogService.disconsiderDialog(this.dialogSelected.id).subscribe((response) => {
       if (response){
         //Remover dialogo da lista de aguardando atendimento
-        this.dialogs = this.dialogs.filter(dialog => dialog.id !== this.dialogSelected.id);
-        this.dialogSelected = null; // Limpa o diálogo selecionado
+        if (this.dialogSelected) {
+           this.dialogs = this.dialogs.filter(dialog => dialog.id !== this.dialogSelected.id);
+          this.dialogSelected = null; // Limpa o diálogo selecionado
+        }
+
         this.sumDialogsCount();
       }
 
@@ -282,16 +329,19 @@ export class ChatComponent implements OnInit {
   }
 
   closeDialog(): void {
-    this.loadingFull.active = true;
-    this.dialogService.closeDialog(this.dialogSelected.id).subscribe((response) => {
-      if (response){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '920px';
+    dialogConfig.maxHeight = '550px';
+    dialogConfig.data = this.dialogSelected.id;
+    this.dialog.open(ChatClosedComponent, dialogConfig).afterClosed().subscribe(res => {
+      if (res) {
         //Remover dialogo da lista de aguardando atendimento
         this.dialogsAttending = this.dialogsAttending.filter(dialog => dialog.id !== this.dialogSelected.id);
         this.dialogSelected = null; // Limpa o diálogo selecionado
         this.sumDialogsCount();
       }
-
-      this.loadingFull.active = false;
     });
   }
 

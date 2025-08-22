@@ -87,6 +87,7 @@ import { VehicleFormComponent } from './pages/vehicle/vehicle-form/vehicle-form.
 import { VehicleListComponent } from './pages/vehicle/vehicle-list/vehicle-list.component';
 import { BrandListComponent } from './pages/brand/brand-list/brand-list.component';
 import { BrandFormComponent } from './pages/brand/brand-form/brand-form.component';
+import { ChatClosedComponent } from './pages/modals/chat-closed/chat-closed.component';
 
 const appName = 'CTrix';
 
@@ -499,7 +500,8 @@ const routes: Routes = [
     VehicleFormComponent,
     VehicleListComponent,
     BrandListComponent,
-    BrandFormComponent
+    BrandFormComponent,
+    ChatClosedComponent
   ],
   imports: [
     CommonModule,

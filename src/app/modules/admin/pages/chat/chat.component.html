@@ -127,38 +127,40 @@
               <div></div>
             </div>
 
-            <li *ngFor="let message of dialogSelected.messages" [ngClass]="{'message-left': message.from_me}">
+            <li *ngFor="let message of dialogSelected.messages" >
               <div class="line-dialog"></div>
+              <div class="message-details" [ngClass]="{'message-left': message.from_me}">
 
-              <div class="avatar">
-                <img [src]="
-                  message?.contact?.file_url
-                    ? message.contact.file_url
+                <div class="avatar">
+                  <img [src]="
+                    message?.contact?.file_url
+                      ? message.contact.file_url
+                      : 'assets/avatar.jpg'
+                  "
+                  onerror="this.src='assets/avatar.jpg';" *ngIf="!message.from_me" />
+
+
+                  <img  [src]="
+                  message.user
+                    ? message?.user?.file_url
+                      ? message?.user.file_url
+                      : 'assets/avatar.jpg'
                     : 'assets/avatar.jpg'
                 "
-                onerror="this.src='assets/avatar.jpg';" *ngIf="!message.from_me" />
+                onerror="this.src='assets/avatar.jpg';" *ngIf="message.from_me" />
+                </div>
 
+                <div class="info">
+                  <p [innerHTML]="show_live_preview(message.body)" *ngIf="message.type == 0"></p>
 
-                <img  [src]="
-                message.user
-                  ? message?.user?.file_url
-                    ? message?.user.file_url
-                    : 'assets/avatar.jpg'
-                  : 'assets/avatar.jpg'
-              "
-              onerror="this.src='assets/avatar.jpg';" *ngIf="message.from_me" />
-              </div>
-
-              <div class="info">
-                <p [innerHTML]="show_live_preview(message.body)" *ngIf="message.type == 0"></p>
-
-                <img *ngIf="message.type == 1 && message.temporaryLink" [src]="message.temporaryLink" class="file-image">
-                <button mat-icon-button *ngIf="message.type == 1" (click)="getLinkPath(message)">
-                  <mat-icon>image</mat-icon>
-                </button>
-                <button mat-icon-button *ngIf="message.type == 2" (click)="getLinkPath(message)">
-                  <mat-icon>play_circle</mat-icon>
-                </button>
+                  <img *ngIf="message.type == 1 && message.temporaryLink" [src]="message.temporaryLink" class="file-image">
+                  <button mat-icon-button *ngIf="message.type == 1 && !message.temporaryLink" (click)="getLinkPath(message)">
+                    <mat-icon>image</mat-icon>
+                  </button>
+                  <button mat-icon-button *ngIf="message.type == 2" (click)="getLinkPath(message)">
+                    <mat-icon>play_circle</mat-icon>
+                  </button>
+                </div>
               </div>
 
               <div class="message-footer-from" [ngClass]="{'message-footer-me': message.from_me}">
