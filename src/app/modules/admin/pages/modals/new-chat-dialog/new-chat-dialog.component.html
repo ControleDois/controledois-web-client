@@ -1,0 +1,20 @@
+<div class="container" style="padding: 0; margin: 0;">
+  <div class="page-content" style="height: 100%;">
+    <app-page-header [header]="pageHeader"></app-page-header>
+
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+        <label class="label-w30">
+          <span class="field">Mensagem:</span>
+          <textarea formControlName="description"></textarea>
+        </label>
+
+        <app-search-loading-unique [search]="searchWhatsapp" *ngIf="!unicWhatsapp"></app-search-loading-unique>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

@@ -13,7 +13,7 @@ export class ContactService {
     private apiService: ApiService
   ) { }
 
-  index(search: string, sorteBy?: string, orderBy?: string, page?: number, limit?: number): Observable<any> {
+  index(search: string, sorteBy?: string, orderBy?: string, page?: string, limit?: string): Observable<any> {
     const params = new HttpParams()
       .set('search', search)
       .set('sortedBy', sorteBy || 'name')
@@ -30,6 +30,10 @@ export class ContactService {
 
   show(id: string): Observable<any> {
     return this.apiService.on(`${this.resource}/${id}`, '', 'get-token');
+  }
+
+  showDialog(id: string): Observable<any> {
+    return this.apiService.on(`${this.resource}/showDialogs/${id}`, '', 'get-token');
   }
 
   update(id: string, body: Object): Observable<any> {

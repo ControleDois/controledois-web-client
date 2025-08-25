@@ -4,7 +4,42 @@
     <div class="basic" style="height: calc(100vh - 90px);">
 
       <div class="dialogs">
-        <app-search-simple [search]="search"></app-search-simple>
+        <div class="dialogs-header">
+          <div class="title">
+            <h2>Conversas</h2>
+            <div class="actions">
+              <button mat-icon-button (click)="toggleConversation($event)" #btnConversations>
+                <mat-icon>edit_square</mat-icon>
+              </button>
+            </div>
+          </div>
+          <app-search-simple [search]="search"></app-search-simple>
+        </div>
+
+        <div class="new-conversation" [class.open]="showConversation" #conversations>
+          <div class="title">
+            <h3>Nova conversa</h3>
+            <app-search-simple [search]="searchContacts"></app-search-simple>
+          </div>
+
+          <ul>
+            <li *ngFor="let contact of contacts" (click)="showContactDialogs(contact.id)">
+              <div class="avatar">
+                <img [src]="
+                  contact?.file_url
+                    ? contact.file_url
+                    : 'assets/avatar.jpg'
+                "
+                onerror="this.src='assets/avatar.jpg';"/>
+              </div>
+
+              <div class="info">
+                <h4>{{ contact.name }}</h4>
+                <p>{{ libraryService.getMaxString(contact.description, 40) }}</p>
+              </div>
+            </li>
+          </ul>
+        </div>
 
         <div class="filter-chips">
           <mat-chip-list>
@@ -20,11 +55,11 @@
               Atendimento
             </mat-chip>
 
-            <mat-chip
+            <!-- <mat-chip
               [matBadge]="QtdDialogsGroups > 0 ? QtdDialogsGroups : null"
               [ngClass]="{'selected-chip': selectedTab === 2}" (click)="selectedTab = 2">
               Grupos
-            </mat-chip>
+            </mat-chip> -->
           </mat-chip-list>
         </div>
 
@@ -107,7 +142,6 @@
         </div>
 
         <div class="messages">
-          <div class="bgChat"></div>
           <ul id="messageScroll">
             <div class="cotainer-timeline">
               <div class="circle-timeline" [ngClass]="{
@@ -228,6 +262,128 @@
 
       <div class="ChatOff" *ngIf="!dialogSelected">
 
+      </div>
+
+      <div class="chatOn" *ngIf="!dialogSelected && contactSelected" >
+        <div class="contact">
+          <div class="contact-info">
+            <div class="avatar">
+              <img [src]="
+                    contactSelected?.file_url
+                      ? contactSelected.file_url
+                      : 'assets/avatar.jpg'
+                  "
+                  onerror="this.src='assets/avatar.jpg';"/>
+            </div>
+
+            <div class="info">
+              <h2>{{contactSelected.name}}</h2>
+              <!-- <p>Última mensagem enviada às {{ getLastInteration(dialogSelected)?.last_date }}</p> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="messages msg-contact" id="messageScroll">
+          <ul *ngFor="let dialog of contactSelected.dialogs">
+            <div class="cotainer-timeline">
+              <div class="circle-timeline" [ngClass]="{
+                  'circle-timeline-disregard':
+                    dialog.finalized_at && dialog.status === 3
+                }"></div>
+              <div class="text-timeline">
+                <span *ngIf="dialog.status == 3">Atendimento Desconsiderado por
+                  <strong>{{ getUserContactSelected(dialog, 1)?.people?.name }}</strong>
+                  às {{ updateDate(dialog.finalized_at) }}</span>
+
+                <span *ngIf="dialog.attendance_at && dialog.status !== 3">Atendimento Iniciado por
+                  <strong>{{getUserContactSelected(dialog, 0)?.people?.name}}</strong>
+                  às {{ updateDate(dialog.attendance_at) }}</span>
+                <span *ngIf="!dialog.attendance_at && dialog.status !== 3">Aguardando Atendimento</span>
+              </div>
+            </div>
+
+            <li *ngFor="let message of dialog.messages" >
+              <div class="line-dialog" [ngClass]="{'line-dialog-end-disregard': dialog.status === 3}" ></div>
+              <div class="message-details" [ngClass]="{'message-left': message.from_me}">
+
+                <div class="avatar">
+                  <img [src]="
+                    message?.contact?.file_url
+                      ? message.contact.file_url
+                      : 'assets/avatar.jpg'
+                  "
+                  onerror="this.src='assets/avatar.jpg';" *ngIf="!message.from_me" />
+
+
+                  <img  [src]="
+                  message.user
+                    ? message?.user?.file_url
+                      ? message?.user.file_url
+                      : 'assets/avatar.jpg'
+                    : 'assets/avatar.jpg'
+                "
+                onerror="this.src='assets/avatar.jpg';" *ngIf="message.from_me" />
+                </div>
+
+                <div class="info">
+                  <p [innerHTML]="show_live_preview(message.body)" *ngIf="message.type == 0"></p>
+
+                  <img *ngIf="message.type == 1 && message.temporaryLink" [src]="message.temporaryLink" class="file-image">
+                  <button mat-icon-button *ngIf="message.type == 1 && !message.temporaryLink" (click)="getLinkPath(message)">
+                    <mat-icon>image</mat-icon>
+                  </button>
+                  <button mat-icon-button *ngIf="message.type == 2" (click)="getLinkPath(message)">
+                    <mat-icon>play_circle</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="message-footer-from" [ngClass]="{'message-footer-me': message.from_me}">
+                <small class="text-muted">
+                  {{
+                  message.contact
+                  ? message.contact.name + " às "
+                  : message.user
+                  ? message.user.name + " às "
+                  : "Bot"
+                  }}
+                  {{
+                  !message.from_me
+                  ? updateDate(message.created_at)
+                  : updateDate(message.created_at)
+                  }}
+                  <mat-icon *ngIf="message.from_me"
+                    [ngClass]="{ viewedMessage: message.status == 3 }">
+                    {{ getStatusIconMessage(message.status) }}</mat-icon>
+                </small>
+              </div>
+            </li>
+
+            <div class="cotainer-timeline">
+              <div class="circle-timeline-bottom" [ngClass]="{
+                  'circle-timeline-disregard':
+                    dialog.finalized_at && dialog.status == 3
+                }"></div>
+              <div class="text-timeline">
+                <span *ngIf="dialog.status == 3">Atendimento Desconsiderado por
+                  <strong>{{getUserContactSelected(dialog, 1)?.people?.name}}</strong>
+                  às {{ updateDate(dialog.finalized_at) }}</span>
+
+                <span *ngIf="dialog.finalized_at && dialog.status == 2">Atendimento Finalizado por
+                  <strong>{{getUserContactSelected(dialog, 3)?.people?.name}}</strong>
+                  às {{ updateDate(dialog.finalized_at) }}</span>
+                <span *ngIf="!dialog.attendance_at && dialog.status !== 3">Aguardando Atendimento</span>
+              </div>
+              <div></div>
+            </div>
+          </ul>
+        </div>
+
+        <div class="dialog-start">
+          <button (click)="newDialog(contactSelected.id)" class="c2-btn c2-btn-blue" mat-button>
+            <mat-icon>rocket_launch</mat-icon>Iniciar Atendimento
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -63,6 +63,10 @@ export class DialogService {
     return this.apiService.on(`${this.resource}/${id}/close-dialog`, body, 'post-token-no-company');
   }
 
+  newDialog(id: string, body: Object): Observable<any> {
+    return this.apiService.on(`${this.resource}/${id}/new-dialog`, body, 'post-token-no-company');
+  }
+
   sendMessage(id: string, body: Object): Observable<any> {
     return this.apiService.on(`${this.resource}/${id}/send-message`, body, 'post-token-no-company');
   }

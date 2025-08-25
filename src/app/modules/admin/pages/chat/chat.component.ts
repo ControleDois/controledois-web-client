@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { debounceTime, distinctUntilChanged, map, Subscription } from 'rxjs';
@@ -12,6 +12,8 @@ import { LibraryService } from 'src/app/shared/services/library.service';
 import { StorageService } from 'src/app/shared/services/storage.service';
 import { WebsocketService } from 'src/app/shared/services/websocket.service';
 import { ChatClosedComponent } from '../modals/chat-closed/chat-closed.component';
+import { ContactService } from 'src/app/shared/services/contact.service';
+import { NewChatDialogComponent } from '../modals/new-chat-dialog/new-chat-dialog.component';
 
 @Component({
   selector: 'app-chat',
@@ -33,7 +35,12 @@ export class ChatComponent implements OnInit {
   public QtdDialogsAttending: number = 0;
   public QtdDialogsGroups: number = 0;
 
+  public contacts: any[] = [];
+
+  public contactSelected: any;
+
   @Output() search = new FormControl('');
+  @Output() searchContacts = new FormControl('');
 
   private messageSubscription!: Subscription;
   public scrollHeight: number = 0;
@@ -50,6 +57,27 @@ export class ChatComponent implements OnInit {
     this.$player = ref.nativeElement;
   }
 
+  public showConversation: boolean = false;
+  @ViewChild('conversations') conversations!: ElementRef;
+  @ViewChild('btnConversations') btnConversations!: ElementRef;
+
+  // Fecha quando clica fora
+  @HostListener('document:click', ['$event'])
+  clickFora(event: Event) {
+    if (!this.showConversation) return;
+
+    const clickTarget = event.target as HTMLElement;
+
+    const clicouNaLista =
+      this.conversations?.nativeElement?.contains(clickTarget);
+    const clicouNoBotao =
+      this.btnConversations?.nativeElement?.contains(clickTarget);
+
+    if (!clicouNaLista && !clicouNoBotao) {
+      this.showConversation = false;
+    }
+  }
+
   constructor(
     private dialogService: DialogService,
     private ws: WebsocketService,
@@ -60,6 +88,7 @@ export class ChatComponent implements OnInit {
     private audioService: AudioRecorderService,
     private storageService: StorageService,
     private dialog: MatDialog,
+    private contactService: ContactService
   ) {
     this.auth = this.storageService.getAuth();
   }
@@ -74,6 +103,16 @@ export class ChatComponent implements OnInit {
       })
     )
     .subscribe();
+
+    this.searchContacts.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        map(() => {
+          this.loadContacts();
+        })
+      )
+      .subscribe();
 
     this.load();
 
@@ -207,6 +246,12 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  toggleConversation(event: Event) {
+    event.stopPropagation(); // evita disparar o clique no documento
+    this.showConversation = !this.showConversation;
+    this.loadContacts();
+  }
+
   sumDialogsCount(): void {
     this.QtdDialogsWaiting = this.dialogs.length;
     this.QtdDialogsAttending = this.dialogsAttending.length;
@@ -241,6 +286,13 @@ export class ChatComponent implements OnInit {
         this.sumDialogsCount();
       });
 
+  }
+
+  loadContacts(): void {
+    this.contactService.index(this.searchContacts.value ? this.searchContacts.value : '',
+    'name', 'name', '1', '100').subscribe((response) => {
+      this.contacts = response.data;
+    });
   }
 
   getSelectedTabClass(): any[] {
@@ -308,6 +360,7 @@ export class ChatComponent implements OnInit {
       this.scroll();
       this.loadingFull.active = false;
       this.sumDialogsCount();
+      this.contactSelected = null;
     });
   }
 
@@ -345,8 +398,33 @@ export class ChatComponent implements OnInit {
     });
   }
 
+  newDialog(contactId: string): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '920px';
+    dialogConfig.maxHeight = '550px';
+    dialogConfig.data = contactId;
+    this.dialog.open(NewChatDialogComponent, dialogConfig).afterClosed().subscribe(res => {
+      if (res) {
+        //remove dialog from waiting list and add to attending list
+        this.dialogs = this.dialogs.filter(dialog => dialog.id !== res.id);
+        this.dialogSelected = res;
+        this.scroll();
+        this.loadingFull.active = false;
+        this.sumDialogsCount();
+        this.contactSelected = null;
+      }
+    });
+  }
+
   getStartedUser(): any {
     const user = this.dialogSelected.users.find(user => user.roles && user.roles.includes(0));
+    return user ? user : null;
+  }
+
+  getUserContactSelected(dialog: any, role: number): any {
+    const user = dialog.users.find(user => user.roles && user.roles.includes(role));
     return user ? user : null;
   }
 
@@ -579,6 +657,20 @@ export class ChatComponent implements OnInit {
     this.audioService.sendAudioToApi(audioBlob, this.dialogSelected.id).subscribe({
       next: (res) => console.log('✅ Áudio enviado:', res),
       error: (err) => console.error('❌ Erro ao enviar áudio:', err)
+    });
+  }
+
+  showContactDialogs(id: string): void {
+    this.loadingFull.active = true;
+    this.cdr.detectChanges();
+
+    this.contactSelected = this.contacts.find(contact => contact.id === id);
+    this.contactService.showDialog(id).subscribe((response) => {
+      this.showConversation = false;
+      this.dialogSelected = null;
+      this.contactSelected = response;
+      this.loadingFull.active = false;
+      this.scroll();
     });
   }
 }
