@@ -1,0 +1,11 @@
+.list {
+  margin: -15px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.deleted {
+  text-decoration: line-through;
+  color: var(--color-red);
+}

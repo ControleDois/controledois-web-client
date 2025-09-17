@@ -1,4 +1,4 @@
-import { throwError, map } from 'rxjs';
+import { throwError, map, interval } from 'rxjs';
 import { finalize, catchError } from 'rxjs';
 import { ConfigService } from './../../../../shared/services/config.service';
 import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
@@ -21,6 +21,8 @@ import { BasicFormButtons } from '../../interfaces/basic-form-buttons.interface'
 import { BasicFormNavigation } from '../../interfaces/basic-form-navigation.interface';
 import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
+import { IndexedDbService } from 'src/app/shared/services/indexed-db.service';
+import { ProductService } from 'src/app/shared/services/product.service';
 
 @Component({
   selector: 'app-config',
@@ -150,6 +152,7 @@ export class ConfigComponent implements OnInit {
       { text: 'Config. Nota', index: 4, icon: 'info' },
       { text: 'Shop', index: 5, icon: 'info' },
       { text: 'Config. Api', index: 6, icon: 'contacts' },
+      { text: 'PDV', index: 7, icon: 'contacts' },
     ],
     selectedItem: 0
   }
@@ -259,6 +262,30 @@ export class ConfigComponent implements OnInit {
     { name: '⦿ Lucro real', type: 7 },
   ];
 
+  //Dados para salvar no indexedDB do PDV
+  private currentPagePeople = 1;
+  private currentPageSale = 1;
+  private hasMorePagesPeople = true;
+  private hasMorePagesSale = true;
+
+  public progressProduct = {
+    page: 1,
+    hasMore: true,
+    intervalId: null as any,
+    progress: 0,
+    total: 0,
+    download: 0,
+  }
+
+  public progressPeople = {
+    page: 1,
+    hasMore: true,
+    intervalId: null as any,
+    progress: 0,
+    total: 0,
+    download: 0,
+  }
+
   constructor(
     private notificationService: NotificationService,
     private router: Router,
@@ -269,6 +296,8 @@ export class ConfigComponent implements OnInit {
     private storageService: StorageService,
     private dialogMessageService: DialogMessageService,
     private dropboxService: DropboxService,
+    private indexedDbService: IndexedDbService,
+    private productService: ProductService,
     public dialog: MatDialog
   ) {}
 
@@ -612,5 +641,142 @@ export class ConfigComponent implements OnInit {
     } else if (this.navigation.selectedItem >= this.navigation.items.length) {
       this.navigation.selectedItem = this.navigation.items.length - 1;
     }
+  }
+
+  startDownloadProducts(): void {
+    this.progressProduct.hasMore = true;
+    this.progressProduct.page = 1;
+    this.progressProduct.progress = 0;
+
+    //Ja inicia
+    this.updateProduct();
+
+    // Inicia o processo de atualização a cada 10 segundos
+    this.progressProduct.intervalId = setInterval(() => {
+      this.updateProduct();
+    }, 10000);
+  }
+
+  updateProduct(): void {
+    if (!this.progressProduct.hasMore) {
+      // Reinicia a busca desde o início se não houver mais páginas
+      this.progressProduct.page = 1;
+      this.progressProduct.hasMore = true;
+    }
+
+    this.productService.index(
+      '',
+      'name',
+      'name',
+      this.progressProduct.page,
+      100,
+    ).subscribe(res => {
+      this.progressProduct.total = res.meta.total;
+
+      // Atualiza a barra de progresso
+      this.progressProduct.progress = Math.min(100, ((this.progressProduct.page - 1) * 100) /  res.meta.total * 100);
+
+      if (res.data.length === 0) {
+        // Se a API retornar 0 registros, considera que chegou ao fim
+        this.progressProduct.hasMore = false;
+        clearInterval(this.progressProduct.intervalId);
+        return;
+      }
+
+      // Atualiza os dados no IndexedDB
+      this.indexedDbService.getAllData('products').then((existingData: any[]) => {
+        const existingIds = new Set(existingData.map((product: any) => product.id));
+
+        const newData = res.data.filter((product: any) => !existingIds.has(product.id));
+        const updatedData = newData.map((product: any) => {
+          const existingProduct = existingData.find((p: any) => p.id === product.id);
+          return existingProduct ? { ...existingProduct, ...product } : product;
+        });
+
+        //Verifica os produtos que não foram atualizados e deleta
+        // existingData.forEach((product: any) => {
+        //   if (!updatedData.find((p: any) => p.id === product.id)) {
+        //     this.indexedDbService.deleteData(product.id, 'products');
+        //   }
+        // });
+
+        this.indexedDbService.batchInsert(updatedData, 'products', updatedData.length);
+      });
+
+      // Avança para a próxima página
+      this.progressProduct.page++;
+
+      // Salva a página atual
+      this.progressProduct.download += res.data.length;
+    });
+  }
+
+  startDownloadPeople(): void {
+    this.progressPeople.hasMore = true;
+    this.progressPeople.page = 1;
+    this.progressPeople.progress = 0;
+
+    //Ja inicia
+    this.updatePeople();
+
+    // Inicia o processo de atualização a cada 10 segundos
+    this.progressPeople.intervalId = setInterval(() => {
+      this.updatePeople();
+    }, 10000);
+  }
+
+  updatePeople(): void {
+    if (!this.progressPeople.hasMore) {
+      // Reinicia a busca desde o início se não houver mais páginas
+      this.progressPeople.page = 1;
+      this.progressPeople.hasMore = true;
+    }
+
+    this.peopleService.index(
+      '',
+      'name',
+      'name',
+      String(this.progressPeople.page),
+      '100',
+      [{ param: 'roles', value: '{2}' }]
+    ).subscribe(res => {
+      this.progressPeople.total = res.meta.total;
+
+      // Atualiza a barra de progresso
+      this.progressPeople.progress = Math.min(100, ((this.progressPeople.page - 1) * 100) /  res.meta.total * 100);
+
+      if (res.data.length === 0) {
+        // Se a API retornar 0 registros, considera que chegou ao fim
+        this.progressPeople.hasMore = false;
+        clearInterval(this.progressPeople.intervalId);
+        return;
+      }
+
+      // Atualiza os dados no IndexedDB
+      this.indexedDbService.getAllData('people').then((existingData: any[]) => {
+        const existingIds = new Set(existingData.map((person: any) => person.id));
+
+        const newData = res.data.filter((person: any) => !existingIds.has(person.id));
+        const updatedData = newData.map((person: any) => {
+          const existingPerson = existingData.find((p: any) => p.id === person.id);
+          return existingPerson ? { ...existingPerson, ...person } : person;
+        });
+
+        // //Verifica os clientes que não foram atualizados e deleta
+        // existingData.forEach((person: any) => {
+        //   if (!updatedData.find((p: any) => p.id === person.id)) {
+        //     this.indexedDbService.deleteData(person.id, 'people');
+        //   }
+        // });
+
+        this.indexedDbService.batchInsert(updatedData, 'people', updatedData.length);
+      });
+
+      // Avança para a próxima página
+      this.progressPeople.page++;
+
+      // Salva a página atual
+      this.progressPeople.download += res.data.length;
+    });
   }
 }

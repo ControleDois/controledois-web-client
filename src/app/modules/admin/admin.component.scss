@@ -1,14 +1,12 @@
-.admin {
-  display: flex;
-  justify-content: space-between;
-}
-
 .admin-container {
-  width: calc(100% - 280px);
+  display: flex;
+  height: 100vh;
 }
 
 .admin-content {
   margin-top: 70px;
+  width: 100%;
+  overflow: auto;
 }
 
 @media (max-width: 62em) {

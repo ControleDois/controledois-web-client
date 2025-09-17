@@ -11,4 +11,9 @@ export class EncryptService {
   public static decrypt(value: string): string {
     return CryptoJS.AES.decrypt(value, EncryptService.key).toString(CryptoJS.enc.Utf8);
   }
+
+  public static generateMd5Id(value: string): string {
+    const hash = CryptoJS.MD5(value).toString();
+    return hash;
+  }
 }

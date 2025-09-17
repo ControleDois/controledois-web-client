@@ -1,0 +1,31 @@
+<div class="values">
+  <div class="value">
+    <span class="label">SubTotal (R$)</span>
+    <span class="amount">{{ values?.subtotal || 0 | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+
+  <div class="value">
+    <span class="label">Desconto (R$)</span>
+    <span class="amount">{{ values?.discount || 0 | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+
+  <div class="value">
+    <span class="label">Encargos (R$)</span>
+    <span class="amount">{{ values?.discount || 0 | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+
+  <div class="value active">
+    <span class="label">Total (R$)</span>
+    <span class="amount">{{ values?.total || 0 | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+</div>
+
+<div class="payments">
+  <div class="payment" *ngFor="let payment of payments">
+    <div class="info">
+      <img [src]="getPaymentImage(payment.form_payment)" />
+      <span>{{ getPaymentName(payment.form_payment) }}</span>
+    </div>
+    <span class="amount">{{ payment.amount | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+</div>

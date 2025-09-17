@@ -1,0 +1,21 @@
+<div class="payments">
+  <div class="payment" [ngClass]="{'active': selectedPayment === 1}">
+    <img src="assets/pdv/payments/1.png" />
+    <span>Dinheiro [ 1 ]</span>
+  </div>
+
+  <div class="payment" [ngClass]="{'active': selectedPayment === 2}">
+    <img src="assets/pdv/payments/2.png"  />
+    <span>Débito [ 2 ]</span>
+  </div>
+
+  <div class="payment" [ngClass]="{'active': selectedPayment === 3}">
+    <img src="assets/pdv/payments/3.png" />
+    <span>Crédito [ 3 ]</span>
+  </div>
+
+  <div class="payment" [ngClass]="{'active': selectedPayment === 4}">
+    <img src="assets/pdv/payments/4.png" />
+    <span>PIX [ 4 ]</span>
+  </div>
+</div>

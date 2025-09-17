@@ -1,0 +1,21 @@
+.values {
+  margin: -20px;
+}
+
+.value {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.5em;
+  font-weight: bold;
+  align-items: center;
+  padding: 20px;
+}
+
+.active {
+  background: var(--primary-color);
+  color: white;
+  padding: 20px;
+  .amount {
+    font-size: 2em;
+  }
+}

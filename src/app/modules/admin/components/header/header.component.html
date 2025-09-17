@@ -4,47 +4,39 @@
   </div>
 
   <nav [ngClass]="{'nav-on': menuMobileOn}">
-    <ul class="nav-ul">
+    <!-- <ul class="nav-ul">
       <li class="nav-ul-li nav-ul-li-mobile" (click)="menuMobileOn = !menuMobileOn"><a>
           <mat-icon>close</mat-icon>
         </a></li>
       <li class="nav-ul-li" (click)="menuMobileOn = !menuMobileOn"><a routerLink="/dash">Visão geral</a></li>
-    </ul>
+    </ul> -->
   </nav>
 
   <ul class="ul-config">
-    <li class="toggle">
-      <div class="toogle-theme">
-        <span>{{ auth.theme ? 'Modo escuro' : 'Modo claro'}}</span>
-        <div (click)="toggle()">
-          <mat-icon [ngClass]="{'active': !auth.theme}">light_mode</mat-icon>
-          <mat-icon [ngClass]="{'active': auth.theme}">dark_mode</mat-icon>
-        </div>
-      </div>
-    </li>
-    <li class="ul-config-li">
-      <a>
-        <mat-icon>person</mat-icon>
-      </a>
-      <ul>
-        <li><span>{{auth.user.people.name}}</span></li>
-        <li>
-          <a routerLink="/user">Usuários</a>
-        </li>
-        <li>
-          <a routerLink="/company">Empresas</a>
-        </li>
-        <li>
-          <a routerLink="/task">Tarefas</a>
-        </li>
-        <li>
-          <a routerLink="/configuration">Configuração</a>
-        </li>
-        <li>
-          <a (click)="logout()">Sair</a>
-        </li>
-      </ul>
-    </li>
-
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>person</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/user">
+        <mat-icon>groups</mat-icon>
+        <span>Usuários</span>
+      </button>
+      <button mat-menu-item routerLink="/company">
+        <mat-icon>domain</mat-icon>
+        <span>Empresas</span>
+      </button>
+      <button mat-menu-item routerLink="/task">
+        <mat-icon>task</mat-icon>
+        <span>Tarefas</span>
+      </button>
+      <button mat-menu-item routerLink="/configuration">
+        <mat-icon>settings</mat-icon>
+        <span>Configuração</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>door_back</mat-icon>
+        <span>Sair</span>
+      </button>
+    </mat-menu>
   </ul>
 </header>

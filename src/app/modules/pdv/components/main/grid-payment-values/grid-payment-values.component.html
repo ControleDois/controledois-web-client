@@ -1,0 +1,16 @@
+<div class="values">
+  <div class="value" style="background: #ddd; border-radius: 10px 10px 0 0">
+    <span class="label">Recebidos (R$)</span>
+    <span class="amount">{{ values?.received || 0 | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+
+  <div class="value">
+    <span class="label">Restam (R$)</span>
+    <span class="amount" style="color: #eb506a;">{{ values?.remaining || 0 | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+
+  <div class="value active">
+    <span class="label">Total em Troco (R$)</span>
+    <span class="amount">{{ values?.change || 0 | currency:'BRL':'':'1.2-2' }}</span>
+  </div>
+</div>

@@ -1,1 +1,32 @@
-<p>Oix</p>
+<div *ngIf="statusProcess === 0" (document:keydown.enter)="startSale()">
+  <app-free-box></app-free-box>
+</div>
+
+<div class="pdv" *ngIf="statusProcess !== 0">
+  <div class="logo card">LONIL BORRACHAS</div>
+
+  <div class="sidebar">
+    <div class="item-active card">
+      <app-search-product *ngIf="!productSelected && statusProcess === 1"></app-search-product>
+      <app-selected-product *ngIf="productSelected && statusProcess === 1" [product]="productSelected"></app-selected-product>
+      <app-payment-methods *ngIf="statusProcess === 2" [selectedPayment]="paymentSelected"></app-payment-methods>
+    </div>
+
+    <div class="control card">
+      <input [formControl]="searchStatus" (keyup.enter)="processStatus()"  type="text" placeholder="Código do produto" autofocus>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="card grid">
+      <app-grid-empty *ngIf="products.length <= 0"></app-grid-empty>
+      <app-grid-products *ngIf="products.length > 0 && statusProcess === 1" [products]="products.value"></app-grid-products>
+      <app-grid-payments *ngIf="statusProcess === 2" [values]="sumProducts()" [payments]="plots.value"></app-grid-payments>
+    </div>
+
+    <div class="card values">
+      <app-grid-values [values]="sumProducts()" *ngIf="statusProcess === 1"></app-grid-values>
+      <app-grid-payment-values *ngIf="statusProcess === 2" [values]="getTotalChange()"></app-grid-payment-values>
+    </div>
+  </div>
+</div>

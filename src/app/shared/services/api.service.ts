@@ -70,12 +70,14 @@ export class ApiService {
           body,
           this.getHttpHeaders()
         );
-    case 'post-token-no-company-formdata':
-      return this.http.post(
-        `${environment.api}/${url}`,
-        formData,
-        this.getHttpHeaders()
-      );
+      case 'post-no-environment':
+        return this.http.post(url, body);
+      case 'post-token-no-company-formdata':
+        return this.http.post(
+          `${environment.api}/${url}`,
+          formData,
+          this.getHttpHeaders()
+        );
       default:
         return this.http.get('', body);
     }

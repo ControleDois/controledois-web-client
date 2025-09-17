@@ -1,7 +1,7 @@
 header {
   min-height: 50px;
-  width: 100%;
-  background-color: var(--header-bg);
+  width: calc(100% - 280px);
+  background-color: var(--overlay-bg);
   border-bottom: 1px solid var(--overlay-border);
   display: flex;
   align-items: center;
@@ -16,7 +16,7 @@ header {
   padding-left: 10px;
 
   h1 {
-    color: #fff;
+    color: var(--primary-color);
   }
 }
 
@@ -134,7 +134,7 @@ nav {
 
     .toogle-theme {
       display: flex;
-      color: #fff;
+      color: var(--primary-color);
       align-items: center;
 
       span {
@@ -153,7 +153,7 @@ nav {
         }
 
         .active {
-          background-color: var(--primary-color);
+          background-color: #fff;
         }
 
         mat-icon {

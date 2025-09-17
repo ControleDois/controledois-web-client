@@ -1,0 +1,24 @@
+<div class="product">
+  <div class="title">
+    <span>{{product?.barcode || 'sem código de barras'}}</span>
+    <h2>{{product?.name}}</h2>
+  </div>
+  <div class="details">
+    <div class="detail">
+      <span class="label">Preço (R$):</span>
+      <span class="value">{{product?.sale_value | currency:'BRL':'':'1.2-2':'pt-BR' }}</span>
+    </div>
+    <div class="detail">
+      <span class="label">Quantidade:</span>
+      <span class="value">{{product?.amount || 1 }}</span>
+    </div>
+    <div class="detail">
+      <span class="label">Desconto:</span>
+      <span class="value">0,00</span>
+    </div>
+    <div class="detail">
+      <span class="label">Total do item:</span>
+      <span class="value">{{product?.amount * product?.sale_value  | currency:'BRL':'':'1.2-2':'pt-BR' }}</span>
+    </div>
+  </div>
+</div>

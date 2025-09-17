@@ -406,6 +406,40 @@
                 </div>
               </div>
             </mat-tab>
+
+            <mat-tab>
+              <div class="progress">
+                <div class="title">
+                  <h3>Produtos</h3>
+                  <div class="percent">
+                    <span>{{this.progressProduct.progress | number:'1.0-2'}}%</span>
+                    <button *ngIf="this.progressProduct.progress === 0" mat-icon-button (click)="startDownloadProducts()">
+                      <mat-icon>play_for_work</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="this.progressProduct.progress"></mat-progress-bar>
+                <div class="itens">
+                  <span>{{this.progressProduct.download}} de {{this.progressProduct.total}}</span>
+                </div>
+              </div>
+
+              <div class="progress">
+                <div class="title">
+                  <h3>Pessoas</h3>
+                  <div class="percent">
+                    <span>{{this.progressPeople.progress | number:'1.0-2'}}%</span>
+                    <button *ngIf="this.progressPeople.progress === 0" mat-icon-button (click)="startDownloadPeople()">
+                      <mat-icon>play_for_work</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <mat-progress-bar mode="determinate" [value]="this.progressPeople.progress"></mat-progress-bar>
+                <div class="itens">
+                  <span>{{this.progressPeople.download}} de {{this.progressPeople.total}}</span>
+                </div>
+              </div>
+            </mat-tab>
           </mat-tab-group>
         </form>
 
