@@ -1,5 +1,6 @@
 <div *ngIf="statusProcess === 0" (document:keydown.enter)="startSale()">
-  <app-free-box></app-free-box>
+  <app-free-box *ngIf="statusProcess === 0 && statusProcessChange === 0"></app-free-box>
+  <app-splash-change *ngIf="statusProcess === 0 && statusProcessChange > 0" [paymentChange]="statusProcessChange"></app-splash-change>
 </div>
 
 <div class="pdv" *ngIf="statusProcess !== 0">

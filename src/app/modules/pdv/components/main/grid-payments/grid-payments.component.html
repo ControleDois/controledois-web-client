@@ -26,6 +26,6 @@
       <img [src]="getPaymentImage(payment.form_payment)" />
       <span>{{ getPaymentName(payment.form_payment) }}</span>
     </div>
-    <span class="amount">{{ payment.amount | currency:'BRL':'':'1.2-2' }}</span>
+    <span class="amount">{{ payment.bill_value | currency:'BRL':'':'1.2-2' }}</span>
   </div>
 </div>

@@ -62,6 +62,7 @@ export class MainComponent implements OnInit  {
   public plots = this.myForm.get('plots') as FormArray;
 
   public statusProcess: Number = 0;
+  public statusProcessChange: number = 0;
   public searchStatus = new FormControl('');
   public skeletonOn: boolean = false;
 
@@ -79,6 +80,8 @@ export class MainComponent implements OnInit  {
   public itemSelectedRemove: number = 0;
 
   public auth!: Auth;
+
+  private timerChange: any;
 
   constructor(
     private indexedDbService: IndexedDbService,
@@ -168,6 +171,9 @@ export class MainComponent implements OnInit  {
 
   public startSale(): void {
     this.statusProcess = 1;
+    if (this.timerChange) {
+      clearTimeout(this.timerChange);
+    }
   }
 
   public processStatus(): void {
@@ -282,14 +288,20 @@ export class MainComponent implements OnInit  {
       valuePayment = parseFloat(parts[1]).toFixed(2)|| values.total;
     }
 
+    const sumTotal = values.total - totalPayments;
+    const totalChange = sumTotal > valuePayment ? 0 : sumTotal - valuePayment;
+
     const control = new FormGroup({
       portion: new FormControl(this.plots.length + 1),
       form_payment: new FormControl(formPayment || 9),
       date_due: new FormControl(
         this.datePipe.transform(new Date(), 'yyyy-MM-dd')
       ),
-      amount: new FormControl(valuePayment|| 0),
+      amount: new FormControl(values.total - totalPayments|| 0),
+      bill_value: new FormControl(valuePayment|| 0),
+      change: new FormControl(Math.abs(totalChange)),
       note: new FormControl(''),
+      status: new FormControl(1),
     });
 
     this.plots.push(control);
@@ -298,20 +310,18 @@ export class MainComponent implements OnInit  {
   }
 
   public sumPayments(): number {
-    return this.plots.value.reduce((acc: number, plot: any) => acc + Number(plot.amount || 0), 0);
+    return this.plots.value.reduce((acc: number, plot: any) => acc + Number(plot.bill_value || 0), 0);
   }
 
   //Buscar o valor total pago e troco
   public getTotalChange(): any {
     //O troco deve ser calculado somente sobre o pagamento em dinheiro
-    const cashPayments = this.plots.value
-    .filter((plot: any) => plot.form_payment === 9)
-    .reduce((acc: number, plot: any) => acc + Number(plot.amount || 0), 0);
+    const cashPayments = this.plots.value.reduce((acc: number, plot: any) => acc + Number(plot.change || 0), 0);
 
     return {
       received: this.sumPayments(),
       remaining: this.sumProducts().total - this.sumPayments(),
-      change: cashPayments - this.sumProducts().total > 0 ? cashPayments - this.sumProducts().total : 0,
+      change: cashPayments,
     }
   }
 
@@ -339,6 +349,13 @@ export class MainComponent implements OnInit  {
       people: this.auth.company.config.sale_people_default,
       sale: this.myForm.value
     }
+
+    this.statusProcessChange = this.getTotalChange().change;
+
+    //Mostrar troco
+    this.timerChange = setTimeout(() => {
+      this.statusProcessChange = 0;
+    }, 60000);
 
     this.serverLocalhostService.printSalePDV(this.auth.company.config.token, print)
         .pipe(
