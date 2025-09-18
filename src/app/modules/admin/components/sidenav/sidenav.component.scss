@@ -153,11 +153,16 @@ ul {
   opacity: 0.2;
   position: absolute;
   z-index: 9999;
+  display: none;
 }
 
 @media (max-width: 62em) {
   .nav {
     position: absolute;
     height: 100%;
+  }
+
+  .nav-bg {
+    display: block;
   }
 }
