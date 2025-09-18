@@ -1,8 +1,8 @@
 <div class="admin">
   <div class="admin-container">
-    <app-sidenav class="hide-62em"></app-sidenav>
+    <app-sidenav [active]="activeSidenav" (close)="toggleSidenav()"></app-sidenav>
     <div class="admin-content">
-      <app-header></app-header>
+      <app-header [activeSidenav]="activeSidenav" (toggleSidenav)="toggleSidenav()"></app-header>
       <router-outlet></router-outlet>
     </div>
   </div>

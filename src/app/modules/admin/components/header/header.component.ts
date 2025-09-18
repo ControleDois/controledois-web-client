@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {StorageService} from "../../../../shared/services/storage.service";
 import {Router} from "@angular/router";
 import {Auth} from "../../../../shared/interfaces/auth.interface";
@@ -11,6 +11,9 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  @Input() activeSidenav!: boolean;
+  @Output() toggleSidenav = new EventEmitter<void>();
+
   public auth: Auth;
   public menuMobileOn = false;
 
@@ -38,6 +41,10 @@ export class HeaderComponent implements OnInit {
   ) {
     this.auth = this.storageService.getAuth();
     document.body.classList.toggle('dark-theme', this.auth.theme);
+  }
+
+  onToggle() {
+    this.toggleSidenav.emit();
   }
 
   ngOnInit(): void {

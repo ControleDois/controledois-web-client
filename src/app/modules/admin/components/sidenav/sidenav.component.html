@@ -1,4 +1,4 @@
-<div class="nav">
+<div class="nav" *ngIf="active">
   <div class="company-selected">
     <div class="selected" (click)="selectedCompany = !selectedCompany">
       <div class="logo">
@@ -17,7 +17,7 @@
   </div>
 
   <ul>
-    <li routerLink="/dash" routerLinkActive="active">
+    <li routerLink="/dash" routerLinkActive="active" (click)="clickRoute()">
       <a>
         <div class="border-active"></div>
         <mat-icon>home</mat-icon>
@@ -43,42 +43,42 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[0]}">
-        <li routerLink="/people" routerLinkActive="active">
+        <li routerLink="/people" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>people</mat-icon>
             <div class="border-active"></div>
             <span>Pessoas</span>
           </a>
         </li>
-        <li routerLink="/product" routerLinkActive="active">
+        <li routerLink="/product" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>inventory</mat-icon>
             <div class="border-active"></div>
             <span>Produtos</span>
           </a>
         </li>
-        <li routerLink="/service" routerLinkActive="active">
+        <li routerLink="/service" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>handyman</mat-icon>
             <div class="border-active"></div>
             <span>Serviços</span>
           </a>
         </li>
-        <li routerLink="/category" routerLinkActive="active">
+        <li routerLink="/category" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>category</mat-icon>
             <div class="border-active"></div>
             <span>Categorias</span>
           </a>
         </li>
-        <li routerLink="/cost-center" routerLinkActive="active">
+        <li routerLink="/cost-center" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>align_vertical_center</mat-icon>
             <div class="border-active"></div>
             <span>Centro de custo</span>
           </a>
         </li>
-        <li routerLink="/contact" routerLinkActive="active">
+        <li routerLink="/contact" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>assignment_ind</mat-icon>
             <div class="border-active"></div>
@@ -95,14 +95,14 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[1]}">
-        <li routerLink="/os" routerLinkActive="active">
+        <li routerLink="/os" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>home_repair_service</mat-icon>
             <div class="border-active"></div>
             <span>Ordens de Serviço</span>
           </a>
         </li>
-        <li routerLink="/sale" routerLinkActive="active">
+        <li routerLink="/sale" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>add_shopping_cart</mat-icon>
             <div class="border-active"></div>
@@ -119,7 +119,7 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[2]}">
-        <li routerLink="/purchase" routerLinkActive="active">
+        <li routerLink="/purchase" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>shopping_basket</mat-icon>
             <div class="border-active"></div>
@@ -136,21 +136,21 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[3]}">
-        <li routerLink="/bank" routerLinkActive="active">
+        <li routerLink="/bank" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>account_balance</mat-icon>
             <div class="border-active"></div>
             <span>Conta</span>
           </a>
         </li>
-        <li routerLink="/bill-payment" routerLinkActive="active">
+        <li routerLink="/bill-payment" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>receipt</mat-icon>
             <div class="border-active"></div>
             <span>Contas a Pagar</span>
           </a>
         </li>
-        <li routerLink="/bill-receivement" routerLinkActive="active">
+        <li routerLink="/bill-receivement" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>price_check</mat-icon>
             <div class="border-active"></div>
@@ -167,28 +167,28 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[4]}">
-        <li routerLink="/nfe" routerLinkActive="active">
+        <li routerLink="/nfe" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>text_snippet</mat-icon>
             <div class="border-active"></div>
             <span>NF-e</span>
           </a>
         </li>
-        <li routerLink="/nfce" routerLinkActive="active">
+        <li routerLink="/nfce" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>receipt</mat-icon>
             <div class="border-active"></div>
             <span>NFC-e</span>
           </a>
         </li>
-        <li routerLink="/purchase-note" routerLinkActive="active">
+        <li routerLink="/purchase-note" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>attach_money</mat-icon>
             <div class="border-active"></div>
             <span>Notas de compras</span>
           </a>
         </li>
-        <li routerLink="/nfe-manifest" routerLinkActive="active">
+        <li routerLink="/nfe-manifest" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>vertical_split</mat-icon>
             <div class="border-active"></div>
@@ -203,14 +203,14 @@
           </a>
 
           <ul class="menu-1" [ngClass]="{'ul-show': menuShow[5]}">
-            <li routerLink="/nfe-nature-operation" routerLinkActive="active">
+            <li routerLink="/nfe-nature-operation" routerLinkActive="active" (click)="clickRoute()">
               <a>
                 <mat-icon>dashboard_customize</mat-icon>
                 <div class="border-active"></div>
                 <span>Natureza de Operação</span>
               </a>
             </li>
-            <li routerLink="/nfe-taxation" routerLinkActive="active">
+            <li routerLink="/nfe-taxation" routerLinkActive="active" (click)="clickRoute()">
               <a>
                 <mat-icon>balance</mat-icon>
                 <div class="border-active"></div>
@@ -229,14 +229,14 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[6]}">
-        <li routerLink="/cte" routerLinkActive="active">
+        <li routerLink="/cte" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>text_snippet</mat-icon>
             <div class="border-active"></div>
             <span>CT-e</span>
           </a>
         </li>
-        <li routerLink="/mdfe" routerLinkActive="active">
+        <li routerLink="/mdfe" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>receipt</mat-icon>
             <div class="border-active"></div>
@@ -251,21 +251,21 @@
           </a>
 
           <ul class="menu-1" [ngClass]="{'ul-show': menuShow[7]}">
-            <li routerLink="/transport-route" routerLinkActive="active">
+            <li routerLink="/transport-route" routerLinkActive="active" (click)="clickRoute()">
               <a>
                 <mat-icon>route</mat-icon>
                 <div class="border-active"></div>
                 <span>Rotas</span>
               </a>
             </li>
-            <li routerLink="/transport-insurance" routerLinkActive="active">
+            <li routerLink="/transport-insurance" routerLinkActive="active" (click)="clickRoute()">
               <a>
                 <mat-icon>car_crash</mat-icon>
                 <div class="border-active"></div>
                 <span>Seguros</span>
               </a>
             </li>
-            <li routerLink="/transport-vehicle" routerLinkActive="active">
+            <li routerLink="/transport-vehicle" routerLinkActive="active" (click)="clickRoute()">
               <a>
                 <mat-icon>directions_car</mat-icon>
                 <div class="border-active"></div>
@@ -284,14 +284,14 @@
       </a>
 
       <ul class="menu-1" [ngClass]="{'ul-show': menuShow[8]}">
-        <li routerLink="/post" routerLinkActive="active">
+        <li routerLink="/post" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>sensors</mat-icon>
             <div class="border-active"></div>
             <span>Transmissão</span>
           </a>
         </li>
-        <li routerLink="/chat" routerLinkActive="active">
+        <li routerLink="/chat" routerLinkActive="active" (click)="clickRoute()">
           <a>
             <mat-icon>chat</mat-icon>
             <div class="border-active"></div>
@@ -301,6 +301,9 @@
       </ul>
     </li>
   </ul>
+</div>
+
+<div class="nav-bg" *ngIf="active" (click)="onClose()">
 </div>
 
 <app-loading-full [loadingFull]="loadingFull"></app-loading-full>

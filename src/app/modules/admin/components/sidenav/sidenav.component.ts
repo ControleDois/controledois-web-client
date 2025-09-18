@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { catchError, finalize, map, throwError } from 'rxjs';
 import { Auth } from 'src/app/shared/interfaces/auth.interface';
@@ -16,6 +16,10 @@ import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit {
+  @Input() active = false;
+  @Output() close = new EventEmitter<void>();
+
+  public menuMobileOn = false;
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
@@ -51,6 +55,18 @@ export class SidenavComponent implements OnInit {
 
   ngOnInit(): void {
 
+  }
+
+  public clickRoute(): void {
+    const isMobile = window.innerWidth < 992;
+    if (isMobile) {
+      this.onClose();
+    }
+  }
+
+
+  onClose() {
+    this.close.emit();
   }
 
   selectCompany(event: any): void {

@@ -1,6 +1,6 @@
 header {
   min-height: 50px;
-  width: calc(100% - 280px);
+  width: calc(100% - 310px);
   background-color: var(--overlay-bg);
   border-bottom: 1px solid var(--overlay-border);
   display: flex;
@@ -8,15 +8,22 @@ header {
   position: fixed;
   top: 0;
   z-index: 1000;
+  color: #9c9c9c;
 }
 
 .logo {
   flex: 0 0 16.666667%;
   max-width: 16.666667%;
   padding-left: 10px;
+  display: flex;
 
   h1 {
     color: var(--primary-color);
+  }
+
+  button {
+    display: none;
+    margin-right: 10px;
   }
 }
 
@@ -197,6 +204,7 @@ nav {
 @media (max-width: 62em) {
   header {
     justify-content: space-between;
+    width: 100%;
   }
 
   nav {
@@ -211,6 +219,12 @@ nav {
     max-width: 80%;
     padding: 20px;
     border-left: 1px solid #ddd;
+  }
+
+  .logo {
+    button {
+      display: block;
+    }
   }
 
   .nav-on {
