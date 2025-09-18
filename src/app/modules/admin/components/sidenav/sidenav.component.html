@@ -109,6 +109,13 @@
             <span>Vendas e Orçamentos</span>
           </a>
         </li>
+        <li routerLinkActive="active" (click)="openTabPDV()">
+          <a>
+            <mat-icon>add_shopping_cart</mat-icon>
+            <div class="border-active"></div>
+            <span>Vendas PDV</span>
+          </a>
+        </li>
       </ul>
     </li>
     <li class="menu-show" [ngClass]="{'show': menuShow[2]}">

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
 import { Auth } from 'src/app/shared/interfaces/auth.interface';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
@@ -43,12 +44,15 @@ export class SidenavComponent implements OnInit {
     paramsArray: [],
   };
 
+  private tabPDV: Window | null = null;
+
   constructor(
     private storageService: StorageService,
     private companyService: CompanyService,
     private notificationService: NotificationService,
     private firebaseService: FirebaseService,
-    public libraryService: LibraryService
+    public libraryService: LibraryService,
+    public router: Router
   ) {
     this.auth = this.storageService.getAuth();
    }
@@ -85,5 +89,21 @@ export class SidenavComponent implements OnInit {
         window.location.reload();
       })
     ).subscribe();
+  }
+
+  public openTabPDV() {
+    const url = this.router.serializeUrl(
+      this.router.createUrlTree(['/pdv'])
+    );
+
+    // Se a aba já existir e não tiver sido fechada
+    if (this.tabPDV && !this.tabPDV.closed) {
+      this.tabPDV.focus(); // só foca na aba existente
+    } else {
+      // abre nova aba
+      this.tabPDV = window.open(url, '_blank');
+    }
+
+    this.clickRoute();
   }
 }
