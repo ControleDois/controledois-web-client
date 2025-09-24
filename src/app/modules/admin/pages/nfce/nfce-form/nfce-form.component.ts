@@ -1,23 +1,24 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit, Output } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, finalize, map, throwError } from 'rxjs';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
-import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
-import { LibraryService } from 'src/app/shared/services/library.service';
+import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
+import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NFeService } from 'src/app/shared/services/nfe.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
-import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
-import { PageHeader } from '../../../interfaces/page-header.interface';
-import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique/search-loading-unique.interface';
+import { DatePipe } from '@angular/common';
+import { DialogMessageService } from 'src/app/shared/services/dialog-message.service';
+import { LibraryService } from 'src/app/shared/services/library.service';
+import { catchError, finalize, map, throwError } from 'rxjs';
 
 @Component({
-  selector: 'app-nfe-form',
-  templateUrl: './nfe-form.component.html',
+  selector: 'app-nfce-form',
+  templateUrl: './nfce-form.component.html',
 })
-export class NfeFormComponent implements OnInit {
+export class NfceFormComponent implements OnInit {
+
   private formId: string;
 
   public loadingFull: LoadingFull = {
@@ -34,8 +35,8 @@ export class NfeFormComponent implements OnInit {
     indicador_intermediario: new FormControl(0),
     forma_pagamento: new FormControl('01'),
     presenca_comprador: new FormControl(1),
-    modelo: new FormControl(55),
     amount: new FormControl(0),
+    modelo: new FormControl(65),
     products: new FormArray([]),
   });
 
@@ -124,11 +125,11 @@ export class NfeFormComponent implements OnInit {
   };
 
   @Output() public pageHeader: PageHeader = {
-    title: `NFe`,
-    description: 'Cadastro de nfes',
+    title: `NFCe`,
+    description: 'Cadastro de NFCe',
     button: {
       text: 'Voltar',
-      routerLink: '/nfe',
+      routerLink: '/nfce',
       icon: 'arrow_back',
     },
   };
@@ -161,7 +162,7 @@ export class NfeFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Dados da NFe', index: 0, icon: 'info' },
+      { text: 'Dados da NFCe', index: 0, icon: 'info' },
       { text: 'Produtos', index: 1, icon: 'info' },
       { text: 'Outros', index: 2, icon: 'info' },
     ],
@@ -195,7 +196,7 @@ export class NfeFormComponent implements OnInit {
         finalize(() => this.loadingFull.active = false),
         catchError((error) => {
           this.notificationService.warn('Dados não encontrados...');
-          this.router.navigate(['nfe']);
+          this.router.navigate(['nfce']);
           return throwError(error);
         }),
         map((res) => {
@@ -241,7 +242,7 @@ export class NfeFormComponent implements OnInit {
         }),
         map(() => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['nfe']);
+          this.router.navigate(['nfce']);
         })
       ).subscribe();
     } else {

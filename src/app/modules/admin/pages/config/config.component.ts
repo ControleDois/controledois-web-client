@@ -5,7 +5,7 @@ import { SearchLoadingUnique } from 'src/app/shared/widget/search-loading-unique
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { PeopleService } from 'src/app/shared/services/people.service';
 import { DatePipe } from '@angular/common';
 import { People } from './../../../../shared/interfaces/people.interface';
@@ -48,6 +48,8 @@ export class ConfigComponent implements OnInit {
     nfe_numero: new FormControl(0),
     nfce_serie: new FormControl(0),
     nfce_numero: new FormControl(0),
+    nfce_id_token: new FormControl(0),
+    nfce_csc: new FormControl(''),
     nfe_ambiente: new FormControl(1),
     nfce_ambiente: new FormControl(1),
     mdfe_serie: new FormControl(0),
@@ -115,6 +117,16 @@ export class ConfigComponent implements OnInit {
       routerLink: '/dash',
       icon: 'arrow_back',
     },
+    buttonsIcons: [
+      {
+        tooltip: 'Download certificado A1!',
+        icon: 'badge',
+        action: () => this.downloadCertification(),
+        class: 'c2-btn c2-btn-bg-no-color',
+        style: 'margin-right: 10px',
+        showButton: false
+      }
+    ]
   };
 
   @Output() public navigationButtons: BasicFormButtons = {
@@ -286,6 +298,8 @@ export class ConfigComponent implements OnInit {
     download: 0,
   }
 
+  @Output() updateEvents = new EventEmitter<void>();
+
   constructor(
     private notificationService: NotificationService,
     private router: Router,
@@ -377,6 +391,12 @@ export class ConfigComponent implements OnInit {
       this.myForm.patchValue(value);
 
       this.getCertificateDropBox();
+
+      //Atualiza botão de download do certificado
+      if (this.pageHeader.buttonsIcons && this.pageHeader.buttonsIcons?.length > 0 ) {
+        this.pageHeader.buttonsIcons[0].showButton = this.myForm.value.people.certificate_path.trim().length > 0;
+        this.updateEvents.emit();
+      }
     }
   }
 
@@ -778,5 +798,28 @@ export class ConfigComponent implements OnInit {
       // Salva a página atual
       this.progressPeople.download += res.data.length;
     });
+  }
+
+
+  downloadCertification(): void {
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Fazendo Download do certificado'
+    this.dropboxService.downloadFile(this.myForm.value.people.certificate_path.replace(/\\/g, "/")).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.myForm.value.people.certificate_path.split('/').pop() ?? 'default_filename';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.loadingFull.active = false;
+      },
+      (error) => {
+        console.error('Download error:', error);
+        this.loadingFull.active = false;
+      }
+    );
   }
 }

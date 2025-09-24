@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, finalize, map, throwError } from 'rxjs';
@@ -92,6 +92,16 @@ export class CompanyFormComponent implements OnInit {
       routerLink: '/company',
       icon: 'arrow_back',
     },
+    buttonsIcons: [
+      {
+        tooltip: 'Download certificado A1!',
+        icon: 'badge',
+        action: () => this.downloadCertification(),
+        class: 'c2-btn c2-btn-bg-no-color',
+        style: 'margin-right: 10px',
+        showButton: false
+      }
+    ]
   };
 
   @Output() public navigationButtons: BasicFormButtons = {
@@ -141,6 +151,8 @@ export class CompanyFormComponent implements OnInit {
     { name: '⦿ Lucro real', type: 7 },
   ];
 
+  @Output() updateEvents = new EventEmitter<void>();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private peopleService: CompanyService,
@@ -182,6 +194,12 @@ export class CompanyFormComponent implements OnInit {
       this.myForm.controls['birth'].setValue(this.datePipe.transform(value.birth, 'yyyy-MM-dd'));
 
       this.getCertificateDropBox();
+
+      //Atualiza botão de download do certificado
+      if (this.pageHeader.buttonsIcons && this.pageHeader.buttonsIcons?.length > 0 ) {
+        this.pageHeader.buttonsIcons[0].showButton = this.myForm.value.certificate_path.trim().length > 0;
+        this.updateEvents.emit();
+      }
     }
   }
 
@@ -384,5 +402,27 @@ export class CompanyFormComponent implements OnInit {
     } else if (this.navigation.selectedItem >= this.navigation.items.length) {
       this.navigation.selectedItem = this.navigation.items.length - 1;
     }
+  }
+
+  downloadCertification(): void {
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Fazendo Download do certificado'
+    this.dropboxService.downloadFile(this.myForm.value.certificate_path.replace(/\\/g, "/")).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.myForm.value.certificate_path.split('/').pop() ?? 'default_filename';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.loadingFull.active = false;
+      },
+      (error) => {
+        console.error('Download error:', error);
+        this.loadingFull.active = false;
+      }
+    );
   }
 }

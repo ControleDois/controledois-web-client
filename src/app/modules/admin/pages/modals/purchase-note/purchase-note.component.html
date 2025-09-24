@@ -1,3 +1,27 @@
-<zxing-scanner *ngIf="scannerEnabled" (scanSuccess)="onCodeResult($event)"></zxing-scanner>
+<div class="title">
+  <div>
+    <mat-icon>qr_code</mat-icon>
+    <h1>Scanner de QR Code</h1>
+  </div>
+  <div>
+    <button mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div class="scanner-wrapper" *ngIf="scannerEnabled">
+  <zxing-scanner
+  *ngIf="scannerEnabled"
+  [device]="currentDevice"
+  (camerasFound)="onCamerasFound($event)"
+  (scanSuccess)="onCodeResult($event)">
+</zxing-scanner>
+
+
+  <!-- Caixa de recorte para o "foco" -->
+  <div class="qr-frame"></div>
+</div>
+
 <app-loading-full [loadingFull]="loadingFull"></app-loading-full>
 

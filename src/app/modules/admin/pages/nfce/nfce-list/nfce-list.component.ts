@@ -1,26 +1,26 @@
-import { Component, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, Subscription, tap, throwError } from 'rxjs';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
+import { PageHeader } from '../../../interfaces/page-header.interface';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, merge, Subscription, tap, throwError } from 'rxjs';
 import { NFeService } from 'src/app/shared/services/nfe.service';
 import { WidgetService } from 'src/app/shared/services/widget.service';
-import { PageHeader } from '../../../interfaces/page-header.interface';
 import { DatePipe } from '@angular/common';
-import { LibraryService } from 'src/app/shared/services/library.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { WebsocketService } from 'src/app/shared/services/websocket.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { LibraryService } from 'src/app/shared/services/library.service';
+import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
 
 @Component({
-  selector: 'app-nfe-list',
-  templateUrl: './nfe-list.component.html',
+  selector: 'app-nfce-list',
+  templateUrl: './nfce-list.component.html',
 })
-export class NfeListComponent implements OnInit, OnDestroy {
+export class NfceListComponent implements OnInit {
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
@@ -43,11 +43,11 @@ export class NfeListComponent implements OnInit, OnDestroy {
   public vDateFilter = new Date();
 
   @Output() public pageHeader: PageHeader = {
-    title: 'NFes',
-    description: 'Listagem de Nfe cadastrados no sistema.',
+    title: 'NFCe',
+    description: 'Listagem de NFCe cadastrados no sistema.',
     button: {
-      text: 'Novo NFe',
-      routerLink: '/nfe/new',
+      text: 'Nova NFCe',
+      routerLink: '/nfce/new',
       icon: 'add',
     },
   };
@@ -64,7 +64,7 @@ export class NfeListComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     public libraryService: LibraryService
   ) {
-   }
+    }
 
   ngOnInit(): void {
     this.search.valueChanges
@@ -103,7 +103,7 @@ export class NfeListComponent implements OnInit, OnDestroy {
 
   load(): void {
     this.nfeService.index(this.search.value ? this.search.value : '',
-      this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), '55','data_emissao', 'data_emissao',
+      this.datePipe.transform(this.vDateFilter, 'yyyy-MM-dd'), '65','data_emissao', 'data_emissao',
       this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1',
       this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
@@ -142,6 +142,8 @@ export class NfeListComponent implements OnInit, OnDestroy {
         return 'Emitida';
       case 3:
         return 'Error';
+      case 4:
+        return 'Cancelada';
       default:
         return 'Error'
     }
@@ -157,6 +159,8 @@ export class NfeListComponent implements OnInit, OnDestroy {
         return '#4ab858';
       case 3:
         return '#F43E61';
+      case 4:
+        return '#d35c74ff';
       default:
         return '#2687E9'
     }
@@ -172,6 +176,8 @@ export class NfeListComponent implements OnInit, OnDestroy {
         return '#ddf1de';
       case 3:
         return '#FCD9E0';
+      case 4:
+        return '#fae2e7ff';
       default:
         return '#DBE6FE'
     }
@@ -262,5 +268,20 @@ export class NfeListComponent implements OnInit, OnDestroy {
         this.loadingFull.active = false;
       }
     );
+  }
+
+  cancel(id: string): void {
+    this.loadingFull.active = true;
+    this.nfeService.cancel(id).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        this.notificationService.warn('Dados não encontrados...');
+        return throwError(error);
+      }),
+      map((res) => {
+        this.notificationService.warn(res.mensagem);
+        this.updateStatus(id, 2);
+      })
+    ).subscribe();
   }
 }

@@ -14,7 +14,6 @@ export class GridPaymentsComponent implements OnInit {
   ngOnInit(): void {
   }
 
-
   getPaymentImage(type: number): string {
     switch (type) {
       case 9:

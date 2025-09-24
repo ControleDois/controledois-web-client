@@ -89,6 +89,8 @@ import { BrandListComponent } from './pages/brand/brand-list/brand-list.componen
 import { BrandFormComponent } from './pages/brand/brand-form/brand-form.component';
 import { ChatClosedComponent } from './pages/modals/chat-closed/chat-closed.component';
 import { NewChatDialogComponent } from './pages/modals/new-chat-dialog/new-chat-dialog.component';
+import { NfceListComponent } from './pages/nfce/nfce-list/nfce-list.component';
+import { NfceFormComponent } from './pages/nfce/nfce-form/nfce-form.component';
 
 const appName = 'CTrix';
 
@@ -262,6 +264,16 @@ const routes: Routes = [
     path: 'nfe/:id',
     component: NfeFormComponent,
     data: { title: `Cadastro de NFe -  ${appName}`},
+  },
+  {
+    path: 'nfce',
+    component: NfceListComponent,
+    data: { title: `NFCe -  ${appName}`},
+  },
+  {
+    path: 'nfce/:id',
+    component: NfceFormComponent,
+    data: { title: `Cadastro de NFCe -  ${appName}`},
   },
   {
     path: 'contact',
@@ -503,7 +515,9 @@ const routes: Routes = [
     BrandListComponent,
     BrandFormComponent,
     ChatClosedComponent,
-    NewChatDialogComponent
+    NewChatDialogComponent,
+    NfceListComponent,
+    NfceFormComponent
   ],
   imports: [
     CommonModule,

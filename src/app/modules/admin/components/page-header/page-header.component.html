@@ -3,7 +3,12 @@
     <h2>{{header.title}}</h2>
     <p>{{header.description}}</p>
   </div>
-  <button (click)="header?.button?.action()" *ngIf="header.button" class="c2-btn c2-btn-blue" mat-button [routerLink]="header.button.routerLink">
-    <mat-icon>{{header.button.icon}}</mat-icon>{{header.button.text}}
-  </button>
+  <div class="buttons">
+    <button [matTooltip]="button.tooltip" matTooltipPosition="above" *ngFor="let button of getButtonsIcons(true)" [style]="button.style" [ngClass]="button.class" mat-icon-button (click)="button.action()">
+      <mat-icon>{{button.icon}}</mat-icon>
+    </button>
+    <button (click)="header?.button?.action()" *ngIf="header.button" class="c2-btn c2-btn-blue" mat-button [routerLink]="header.button.routerLink">
+      <mat-icon>{{header.button.icon}}</mat-icon>{{header.button.text}}
+    </button>
+  </div>
 </div>

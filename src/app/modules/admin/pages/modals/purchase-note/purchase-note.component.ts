@@ -17,6 +17,9 @@ export class PurchaseNoteComponent implements OnInit {
   private auth: Auth;
   public scannerEnabled: boolean = true;
 
+  availableDevices: MediaDeviceInfo[] = [];
+  currentDevice!: MediaDeviceInfo;
+
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
@@ -35,6 +38,11 @@ export class PurchaseNoteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  onCamerasFound(devices: MediaDeviceInfo[]) {
+    const backCam = devices.find(d => /back|rear|environment/gi.test(d.label));
+    this.currentDevice = backCam || devices[0];
   }
 
   onCodeResult(result: string) {

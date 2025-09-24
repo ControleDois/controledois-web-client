@@ -7,4 +7,12 @@ export interface PageHeader {
     icon?: string;
     action?: () => void;
   };
+  buttonsIcons?: {
+    tooltip: string;
+    icon: string;
+    action: () => void;
+    class: string;
+    style?: string;
+    showButton: boolean;
+  }[];
 }

@@ -214,8 +214,8 @@ export class DashboardComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = false;
-    dialogConfig.width = '300px';
-    dialogConfig.maxHeight = '300px';
+    dialogConfig.maxWidth = '600px';
+    dialogConfig.maxHeight = '620px';
     this.dialog.open(PurchaseNoteComponent, dialogConfig);
   }
 }

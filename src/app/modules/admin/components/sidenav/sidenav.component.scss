@@ -10,7 +10,7 @@
   width: 310px;
   height: 100vh;
   overflow: auto;
-  z-index: 10001;
+  z-index: 1000;
 }
 
 .company-selected {
@@ -152,7 +152,7 @@ ul {
   background: #535353;
   opacity: 0.2;
   position: absolute;
-  z-index: 9999;
+  z-index: 999;
   display: none;
 }
 

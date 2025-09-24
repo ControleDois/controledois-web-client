@@ -1,5 +1,5 @@
 import { catchError, finalize, map } from 'rxjs/operators';
-import { Component, ElementRef, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { throwError } from 'rxjs';
@@ -82,6 +82,16 @@ export class PeopleFormComponent implements OnInit {
       routerLink: '/people',
       icon: 'arrow_back',
     },
+    buttonsIcons: [
+      {
+        tooltip: 'Download certificado A1!',
+        icon: 'badge',
+        action: () => this.downloadCertification(),
+        class: 'c2-btn c2-btn-bg-no-color',
+        style: 'margin-right: 10px',
+        showButton: false
+      }
+    ]
   };
 
   @Output() public navigationButtons: BasicFormButtons = {
@@ -185,6 +195,9 @@ export class PeopleFormComponent implements OnInit {
     { name: '⦿ Cooperativa de Transporte de Cargas (CTC)', type: 3 },
   ];
 
+
+  @Output() updateEvents = new EventEmitter<void>();
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private peopleService: PeopleService,
@@ -230,6 +243,13 @@ export class PeopleFormComponent implements OnInit {
   setForm(value: any): void {
     if (value) {
       this.myForm.patchValue(value);
+
+      //Atualiza botão de download do certificado
+      if (this.pageHeader.buttonsIcons && this.pageHeader.buttonsIcons?.length > 0 ) {
+        this.pageHeader.buttonsIcons[0].showButton = this.myForm.value.certificate_path.trim().length > 0;
+        this.updateEvents.emit();
+      }
+
       this.myForm.controls['birth'].setValue(this.datePipe.transform(value.birth, 'yyyy-MM-dd'));
 
       if (value.keys && value.keys.length > 0) {
@@ -740,5 +760,27 @@ export class PeopleFormComponent implements OnInit {
     } else if (this.navigation.selectedItem >= this.navigation.items.length) {
       this.navigation.selectedItem = this.navigation.items.length - 1;
     }
+  }
+
+  downloadCertification(): void {
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Fazendo Download do certificado'
+    this.dropboxService.downloadFile(this.myForm.value.certificate_path.replace(/\\/g, "/")).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = this.myForm.value.certificate_path.split('/').pop() ?? 'default_filename';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        this.loadingFull.active = false;
+      },
+      (error) => {
+        console.error('Download error:', error);
+        this.loadingFull.active = false;
+      }
+    );
   }
 }
