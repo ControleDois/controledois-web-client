@@ -10,6 +10,7 @@ import { WidgetService } from 'src/app/shared/services/widget.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { LibraryService } from 'src/app/shared/services/library.service';
+import { MailService } from 'src/app/shared/services/mail.service';
 
 @Component({
   selector: 'app-client-list',
@@ -53,7 +54,7 @@ export class PeopleListComponent implements OnInit, AfterViewInit {
   constructor(
     private peopleService: PeopleService,
     private widGetService: WidgetService,
-    public libraryService: LibraryService
+    public libraryService: LibraryService,
   ) {
    }
 

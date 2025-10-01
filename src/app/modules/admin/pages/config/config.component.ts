@@ -96,6 +96,7 @@ export class ConfigComponent implements OnInit {
       categories: new FormArray([]),
     }),
     whatsapps: new FormArray([]),
+    terminals: new FormArray([]),
   });
 
   public peopleRole = [
@@ -165,6 +166,7 @@ export class ConfigComponent implements OnInit {
       { text: 'Shop', index: 5, icon: 'info' },
       { text: 'Config. Api', index: 6, icon: 'contacts' },
       { text: 'PDV', index: 7, icon: 'contacts' },
+      { text: 'Terminais', index: 8, icon: 'contacts' },
     ],
     selectedItem: 0
   }
@@ -253,6 +255,9 @@ export class ConfigComponent implements OnInit {
 
   public whatsapps = this.myForm.get('whatsapps') as FormArray;
 
+  public terminals = this.myForm.get('terminals') as FormArray;
+  @Output() public terminalsOutPut: Array<SearchLoadingUnique>;
+
   @ViewChild('fileInputCertificado') fileInputCertificado!: ElementRef<HTMLInputElement>;
   public certificado: DropboxFile | undefined;
 
@@ -313,7 +318,9 @@ export class ConfigComponent implements OnInit {
     private indexedDbService: IndexedDbService,
     private productService: ProductService,
     public dialog: MatDialog
-  ) {}
+  ) {
+    this.terminalsOutPut = [];
+  }
 
   ngOnInit(): void {
     this.loadingFull.active = true;
@@ -384,6 +391,12 @@ export class ConfigComponent implements OnInit {
       if (value.company?.whatsapps && value.company?.whatsapps.length > 0) {
         for (const whatsapp of value.company?.whatsapps) {
           this.addWhatsapp(whatsapp);
+        }
+      }
+
+      if (value.company?.terminals && value.company?.terminals.length > 0) {
+        for (const terminal of value.company?.terminals) {
+          this.addTerminal(terminal);
         }
       }
 
@@ -664,6 +677,9 @@ export class ConfigComponent implements OnInit {
   }
 
   startDownloadProducts(): void {
+    //Deleta os produtos
+    this.indexedDbService.clearData('products');
+
     this.progressProduct.hasMore = true;
     this.progressProduct.page = 1;
     this.progressProduct.progress = 0;
@@ -690,6 +706,7 @@ export class ConfigComponent implements OnInit {
       'name',
       this.progressProduct.page,
       100,
+      true,
     ).subscribe(res => {
       this.progressProduct.total = res.meta.total;
 
@@ -821,5 +838,64 @@ export class ConfigComponent implements OnInit {
         this.loadingFull.active = false;
       }
     );
+  }
+
+  addTerminal(value: any): void {
+    const control = new FormGroup({
+      id: new FormControl(value?.id || ''),
+      nfeNatureOperationId: new FormControl(value?.nfe_nature_operation_id || ''),
+      nfe_serie: new FormControl(value?.nfe_serie || 1),
+      nfe_numero: new FormControl(value?.nfe_numero || 1),
+      nfe_ambiente: new FormControl(value?.nfe_ambiente || 1),
+      nfce_serie: new FormControl(value?.nfce_serie || 1),
+      nfce_numero: new FormControl(value?.nfce_numero || 1),
+      nfce_ambiente: new FormControl(value?.nfce_ambiente || 1),
+      nfce_id_token: new FormControl(value?.nfce_id_token || 1),
+      nfce_csc: new FormControl(value?.nfce_csc || ''),
+      api_url: new FormControl(value?.api_url || ''),
+      printer_path: new FormControl(value?.printer_path || ''),
+      certificate_path: new FormControl(value?.certificate_path || ''),
+      certificate_password: new FormControl(value?.certificate_password || ''),
+    });
+
+    this.terminalsOutPut.push({
+      noTitle: false,
+      title: 'Natureza da Operação',
+      url: 'nfe-nature-operation',
+      searchFieldOn: value?.natureOperation || null,
+      searchFieldOnCollum: ['description'],
+      sortedBy: 'description',
+      orderBy: 'description',
+      searchField: new FormControl(''),
+      validation: true,
+      paramsArray: [],
+    });
+
+    this.terminals.push(control);
+  }
+
+  removeTerminal(index: any): void {
+    this.terminals.controls.splice(index, 1);
+    this.terminalsOutPut.splice(index, 1);
+    this.terminals.value.splice(index, 1);
+  }
+
+  selectNatureOperation(event: any, i: any): void {
+    this.terminals.at(i).setValue({
+      ...this.terminals.at(i).value,
+      nfeNatureOperationId: event.id,
+    });
+  }
+
+  addFavoriteTerminal(index: any): void {
+    this.indexedDbService.clearData('terminal')
+    this.indexedDbService.addData({
+      ...this.terminals.controls[index].value,
+      natureOperation: this.terminalsOutPut[index]?.searchFieldOn || null
+    }, 'terminal');
+  }
+
+  getFavoriteTerminalId(): string {
+    return ''
   }
 }

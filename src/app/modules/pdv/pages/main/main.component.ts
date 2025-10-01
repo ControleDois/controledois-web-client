@@ -239,6 +239,7 @@ export class MainComponent implements OnInit  {
       cost_value: new FormControl(this.productSelected?.sale_value || 0),
       subtotal: new FormControl(this.productAmount * this.productSelected?.sale_value || 0),
       removed: new FormControl(false),
+      product: new FormControl(this.productSelected)
     });
 
     this.products.push(control);
@@ -341,15 +342,6 @@ export class MainComponent implements OnInit  {
     this.myForm.value.net_total = sumProducts.total;
 
     this.indexedDbService.addData(this.myForm.value, 'sales');
-
-    //Enviar para impressora na rede
-    const print = {
-      role: 0,
-      company: this.auth.company,
-      people: this.auth.company.config.sale_people_default,
-      sale: this.myForm.value
-    }
-
     this.statusProcessChange = this.getTotalChange().change;
 
     //Mostrar troco
@@ -357,17 +349,56 @@ export class MainComponent implements OnInit  {
       this.statusProcessChange = 0;
     }, 60000);
 
-    this.serverLocalhostService.printSalePDV(this.auth.company.config.token, print)
-        .pipe(
-          finalize(() => (console.log('ue'))),
-          catchError((error) => {
-            return throwError(error);
-          }),
-          map(() => {
-            console.log('oxi')
-          })
-        )
-        .subscribe();
+    //Pega o terminal favorito para operação
+    const terminal = await this.indexedDbService.getAllData('terminal').then(res => res[0]);
+
+    if (terminal) {
+
+      //Gerar NFCe
+      const nfe = this.serverLocalhostService.generateNFCe(this.auth.company,
+        terminal?.natureOperation || this.auth.company.config.natureOperation,
+        this.auth.company.config.sale_people_default,
+        this.products.value,
+        this.plots.value
+      );
+
+      this.indexedDbService.addData(nfe, 'nfes');
+
+      //Enviar nfe
+      this.serverLocalhostService.sendNFe(terminal.api_url, {
+        company: this.auth.company,
+        nfe: nfe,
+        terminal: terminal
+      }).pipe(
+        finalize(() => (console.log('ue'))),
+        catchError((error) => {
+          return throwError(error);
+        }),
+        map(() => {
+          console.log('envia nota')
+        })
+      )
+      .subscribe();
+
+      //Imprime venda
+      this.serverLocalhostService.printSalePDV(terminal.api_url,this.auth.company.config.token, {
+        role: 0,
+        company: this.auth.company,
+        people: this.auth.company.config.sale_people_default,
+        sale: this.myForm.value,
+        terminal: terminal
+      })
+      .pipe(
+        finalize(() => (console.log('ue'))),
+        catchError((error) => {
+          return throwError(error);
+        }),
+        map(() => {
+          console.log('imprime')
+        })
+      )
+      .subscribe();
+    }
 
     this.statusProcess = 0;
     this.products.clear();

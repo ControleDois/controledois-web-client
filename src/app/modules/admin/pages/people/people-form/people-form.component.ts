@@ -17,6 +17,8 @@ import { PageHeader } from '../../../interfaces/page-header.interface';
 import { BasicFormNavigation } from '../../../interfaces/basic-form-navigation.interface';
 import { BasicFormButtons } from '../../../interfaces/basic-form-buttons.interface';
 import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
+import { CTrixDelphiService } from 'src/app/shared/services/ctrix.delphi.service';
+import { MailService } from 'src/app/shared/services/mail.service';
 
 @Component({
   selector: 'app-client-form',
@@ -206,7 +208,9 @@ export class PeopleFormComponent implements OnInit {
     private datePipe: DatePipe,
     private dialogMessageService: DialogMessageService,
     private libraryService: LibraryService,
-    private dropboxService: DropboxService
+    private dropboxService: DropboxService,
+    private ctrixDelphiService: CTrixDelphiService,
+    private mailService: MailService
   ) {
     this.formId = this.activatedRoute.snapshot.params['id'];
     this.pageHeader.title = this.formId === 'new' ? 'Nova Pessoa' : 'Editar Pessoa';
@@ -246,7 +250,7 @@ export class PeopleFormComponent implements OnInit {
 
       //Atualiza botão de download do certificado
       if (this.pageHeader.buttonsIcons && this.pageHeader.buttonsIcons?.length > 0 ) {
-        this.pageHeader.buttonsIcons[0].showButton = this.myForm.value.certificate_path.trim().length > 0;
+        this.pageHeader.buttonsIcons[0].showButton = this.myForm.value?.certificate_path?.trim().length > 0;
         this.updateEvents.emit();
       }
 
@@ -418,13 +422,23 @@ export class PeopleFormComponent implements OnInit {
   }
 
   gerenateKey(index: any): void {
-    const serialKeySystem = this.keys.controls[index].value.role + ' - encryptSerial - 16/04/2023';
-    const due_date = this.libraryService.getFormatData(
-      this.keys.controls[index].value.due_date
-    );
-    const key = serialKeySystem + ' - ' + this.myForm.value.document + ' - ' + due_date;
-    const keyMD5 = MD5(key).toString().toUpperCase();
-    this.keys.at(index).get('key')?.setValue(keyMD5);
+    if (this.keys.controls[index].value.role == 1) {
+      const serialKeySystem = this.keys.controls[index].value.role + ' - encryptSerial - 16/04/2023';
+      const due_date = this.libraryService.getFormatData(
+        this.keys.controls[index].value.due_date
+      );
+      const key = serialKeySystem + ' - ' + this.myForm.value.document + ' - ' + due_date;
+      const keyMD5 = MD5(key).toString().toUpperCase();
+      this.keys.at(index).get('key')?.setValue(keyMD5);
+    }
+
+    if (this.keys.controls[index].value.role == 99) {
+      const due_date = this.libraryService.getFormatData(
+        this.keys.controls[index].value.due_date
+      );
+
+      this.keys.at(index).get('key')?.setValue(this.ctrixDelphiService.generateKey('FCC2F328', due_date));
+    }
   }
 
   getDaysKey(index: any): string {
@@ -782,5 +796,37 @@ export class PeopleFormComponent implements OnInit {
         this.loadingFull.active = false;
       }
     );
+  }
+
+  sendKey(index: any): void {
+    this.loadingFull.message = 'Enviando Licença';
+    this.loadingFull.active = true;
+
+    this.mailService.sendKey(this.formId, {
+      key: this.keys.controls[index].value,
+      mail: {
+        title: this.getMailKeyTitle(this.keys.controls[index].value.role)
+      }
+    }).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        return throwError(error);
+      }),
+      map(() => {
+        this.notificationService.success('Email enviado.');
+      })
+    ).subscribe();
+  }
+
+  getMailKeyTitle(role: number): string {
+    switch (role) {
+      case 1: {
+        return 'CTrix'
+      }
+      case 99: {
+        return 'CTrix ERP'
+      }
+      default: return 'Sistema'
+    }
   }
 }

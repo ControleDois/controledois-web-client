@@ -13,14 +13,15 @@ export class ProductService {
     private apiService: ApiService
   ) { }
 
-  index(search: string, sorteBy?: string, orderBy?: string, page?: number, limit?: number): Observable<any> {
+  index(search: string, sorteBy?: string, orderBy?: string, page?: number, limit?: number, tributation?: boolean): Observable<any> {
     const params = new HttpParams()
       .set('role', '0')
       .set('search', search)
       .set('sortedBy', sorteBy || 'name')
       .set('orderBy', orderBy || 'name')
       .set('page', page || '1')
-      .set('limit', limit || '10');
+      .set('limit', limit || '10')
+      .set('tributation', tributation || false);
 
     return this.apiService.on(this.resource, '', 'get-token-params', params);
   }

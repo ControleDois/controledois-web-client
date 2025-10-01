@@ -33,6 +33,12 @@ export class IndexedDbService {
           saleStore.createIndex('document', 'people.document', { unique: false });
           saleStore.createIndex('social_name', 'people.social_name', { unique: false });
         }
+        if (!db.objectStoreNames.contains('terminal')) {
+          db.createObjectStore('terminal', { keyPath: 'id', autoIncrement: true });
+        }
+        if (!db.objectStoreNames.contains('nfes')) {
+          db.createObjectStore('nfes', { keyPath: 'id', autoIncrement: true });
+        }
       },
     });
   }
@@ -190,20 +196,20 @@ export class IndexedDbService {
 
   async deleteDatabase(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.deleteDatabase('controledois_web_salesforce');
+      const request = indexedDB.deleteDatabase('controledois_web_pdv');
 
       request.onsuccess = () => {
-        console.log(`Banco de dados controledois_web_salesforce deletado com sucesso.`);
+        console.log(`Banco de dados controledois_web_pdv deletado com sucesso.`);
         resolve();
       };
 
       request.onerror = (event) => {
-        console.error(`Erro ao deletar o banco de dados controledois_web_salesforce:`, event);
+        console.error(`Erro ao deletar o banco de dados controledois_web_pdv:`, event);
         reject(event);
       };
 
       request.onblocked = () => {
-        console.warn(`A exclusão do banco de dados controledois_web_salesforce foi bloqueada.`);
+        console.warn(`A exclusão do banco de dados controledois_web_pdv foi bloqueada.`);
       };
     });
   }

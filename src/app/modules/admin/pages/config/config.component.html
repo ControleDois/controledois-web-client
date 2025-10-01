@@ -450,6 +450,138 @@
                 </div>
               </div>
             </mat-tab>
+
+            <mat-tab>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+                  <ng-container formArrayName="terminals">
+                    <div *ngFor="let terminal of terminals.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px; padding: 20px;">
+
+                      <ng-container [formGroupName]="i">
+                        <div class="basic-form-header" style="margin-bottom: 20px; display: flex; justify-content: space-between;">
+                          <h3>Dados gerais</h3>
+
+                          <div>
+                            <button mat-icon-button (click)="addFavoriteTerminal(i)" *ngIf="terminal?.value?.id !== ''">
+                              <mat-icon>favorite</mat-icon>
+                            </button>
+                            <button class="add-item" mat-icon-button (click)="removeTerminal(i)">
+                              <mat-icon>clear</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div class="label-group">
+                          <app-search-loading-unique style="width: 25%" [search]="terminalsOutPut[i]" (eventEmit)="selectNatureOperation($event, i)"></app-search-loading-unique>
+                        </div>
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Configurações de NF-e</h3>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Ambiente:</span>
+                            <select formControlName="nfe_ambiente">
+                              <option value="1">Homologação</option>
+                              <option value="0">Produção</option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Série NF-e</span>
+                            <input formControlName="nfe_serie" type="number">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Número NF-e</span>
+                            <input formControlName="nfe_numero" type="number">
+                          </label>
+                        </div>
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Configurações de NFC-e</h3>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Ambiente:</span>
+                            <select formControlName="nfce_ambiente">
+                              <option value="1">Homologação</option>
+                              <option value="0">Produção</option>
+                            </select>
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Série NFC-e</span>
+                            <input formControlName="nfce_serie" type="number">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Número NFC-e</span>
+                            <input formControlName="nfce_numero" type="number">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Id Token</span>
+                            <input formControlName="nfce_id_token" type="number">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">CSC</span>
+                            <input formControlName="nfce_csc">
+                          </label>
+                        </div>
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Certificado</h3>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Caminho do Certificado:</span>
+                            <input formControlName="certificate_path" type="text">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Senha:</span>
+                            <input formControlName="certificate_password" type="text">
+                          </label>
+                        </div>
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Impressora</h3>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Caminho da impressora:</span>
+                            <input formControlName="printer_path" type="text">
+                          </label>
+                        </div>
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Servidor de Comando</h3>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">API:</span>
+                            <input formControlName="api_url" type="text">
+                          </label>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addTerminal(null)">Adicionar outro terminal</button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
           </mat-tab-group>
         </form>
 

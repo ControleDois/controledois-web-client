@@ -5,6 +5,7 @@ export interface Config {
   sale_people_default: any;
   sale_category_default: any;
   sale_bank_account_default: any;
+  natureOperation: any;
   sale_people_default_id: string | number;
   sale_bank_account_default_id: string | number;
   sale_category_default_id: string | number;

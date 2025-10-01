@@ -346,26 +346,27 @@
                   <ng-container formArrayName="keys">
                     <div *ngFor="let key of keys.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
                       <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
-                        <li>Tipo de Chave</li>
-                        <li>Validade</li>
-                        <li style="width: 50%;">Chave</li>
+                        <li style="width: 22%">Tipo de Chave</li>
+                        <li style="width: 24%">Validade</li>
+                        <li style="width: 100%;">Chave</li>
                       </ul>
 
                       <ng-container [formGroupName]="i">
                         <div class="label-group">
-                          <label>
+                          <label style="width: 30%">
                             <span class="label-title">Obrigatório</span>
                             <select formControlName="role">
                               <option [value]="1">CTrix ERP</option>
+                              <option [value]="99">CTrix ERP - Old</option>
                             </select>
                           </label>
 
-                          <label>
+                          <label style="width: 30%">
                             <span class="label-title">Validade</span>
                             <input formControlName="due_date" type="date">
                           </label>
 
-                          <label style="width: 50%">
+                          <label style="width: 100%">
                             <span class="label-title">Chave</span>
                             <input formControlName="key" type="text">
                           </label>
@@ -373,6 +374,10 @@
                           <label>
                             <button mat-icon-button (click)="gerenateKey(i)">
                               <mat-icon>key</mat-icon>
+                            </button>
+
+                            <button mat-icon-button (click)="sendKey(i)">
+                              <mat-icon>mail</mat-icon>
                             </button>
                           </label>
 
