@@ -77,6 +77,14 @@
 
               <div class="label-group">
                 <app-search-loading-unique class="label-w50" [search]="searchBrand"></app-search-loading-unique>
+
+                <label class="label-w30">
+                  <span class="field">Produto pesado:</span>
+                  <select formControlName="heavy_product">
+                    <option [value]="1">Sim</option>
+                    <option [value]="0">Não</option>
+                  </select>
+                </label>
               </div>
             </mat-tab>
 

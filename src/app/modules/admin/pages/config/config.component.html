@@ -472,7 +472,23 @@
                         </div>
 
                         <div class="label-group">
-                          <app-search-loading-unique style="width: 25%" [search]="terminalsOutPut[i]" (eventEmit)="selectNatureOperation($event, i)"></app-search-loading-unique>
+                          <app-search-loading-unique style="width: 100%" [search]="terminalsOutPut[i]" (eventEmit)="selectNatureOperation($event, i)"></app-search-loading-unique>
+
+                          <label class="label-w30">
+                            <span class="field">Ativa geração de NFC-e:</span>
+                            <select formControlName="nfce_active">
+                              <option [value]="1">Sim</option>
+                              <option [value]="0">Não</option>
+                            </select>
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Ativa geração de NFe:</span>
+                            <select formControlName="nfe_active">
+                              <option [value]="1">Sim</option>
+                              <option [value]="0">Não</option>
+                            </select>
+                          </label>
                         </div>
 
                         <div class="basic-form-header" style="margin-bottom: 20px;">
@@ -559,6 +575,67 @@
                             <input formControlName="printer_path" type="text">
                           </label>
                         </div>
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Balança</h3>
+                        </div>
+
+                        <label class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Modelo:</span>
+                            <select formControlName="balance_model">
+                              <option *ngFor="let options of balanceModel" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Caminho da balança:</span>
+                            <input formControlName="balance_path" type="text">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Baud Rate:</span>
+                            <select formControlName="balance_baud">
+                              <option *ngFor="let options of balanceBaud" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Data Bits:</span>
+                            <select formControlName="balance_data">
+                              <option *ngFor="let options of balanceData" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+                        </label>
+
+                        <label class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Parity:</span>
+                            <select formControlName="balance_parity">
+                              <option *ngFor="let options of balanceParity" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Stop Bits:</span>
+                            <select formControlName="balance_stop">
+                              <option *ngFor="let options of balanceStop" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Handshaking:</span>
+                            <select formControlName="balance_hand_shake">
+                              <option *ngFor="let options of balanceHandShake" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+                        </label>
 
                         <div class="basic-form-header" style="margin-bottom: 20px;">
                           <h3>Servidor de Comando</h3>

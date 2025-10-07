@@ -279,6 +279,54 @@ export class ConfigComponent implements OnInit {
     { name: '⦿ Lucro real', type: 7 },
   ];
 
+  public balanceModel = [
+    { name: '⦿ Nenhuma', type: 0 },
+    { name: '⦿ Filizola', type: 1 },
+    { name: '⦿ Toledo', type: 2 },
+  ];
+
+  public balanceBaud = [
+    { name: '⦿ 110', type: 110 },
+    { name: '⦿ 300', type: 300 },
+    { name: '⦿ 600', type: 600 },
+    { name: '⦿ 1200', type: 1200 },
+    { name: '⦿ 2400', type: 2400 },
+    { name: '⦿ 4800', type: 4800 },
+    { name: '⦿ 9600', type: 9600 },
+    { name: '⦿ 19200', type: 19200 },
+    { name: '⦿ 38400', type: 38400 },
+    { name: '⦿ 57600', type: 57600 },
+    { name: '⦿ 115200', type: 115200 },
+  ];
+
+  public balanceData = [
+    { name: '⦿ 5', type: 5 },
+    { name: '⦿ 6', type: 6 },
+    { name: '⦿ 7', type: 7 },
+    { name: '⦿ 8', type: 8 },
+  ];
+
+  public balanceParity = [
+    { name: '⦿ none', type: 0 },
+    { name: '⦿ odd', type: 1 },
+    { name: '⦿ even', type: 2 },
+    { name: '⦿ mark', type: 3 },
+    { name: '⦿ space', type: 4 },
+  ];
+
+  public balanceStop = [
+    { name: '⦿ s1', type: 0 },
+    { name: '⦿ s1,5', type: 1 },
+    { name: '⦿ s2', type: 2 },
+  ];
+
+  public balanceHandShake = [
+    { name: '⦿ none', type: 0 },
+    { name: '⦿ rts/cts', type: 1 },
+    { name: '⦿ dtr/dsr', type: 2 },
+    { name: '⦿ dsr/dtr', type: 3 },
+  ];
+
   //Dados para salvar no indexedDB do PDV
   private currentPagePeople = 1;
   private currentPageSale = 1;
@@ -847,15 +895,24 @@ export class ConfigComponent implements OnInit {
       nfe_serie: new FormControl(value?.nfe_serie || 1),
       nfe_numero: new FormControl(value?.nfe_numero || 1),
       nfe_ambiente: new FormControl(value?.nfe_ambiente || 1),
+      nfe_active: new FormControl(value?.nfe_active || 0),
       nfce_serie: new FormControl(value?.nfce_serie || 1),
       nfce_numero: new FormControl(value?.nfce_numero || 1),
       nfce_ambiente: new FormControl(value?.nfce_ambiente || 1),
       nfce_id_token: new FormControl(value?.nfce_id_token || 1),
       nfce_csc: new FormControl(value?.nfce_csc || ''),
+      nfce_active: new FormControl(value?.nfce_active || 0),
       api_url: new FormControl(value?.api_url || ''),
       printer_path: new FormControl(value?.printer_path || ''),
       certificate_path: new FormControl(value?.certificate_path || ''),
       certificate_password: new FormControl(value?.certificate_password || ''),
+      balance_model: new FormControl(value?.balance_model || 0),
+      balance_path: new FormControl(value?.balance_path || ''),
+      balance_baud: new FormControl(value?.balance_baud || 0),
+      balance_data: new FormControl(value?.balance_data || 0),
+      balance_parity: new FormControl(value?.balance_parity || 0),
+      balance_stop: new FormControl(value?.balance_stop || 0),
+      balance_hand_shake: new FormControl(value?.balance_hand_shake || 0),
     });
 
     this.terminalsOutPut.push({

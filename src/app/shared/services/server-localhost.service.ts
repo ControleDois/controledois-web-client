@@ -10,6 +10,10 @@ export class ServerLocalhostService {
     private apiService: ApiService
   ) { }
 
+  getBalance(api: string, balance: Object): Observable<any> {
+    return this.apiService.on(`${api}/balance`, balance, 'post-no-environment');
+  }
+
   printSalePDV(api: string, token: string, body: Object): Observable<any> {
     return this.apiService.on(`${api}/print?token=${token}`, body, 'post-no-environment');
   }

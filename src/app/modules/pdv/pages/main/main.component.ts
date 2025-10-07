@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { catchError, debounceTime, distinctUntilChanged, filter, finalize, interval, map, switchMap, throwError } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, interval, map, switchMap, takeWhile, throwError } from 'rxjs';
 import { IndexedDbService } from 'src/app/shared/services/indexed-db.service';
 import { DatePipe } from '@angular/common';
 import { Auth } from 'src/app/shared/interfaces/auth.interface';
@@ -9,6 +9,7 @@ import { InternetService } from 'src/app/shared/services/internet.service';
 import { SaleService } from 'src/app/shared/services/sale.service';
 import { EncryptService } from 'src/app/shared/services/encrypt.service';
 import { ServerLocalhostService } from 'src/app/shared/services/server-localhost.service';
+import { BalancaService } from 'src/app/shared/services/balanca.service';
 
 @Component({
   selector: 'app-main',
@@ -83,13 +84,16 @@ export class MainComponent implements OnInit  {
 
   private timerChange: any;
 
+  //Conexão com a balança
+  public balanceConnection: boolean = false;
+
   constructor(
     private indexedDbService: IndexedDbService,
     private datePipe: DatePipe,
     private storageService: StorageService,
     private internetService: InternetService,
     private saleService: SaleService,
-    private serverLocalhostService: ServerLocalhostService
+    private serverLocalhostService: ServerLocalhostService,
   ) {
     this.auth = storageService.getAuth();
    }
@@ -118,7 +122,6 @@ export class MainComponent implements OnInit  {
       //Se estiver vazio o texto limpa o produto selecionado
       if ((this.searchStatus.value || '').trim() === '') {
         this.productSelected = null;
-        this.productAmount = 1;
         return;
       }
 
@@ -135,7 +138,17 @@ export class MainComponent implements OnInit  {
 
       this.indexedDbService.filterProductBy(this.searchStatus.value || '').then((res) => {
         this.productSelected = res.length > 0 ? res[0] : null;
-        this.productSelected.amount = this.productAmount;
+
+        if (this.productSelected) {
+          this.productSelected.amount = this.productAmount;
+
+          if (this.productSelected.heavy_product) {
+            this.startBalance();
+          };
+        } else {
+          this.balanceConnection = false;
+          this.productAmount = 1;
+        }
       });
     }
 
@@ -201,11 +214,20 @@ export class MainComponent implements OnInit  {
         return;
       }
 
+      //Verifica se existe & que indica que é pra comecar a buscar a balança
+      if (searchText.trim() === '&') {
+        this.searchStatus.setValue('');
+        this.startBalance();
+        return;
+      }
+
       // Se houver um produto selecionado, adiciona o produto
       if (this.productSelected) {
         this.addProduct();
         this.productSelected = null;
         this.searchStatus.setValue('');
+        this.productAmount = 1;
+        this.balanceConnection = false;
         return;
       }
 
@@ -354,31 +376,33 @@ export class MainComponent implements OnInit  {
 
     if (terminal) {
 
-      //Gerar NFCe
-      const nfe = this.serverLocalhostService.generateNFCe(this.auth.company,
-        terminal?.natureOperation || this.auth.company.config.natureOperation,
-        this.auth.company.config.sale_people_default,
-        this.products.value,
-        this.plots.value
-      );
+      if (terminal.nfce_active) {
+        //Gerar NFCe
+        const nfe = this.serverLocalhostService.generateNFCe(this.auth.company,
+          terminal?.natureOperation || this.auth.company.config.natureOperation,
+          this.auth.company.config.sale_people_default,
+          this.products.value,
+          this.plots.value
+        );
 
-      this.indexedDbService.addData(nfe, 'nfes');
+        this.indexedDbService.addData(nfe, 'nfes');
 
-      //Enviar nfe
-      this.serverLocalhostService.sendNFe(terminal.api_url, {
-        company: this.auth.company,
-        nfe: nfe,
-        terminal: terminal
-      }).pipe(
-        finalize(() => (console.log('ue'))),
-        catchError((error) => {
-          return throwError(error);
-        }),
-        map(() => {
-          console.log('envia nota')
-        })
-      )
-      .subscribe();
+        //Enviar nfe
+        this.serverLocalhostService.sendNFe(terminal.api_url, {
+          company: this.auth.company,
+          nfe: nfe,
+          terminal: terminal
+        }).pipe(
+          finalize(() => (console.log('ue'))),
+          catchError((error) => {
+            return throwError(error);
+          }),
+          map(() => {
+            console.log('envia nota')
+          })
+        )
+        .subscribe();
+      }
 
       //Imprime venda
       this.serverLocalhostService.printSalePDV(terminal.api_url,this.auth.company.config.token, {
@@ -430,5 +454,40 @@ export class MainComponent implements OnInit  {
         });
       })
     }
+  }
+
+  async startBalance() {
+    // Evitar iniciar a balança se já estiver conectada
+    if (this.balanceConnection) {
+      return;
+    }
+
+    this.balanceConnection = true;
+
+    //Pega o terminal favorito para operação
+    const terminal = await this.indexedDbService.getAllData('terminal').then(res => res[0]);
+
+    if (!terminal) {
+      return;
+    }
+
+    //A cada 5 segundos, faz a chamada à api
+    interval(5000)
+      .pipe(
+        switchMap(() => this.serverLocalhostService.getBalance(terminal.api_url, terminal)),
+        takeWhile(() => this.balanceConnection),
+      )
+      .subscribe({
+        next: (res) => {
+          this.productAmount = res.peso;
+
+          if (this.productSelected) {
+            this.productSelected.amount = this.productAmount;
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
   }
 }

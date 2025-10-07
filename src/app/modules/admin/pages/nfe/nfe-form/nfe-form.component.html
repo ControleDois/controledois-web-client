@@ -40,7 +40,7 @@
 
                           <label>
                             <span class="label-title">Quantidade</span>
-                            <input formControlName="amount" type="number" style="text-align: right" (keyup)="sumProductDetails(i)">
+                            <input formControlName="amount" type="text" currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: false, precision: 3}" style="text-align: right" (keyup)="sumProductDetails(i)">
                           </label>
 
                           <label>

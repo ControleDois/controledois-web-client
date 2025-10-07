@@ -46,6 +46,7 @@ export class ProductFormComponent implements OnInit {
     cfop_interstate: new FormControl(''),
     img_path: new FormControl(''),
     img_url: new FormControl(''),
+    heavy_product: new FormControl(0),
     shop: new FormGroup({
       name: new FormControl(''),
       sale_value: new FormControl(0),
