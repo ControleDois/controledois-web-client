@@ -327,6 +327,58 @@ export class ConfigComponent implements OnInit {
     { name: '⦿ dsr/dtr', type: 3 },
   ];
 
+  public tefPaygoModelo = [
+    { name: '⦿ tefApiNenhum', type: 0 },
+    { name: '⦿ tefApiPayGoWeb', type: 1 },
+    { name: '⦿ tefApiCliSITEF', type: 2 },
+    { name: '⦿ tefApiElgin', type: 3 },
+    { name: '⦿ tefStoneAutoTEF', type: 4 },
+    { name: '⦿ tefAditumAPI', type: 5 },
+    { name: '⦿ tefScopeAPI', type: 6 },
+    { name: '⦿ tefDestaxaAPI', type: 7 },
+    { name: '⦿ tefTPag', type: 8 },
+    { name: '⦿ tefEquals', type: 9 },
+    { name: '⦿ tefDirectPin', type: 10 },
+  ];
+
+  public tefPaygoTransacaoPendente = [
+    { name: '⦿ Confirmar', type: 0 },
+    { name: '⦿ Estornar', type: 1 },
+    { name: '⦿ Perguntar', type: 2 },
+  ];
+
+  public tefPaygoTransacaoInicializacao = [
+    { name: '⦿ Não fazer nada', type: 0 },
+    { name: '⦿ Processar pendentes', type: 1 },
+    { name: '⦿ Cancelar/Estornar', type: 2 },
+  ];
+
+  public tefPaygoPosprinterModelo = [
+    { name: '⦿ ppTexto', type: 0 },
+    { name: '⦿ ppEscPosEpson', type: 1 },
+    { name: '⦿ ppEscDaruma', type: 2 },
+    { name: '⦿ ppEscVox', type: 3 },
+    { name: '⦿ ppEscDiebold', type: 4 },
+    { name: '⦿ ppEscEpsonP2', type: 5 },
+    { name: '⦿ ppCustomPos', type: 6 },
+    { name: '⦿ ppEscPosStar', type: 7 },
+    { name: '⦿ ppEscZJiang', type: 8 },
+    { name: '⦿ ppEscGPrinter', type: 9 },
+    { name: '⦿ ppEscDatecs', type: 10 },
+    { name: '⦿ ppEscSunmi', type: 11 },
+    { name: '⦿ ppExterno', type: 12 },
+  ];
+
+  public tefPaygoPosprinterPaginaDeCodigo = [
+    { name: '⦿ pcNone', type: 0 },
+    { name: '⦿ pc437', type: 1 },
+    { name: '⦿ pc850', type: 2 },
+    { name: '⦿ pc852', type: 3 },
+    { name: '⦿ pc860', type: 4 },
+    { name: '⦿ pcUTF8', type: 5 },
+    { name: '⦿ pc1252', type: 6 },
+  ];
+
   //Dados para salvar no indexedDB do PDV
   private currentPagePeople = 1;
   private currentPageSale = 1;
@@ -494,9 +546,9 @@ export class ConfigComponent implements OnInit {
           this.notificationService.warn(error.error.errors[0].message);
           return throwError(error);
         }),
-        map(() => {
+        map((res) => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['dash']);
+          this.setForm(res);
         })
       )
       .subscribe();
@@ -913,6 +965,21 @@ export class ConfigComponent implements OnInit {
       balance_parity: new FormControl(value?.balance_parity || 0),
       balance_stop: new FormControl(value?.balance_stop || 0),
       balance_hand_shake: new FormControl(value?.balance_hand_shake || 0),
+      tef_paygo_modelo: new FormControl(value?.tef_paygo_modelo || 0),
+      tef_paygo_transacao_pendente: new FormControl(value?.tef_paygo_transacao_pendente || 0),
+      tef_paygo_transacao_inicializacao: new FormControl(value?.tef_paygo_transacao_inicializacao || 0),
+      tef_paygo_auto_atendimento: new FormControl(value?.tef_paygo_auto_atendimento || false),
+      tef_paygo_imprime_via_cliente_reduzida: new FormControl(value?.tef_paygo_imprime_via_cliente_reduzida || false),
+      tef_paygo_confirma_transacao_autonomamente: new FormControl(value?.tef_paygo_confirma_transacao_autonomamente || false),
+      tef_paygo_suporta_desconto: new FormControl(value?.tef_paygo_suporta_desconto || false),
+      tef_paygo_suporta_saque: new FormControl(value?.tef_paygo_suporta_saque || false),
+      tef_paygo_exibicao_qrcode: new FormControl(value?.tef_paygo_exibicao_qrcode || 0),
+      tef_paygo_posprinter_modelo: new FormControl(value?.tef_paygo_posprinter_modelo || 0),
+      tef_paygo_posprinter_pagina_de_codigo: new FormControl(value?.tef_paygo_posprinter_pagina_de_codigo || 0),
+      tef_paygo_posprinter_porta: new FormControl(value?.tef_paygo_posprinter_porta || ''),
+      tef_paygo_posprinter_colunas: new FormControl(value?.tef_paygo_posprinter_colunas || 0),
+      tef_paygo_posprinter_linhas: new FormControl(value?.tef_paygo_posprinter_linhas || 0),
+      tef_paygo_posprinter_espaco: new FormControl(value?.tef_paygo_posprinter_espaco || 0),
     });
 
     this.terminalsOutPut.push({

@@ -22,7 +22,12 @@ export class ServerLocalhostService {
     return this.apiService.on(`${api}/nfe-off`, body, 'post-no-environment');
   }
 
-  generateNFCe(company: any, operation: any, people: any, products: any, payments: any): any {
+  tefPayGo(api: string, body: Object): Observable<any> {
+    return this.apiService.on(`${api}/tef-paygo`, body, 'post-no-environment');
+  }
+
+  generateNFCe(company: any, terminal: any, people: any, products: any, payments: any): any {
+    let operation = terminal.natureOperation || company.config.natureOperation;
 
     let consumidorFinal = 0
     if (people.state_registration_indicator === 9) {
@@ -34,6 +39,8 @@ export class ServerLocalhostService {
       companyId: company.id,
       peopleId: people.id,
       modelo: 65,
+      nfce_serie: terminal.nfce_serie,
+      nfce_numero: terminal.nfce_numero,
       nfeNatureOperationId: operation.id,
       natureza_operacao: operation.description,
       data_emissao: new Date(),
@@ -48,18 +55,18 @@ export class ServerLocalhostService {
       inscricao_estadual_emitente: company.people.state_registration,
       nome_emitente: company.people.social_name,
       nome_fantasia_emitente: company.people.name,
-      inscricao_municipal_emitente: company.people.municipal_registration,
+      inscricao_municipal_emitente: company.people?.municipal_registration || '',
       inscricao_estadual_st_emitente: company.people.state_registration,
-      regime_tributario_emitente: company.people.state_registration_indicator,
+      regime_tributario_emitente: company.people.crt,
 
       //Emitente Endereço
       telefone_emitente: company.people.phone,
       logradouro_emitente: company.people.address.address,
       numero_emitente: company.people.address.number,
-      bairro_emitente: company.people.address.district,
+      bairro_emitente: company.people.address?.district,
       municipio_emitente: company.people.address.city,
       uf_emitente: company.people.address.state,
-      complemento_emitente: company.people.address.complement,
+      complemento_emitente: company.people?.address?.complement || '',
       codigo_municipio_emitente: Number(company.people.address.code_ibge),
       cep_emitente: company.people.address.zip_code,
 
@@ -106,6 +113,11 @@ export class ServerLocalhostService {
       ibscbs_gcbs_vcred_pres_cond_sus: 0,
     }
 
+    let valorTotalOutrasDespesas = 0;
+    let valorTotalProdutosBase = 0; // Será o <vProd> no total da nota
+    let valorTotalIBS = 0;
+    let valorTotalCBS = 0;
+
     let indexItem = 0
     let nfeItens: any[] = []
     let valorTotal = 0
@@ -115,7 +127,34 @@ export class ServerLocalhostService {
       indexItem++
       let findProduct = product.product
 
-      console.log(findProduct);
+      // alíquotas (em porcentagem)
+      const pIBS_UF = 0.10;
+      const pIBS_MUN = 0;
+      const pCBS = 0.90;
+
+      //Calcule o valor final do item (o preço de venda)
+      const valorFinalItem = product.amount * product.cost_value;
+
+      //Calcule o valor base do produto, removendo os impostos
+      const totalTaxRate = (pIBS_UF + pIBS_MUN + pCBS) / 100;
+      const valorBrutoBase = parseFloat((valorFinalItem / (1 + totalTaxRate)).toFixed(2));
+
+      //Calcule os valores de IBS e CBS sobre o novo valor base
+      let  vIBS_UF = parseFloat(((valorBrutoBase * pIBS_UF) / 100).toFixed(2));
+      let  vIBS_MUN = 0; // Mantido como 0 no seu exemplo
+      let  vCBS = parseFloat(((valorBrutoBase * pCBS) / 100).toFixed(2));
+
+      // Some os componentes calculados
+      const somaCalculada = valorBrutoBase + vIBS_UF + vIBS_MUN + vCBS;
+
+      //Encontre a diferença para o valor final
+      const diferenca = parseFloat((valorFinalItem - somaCalculada).toFixed(2));
+
+      //Se houver diferença, ajuste o maior imposto (vCBS)
+      if (diferenca !== 0) {
+        vCBS += diferenca;
+        vCBS = parseFloat(vCBS.toFixed(2)); // Garante 2 casas decimais após a soma
+      }
 
       let item: any = {
         product_id: findProduct.id,
@@ -132,32 +171,46 @@ export class ServerLocalhostService {
             : operation.cfop_state,
         unidade_comercial: findProduct.unit,
         quantidade_comercial: product.amount,
-        valor_unitario_comercial: product.cost_value,
-        valor_bruto: product.amount * product.cost_value,
+
+        // ALTERADO: O valor unitário agora é baseado no novo valor base
+        valor_unitario_comercial: parseFloat((valorBrutoBase / product.amount).toFixed(10)), // Maior precisão aqui
+
+        // ALTERADO: O valor bruto do item é o valor base calculado
+        valor_bruto: valorBrutoBase,
+
+        valor_total_item: valorFinalItem,
+
         unidade_tributavel: findProduct.unit,
         quantidade_tributavel: product.amount,
-        valor_unitario_tributavel: product.cost_value,
+
+        // ALTERADO: O valor unitário tributável também é baseado no novo valor base
+        valor_unitario_tributavel: parseFloat((valorBrutoBase / product.amount).toFixed(10)),
+
         icms_origem: findProduct.icms_origin,
         inclui_no_total: 1,
-        icms_base_calculo: product.cost_value,
+
+        // ALTERADO: A base de cálculo do ICMS (se houver) também deve ser o valor base
+        icms_base_calculo: valorBrutoBase,
+
+        valor_desconto: 0,
       }
 
       //Reforma Tributaria
       let ibscbs: any = {
-        ibscbs_cst: findProduct.taxation.rule.nfeTaxationRulesResale.icms_situacao_tributaria + '0',
+        ibscbs_cst: '000',
         ibscbs_cclass_trib: '000001',
 
-        ibscbs_vbc: item.valor_bruto,
-        ibscbs_vibs: 0,
+        ibscbs_vbc: valorBrutoBase, // Base de cálculo é o valor do produto sem imposto
+        ibscbs_vibs: vIBS_UF + vIBS_MUN, // Valor total do IBS
 
-        ibscbs_pibs_uf: 0.10,
-        ibscbs_vibs_uf: (item.valor_bruto * 0.10) / 100,
+        ibscbs_pibs_uf: pIBS_UF,
+        ibscbs_vibs_uf: vIBS_UF,
 
-        ibscbs_pibs_mun: 0,
-        ibscbs_vibs_mun: (item.valor_bruto * 0) / 100,
+        ibscbs_pibs_mun: pIBS_MUN,
+        ibscbs_vibs_mun: vIBS_MUN,
 
-        ibscbs_pcbs: 0.90,
-        ibscbs_vcbs: (item.valor_bruto * 0.90) / 100,
+        ibscbs_pcbs: pCBS,
+        ibscbs_vcbs: vCBS,
       }
 
       if (consumidorFinal === 0) {
@@ -207,28 +260,61 @@ export class ServerLocalhostService {
         }
       }
 
-      valorTotal += product.amount * product.cost_value
+      // ALTERADO: Atualize os novos totais e o valor final
+      valorTotal += valorFinalItem; // Soma o valor que o cliente realmente paga
+      valorTotalProdutosBase += valorBrutoBase;
+      valorTotalIBS += ibscbs.ibscbs_vibs;
+      valorTotalCBS += ibscbs.ibscbs_vcbs;
+      valorTotalOutrasDespesas += ibscbs.ibscbs_vibs + ibscbs.ibscbs_vcbs;
+
       nfeItens.push(item)
     }
 
-    nfe.valor_produtos = valorTotal
-    nfe.valor_total = valorTotal
+    // Some o total dos novos impostos
+    const totalNovosImpostos = valorTotalIBS + valorTotalCBS;
+
+    // ALTERADO: Atribua os valores corretos aos totais da NFe
+    nfe.valor_produtos = parseFloat(valorTotalProdutosBase.toFixed(2));
+
+    // **A JOGADA É AQUI:**
+    // Coloque a soma dos novos impostos em "outras despesas"
+    nfe.valor_outras_despesas = parseFloat(totalNovosImpostos.toFixed(2));
+
+    // O valor total da nota DEVE ser a soma do valor base dos produtos + impostos.
+    // Usar o valorTotal (soma dos pagamentos) é a forma mais segura para evitar erros de arredondamento.
+    nfe.valor_total = parseFloat((valorTotalProdutosBase + valorTotalIBS + valorTotalCBS).toFixed(2));
 
     let nfePagamentos: any[] = []
 
-    console.log(payments);
-
     for (const payment of payments) {
+      let formPayment = ''
+      switch (payment.form_payment) {
+        case 9:
+          formPayment = '01';
+          break;
+        case 2:
+          formPayment = '04';
+          break;
+        case 1:
+          formPayment = '03';
+          break;
+        case 10:
+          formPayment = '17';
+          break;
+      }
+
       let paymentMethod = {
         indicador_pagamento: 0,
-        forma_pagamento: payment.form_payment,
+        forma_pagamento: formPayment,
         valor_pagamento: payment.amount,
+        autentication: ''
       }
 
       nfePagamentos.push(paymentMethod)
     }
 
-    //Somar o bcibscb dos itens
+    // --- 1. Faça a somatória dos valores ---
+    // (Removida a linha duplicada para 'ibscbs_gibs_vibs')
     nfe.ibscbs_vbc = nfeItens
     .reduce((acc: number, product: any) => acc + (Number(product.ibscbs_vbc) || 0), 0);
     nfe.ibscbs_gibs_vibs = nfeItens
@@ -237,12 +323,17 @@ export class ServerLocalhostService {
     .reduce((acc: number, product: any) => acc + (Number(product.ibscbs_vibs_uf) || 0), 0);
     nfe.ibscbs_gibs_gibmun_vibs_mun = nfeItens
     .reduce((acc: number, product: any) => acc + (Number(product.ibscbs_vibs_mun) || 0), 0);
-
-    nfe.ibscbs_gibs_vibs = nfeItens
-    .reduce((acc: number, product: any) => acc + (Number(product.ibscbs_vibs) || 0), 0);
-
     nfe.ibscbs_gcbs_vcbs = nfeItens
     .reduce((acc: number, product: any) => acc + (Number(product.ibscbs_vcbs) || 0), 0);
+
+    // --- 2. Arredonde os totais para 2 casas decimais ---
+    // Usando .toFixed(2) que é mais seguro para moeda.
+    // O '+' na frente converte o resultado (que é uma string) de volta para número.
+    nfe.ibscbs_vbc = +nfe.ibscbs_vbc.toFixed(2);
+    nfe.ibscbs_gibs_vibs = +nfe.ibscbs_gibs_vibs.toFixed(2);
+    nfe.ibscbs_gibs_gibsuf_vibs_uf = +nfe.ibscbs_gibs_gibsuf_vibs_uf.toFixed(2);
+    nfe.ibscbs_gibs_gibmun_vibs_mun = +nfe.ibscbs_gibs_gibmun_vibs_mun.toFixed(2);
+    nfe.ibscbs_gcbs_vcbs = +nfe.ibscbs_gcbs_vcbs.toFixed(2);
 
     nfe = {
       ...nfe,
@@ -250,6 +341,7 @@ export class ServerLocalhostService {
       pagamentos: nfePagamentos,
     }
 
+    console.log(nfe);
     return nfe
   }
 }

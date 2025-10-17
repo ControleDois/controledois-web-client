@@ -47,23 +47,33 @@
             <mat-icon>keyboard_arrow_down</mat-icon>
           </div>
           <mat-menu #actions="matMenu">
-            <button mat-menu-item [routerLink]="'/nfe/' + element.id" *ngIf="element.status === 0 || element.status > 2">
+            <button mat-menu-item [routerLink]="'/nfe/' + element.id" *ngIf="(element.status === 0 || element.status === 3) && !element.protocolo">
+              <mat-icon>edit_square</mat-icon>
               <span>Editar</span>
             </button>
-            <button mat-menu-item (click)="delete(element.id)" *ngIf="element.status === 0">
+            <button mat-menu-item (click)="delete(element.id)" *ngIf="(element.status === 0 || element.status === 3) && !element.protocolo">
+              <mat-icon>delete_sweep</mat-icon>
               <span>Remover</span>
             </button>
-            <button mat-menu-item (click)="send(element.id)" *ngIf="element.status === 0 || element.status > 2">
-              <span>Enviar Nfe</span>
+            <button mat-menu-item (click)="send(element.id)" *ngIf="(element.status === 0 || element.status === 3) && !element.protocolo">
+              <mat-icon>drive_file_move</mat-icon>
+              <span>Enviar NFe</span>
             </button>
             <button mat-menu-item (click)="showLog(element)" *ngIf="element.status === 3">
+              <mat-icon>error</mat-icon>
               <span>Verificar Erro</span>
             </button>
-            <button mat-menu-item (click)="downloadFile(element.caminho_danfe)" *ngIf="element.status === 2">
+            <button mat-menu-item (click)="downloadFile(element.caminho_danfe)" *ngIf="(element.status > 1) && element.protocolo">
+              <mat-icon>picture_as_pdf</mat-icon>
               <span>Danfe</span>
             </button>
-            <button mat-menu-item (click)="downloadFile(element.caminho_xml_nota_fiscal)" *ngIf="element.status === 2">
+            <button mat-menu-item (click)="downloadFile(element.caminho_xml_nota_fiscal)" *ngIf="(element.status > 1) && element.protocolo">
+              <mat-icon>description</mat-icon>
               <span>XML</span>
+            </button>
+            <button mat-menu-item (click)="cancel(element.id)" *ngIf="(element.status === 2 || element.status === 3) && element.protocolo">
+              <mat-icon>block</mat-icon>
+              <span>Cancelar NFe</span>
             </button>
           </mat-menu>
         </td>

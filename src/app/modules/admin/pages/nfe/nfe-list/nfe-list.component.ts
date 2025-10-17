@@ -142,6 +142,8 @@ export class NfeListComponent implements OnInit, OnDestroy {
         return 'Emitida';
       case 3:
         return 'Error';
+      case 4:
+        return 'Cancelada';
       default:
         return 'Error'
     }
@@ -157,6 +159,8 @@ export class NfeListComponent implements OnInit, OnDestroy {
         return '#4ab858';
       case 3:
         return '#F43E61';
+      case 4:
+        return '#d35c74ff';
       default:
         return '#2687E9'
     }
@@ -172,6 +176,8 @@ export class NfeListComponent implements OnInit, OnDestroy {
         return '#ddf1de';
       case 3:
         return '#FCD9E0';
+      case 4:
+        return '#fae2e7ff';
       default:
         return '#DBE6FE'
     }
@@ -262,5 +268,20 @@ export class NfeListComponent implements OnInit, OnDestroy {
         this.loadingFull.active = false;
       }
     );
+  }
+
+  cancel(id: string): void {
+    this.loadingFull.active = true;
+    this.nfeService.cancel(id).pipe(
+      finalize(() => this.loadingFull.active = false),
+      catchError((error) => {
+        this.notificationService.warn('Dados não encontrados...');
+        return throwError(error);
+      }),
+      map((res) => {
+        this.notificationService.warn(res.mensagem);
+        this.updateStatus(id, 2);
+      })
+    ).subscribe();
   }
 }

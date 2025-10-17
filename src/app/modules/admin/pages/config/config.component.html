@@ -638,6 +638,121 @@
                         </label>
 
                         <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Configurações do TEF</h3>
+                        </div>
+
+                        <label class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Gerenciador do TEF:</span>
+                            <select formControlName="tef_paygo_modelo">
+                              <option *ngFor="let options of tefPaygoModelo" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Transação pendente:</span>
+                            <select formControlName="tef_paygo_transacao_pendente">
+                              <option *ngFor="let options of tefPaygoTransacaoPendente" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Pendencia na inicialização:</span>
+                            <select formControlName="tef_paygo_transacao_inicializacao">
+                              <option *ngFor="let options of tefPaygoTransacaoInicializacao" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Pendencia na inicialização:</span>
+                            <select formControlName="tef_paygo_exibicao_qrcode">
+                              <option *ngFor="let options of tefPaygoTransacaoPendente" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+                        </label>
+
+                        <label class="label-group">
+                          <div class="label-group-check" style="margin-bottom: 10px; width: 100%;">
+                            <span class="title">Configs</span>
+                            <div class="checks">
+                              <label class="check" style="width: 25.5%">
+                                <input type="checkbox" formControlName="tef_paygo_auto_atendimento" >
+                                <span>Auto atendimento?</span>
+                              </label>
+
+                              <label class="check" style="width: 25.5%">
+                                <input type="checkbox" formControlName="tef_paygo_imprime_via_cliente_reduzida" >
+                                <span>Imprime via cliente reduzida?</span>
+                              </label>
+
+                              <label class="check" style="width: 25.5%">
+                                <input type="checkbox" formControlName="tef_paygo_confirma_transacao_autonomamente" >
+                                <span>Confirma transação automaticamente?</span>
+                              </label>
+
+                              <label class="check" style="width: 25.5%">
+                                <input type="checkbox" formControlName="tef_paygo_suporta_desconto" >
+                                <span>Suporta desconto?</span>
+                              </label>
+
+                              <label class="check" style="width: 25.5%">
+                                <input type="checkbox" formControlName="tef_paygo_suporta_saque" >
+                                <span>Suporta saque?</span>
+                              </label>
+                            </div>
+                          </div>
+                        </label>
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
+                          <h3>Impressora TEF</h3>
+                        </div>
+
+                        <label class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Modelo:</span>
+                            <select formControlName="tef_paygo_posprinter_modelo">
+                              <option *ngFor="let options of tefPaygoPosprinterModelo" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Porta:</span>
+                            <input formControlName="tef_paygo_posprinter_porta" type="text">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Paginas de código:</span>
+                            <select formControlName="tef_paygo_posprinter_pagina_de_codigo">
+                              <option *ngFor="let options of tefPaygoPosprinterPaginaDeCodigo" [value]="options.type">{{ options.name }}
+                              </option>
+                            </select>
+                          </label>
+                        </label>
+
+                        <label class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Colunas:</span>
+                            <input formControlName="tef_paygo_posprinter_colunas" type="number">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Colunas:</span>
+                            <input formControlName="tef_paygo_posprinter_linhas" type="number">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Colunas:</span>
+                            <input formControlName="tef_paygo_posprinter_espaco" type="number">
+                          </label>
+                        </label>
+
+
+                        <div class="basic-form-header" style="margin-bottom: 20px;">
                           <h3>Servidor de Comando</h3>
                         </div>
 

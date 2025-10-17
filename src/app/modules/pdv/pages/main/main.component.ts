@@ -82,6 +82,9 @@ export class MainComponent implements OnInit  {
 
   public auth!: Auth;
 
+  //Terminal selecionado
+  public terminalSelected: any = null;
+
   private timerChange: any;
 
   //Conexão com a balança
@@ -98,7 +101,9 @@ export class MainComponent implements OnInit  {
     this.auth = storageService.getAuth();
    }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.terminalSelected = await this.indexedDbService.getAllData('terminal').then(res => res[0]);
+
     this.searchStatus.valueChanges
     .pipe(
       debounceTime(100),
@@ -327,6 +332,26 @@ export class MainComponent implements OnInit  {
       status: new FormControl(1),
     });
 
+    if (this.terminalSelected ) {
+      if (this.paymentSelected == 2 || this.paymentSelected == 3) {
+        this.serverLocalhostService.tefPayGo(this.terminalSelected.api_url, {
+          status: 1,
+          company: this.auth.company,
+          payment: control.value,
+          terminal: this.terminalSelected
+        }).pipe(
+          finalize(() => (console.log('ue'))),
+          catchError((error) => {
+            return throwError(error);
+          }),
+          map(() => {
+            console.log('enviado tef')
+          })
+        )
+        .subscribe();
+      }
+    }
+
     this.plots.push(control);
     this.paymentSelected = 0;
     this.searchStatus.setValue('');
@@ -371,15 +396,12 @@ export class MainComponent implements OnInit  {
       this.statusProcessChange = 0;
     }, 60000);
 
-    //Pega o terminal favorito para operação
-    const terminal = await this.indexedDbService.getAllData('terminal').then(res => res[0]);
+    if (this.terminalSelected) {
 
-    if (terminal) {
-
-      if (terminal.nfce_active) {
+      if (this.terminalSelected.nfce_active) {
         //Gerar NFCe
         const nfe = this.serverLocalhostService.generateNFCe(this.auth.company,
-          terminal?.natureOperation || this.auth.company.config.natureOperation,
+          this.terminalSelected,
           this.auth.company.config.sale_people_default,
           this.products.value,
           this.plots.value
@@ -388,29 +410,31 @@ export class MainComponent implements OnInit  {
         this.indexedDbService.addData(nfe, 'nfes');
 
         //Enviar nfe
-        this.serverLocalhostService.sendNFe(terminal.api_url, {
+        this.serverLocalhostService.sendNFe(this.terminalSelected.api_url, {
           company: this.auth.company,
           nfe: nfe,
-          terminal: terminal
+          terminal: this.terminalSelected
         }).pipe(
           finalize(() => (console.log('ue'))),
           catchError((error) => {
             return throwError(error);
           }),
           map(() => {
-            console.log('envia nota')
+            //Atualiza o número da NFCe somando 1
+            this.terminalSelected.nfce_numero = nfe.nfce_numero + 1;
+            this.indexedDbService.updateData(this.terminalSelected, 'terminal');
           })
         )
         .subscribe();
       }
 
       //Imprime venda
-      this.serverLocalhostService.printSalePDV(terminal.api_url,this.auth.company.config.token, {
+      this.serverLocalhostService.printSalePDV(this.terminalSelected.api_url,this.auth.company.config.token, {
         role: 0,
         company: this.auth.company,
         people: this.auth.company.config.sale_people_default,
         sale: this.myForm.value,
-        terminal: terminal
+        terminal: this.terminalSelected
       })
       .pipe(
         finalize(() => (console.log('ue'))),
@@ -468,6 +492,11 @@ export class MainComponent implements OnInit  {
     const terminal = await this.indexedDbService.getAllData('terminal').then(res => res[0]);
 
     if (!terminal) {
+      return;
+    }
+
+    //Se não tiver path da balança, não inicia a balança
+    if (!terminal.balance_path) {
       return;
     }
 
