@@ -64,6 +64,7 @@ export class MainComponent implements OnInit  {
 
   public statusProcess: Number = 0;
   public statusProcessChange: number = 0;
+  public statusCardPayment: number = 0;
   public searchStatus = new FormControl('');
   public skeletonOn: boolean = false;
 
@@ -73,6 +74,20 @@ export class MainComponent implements OnInit  {
 
   //Pagamento selecionado
   public paymentSelected: number = 0;
+
+  //Form de pagamento selecionado
+  public paymentSelectedForm = new FormGroup({
+    portion: new FormControl(0),
+    form_payment: new FormControl(0),
+    date_due: new FormControl(
+      this.datePipe.transform(new Date(), 'yyyy-MM-dd')
+    ),
+    amount: new FormControl(0),
+    bill_value: new FormControl(0),
+    change: new FormControl(0),
+    note: new FormControl(''),
+    status: new FormControl(1),
+  });
 
   //Pagamento parcelado
   public paymentInstallments: number = 1;
@@ -89,6 +104,8 @@ export class MainComponent implements OnInit  {
 
   //Conexão com a balança
   public balanceConnection: boolean = false;
+
+  //Conexão com o cardPayment
 
   constructor(
     private indexedDbService: IndexedDbService,
@@ -286,7 +303,7 @@ export class MainComponent implements OnInit  {
     }
   }
 
-  addPortion(): void {
+  async addPortion(): Promise<void> {
     const values = this.sumProducts();
     const totalPayments = this.sumPayments();
     let valuePayment = values.total - totalPayments;
@@ -319,7 +336,7 @@ export class MainComponent implements OnInit  {
     const sumTotal = values.total - totalPayments;
     const totalChange = sumTotal > valuePayment ? 0 : sumTotal - valuePayment;
 
-    const control = new FormGroup({
+    this.paymentSelectedForm = new FormGroup({
       portion: new FormControl(this.plots.length + 1),
       form_payment: new FormControl(formPayment || 9),
       date_due: new FormControl(
@@ -332,29 +349,38 @@ export class MainComponent implements OnInit  {
       status: new FormControl(1),
     });
 
-    if (this.terminalSelected ) {
+    this.statusCardPayment = 0;
+    if (this.terminalSelected) {
       if (this.paymentSelected == 2 || this.paymentSelected == 3) {
-        this.serverLocalhostService.tefPayGo(this.terminalSelected.api_url, {
+        this.statusCardPayment = 1;
+
+        await this.serverLocalhostService.tefPayGo(this.terminalSelected.api_url, {
           status: 1,
           company: this.auth.company,
-          payment: control.value,
+          payment: this.paymentSelectedForm.value,
           terminal: this.terminalSelected
         }).pipe(
           finalize(() => (console.log('ue'))),
           catchError((error) => {
+            this.statusCardPayment = 0;
             return throwError(error);
           }),
           map(() => {
-            console.log('enviado tef')
+            this.paymentSelectedForm.value.status = 0;
+            this.paymentSelectedForm.value.note = 'Iniciando pagamento...';
+            this.searchStatus.setValue('');
+            this.checkCardPayment();
           })
         )
         .subscribe();
       }
     }
 
-    this.plots.push(control);
-    this.paymentSelected = 0;
-    this.searchStatus.setValue('');
+    if (this.statusCardPayment === 0) {
+      this.plots.push(this.paymentSelectedForm);
+      this.paymentSelected = 0;
+      this.searchStatus.setValue('');
+    }
   }
 
   public sumPayments(): number {
@@ -397,8 +423,7 @@ export class MainComponent implements OnInit  {
     }, 60000);
 
     if (this.terminalSelected) {
-
-      if (this.terminalSelected.nfce_active) {
+      if (this.terminalSelected.nfce_active > 0) {
         //Gerar NFCe
         const nfe = this.serverLocalhostService.generateNFCe(this.auth.company,
           this.terminalSelected,
@@ -488,22 +513,19 @@ export class MainComponent implements OnInit  {
 
     this.balanceConnection = true;
 
-    //Pega o terminal favorito para operação
-    const terminal = await this.indexedDbService.getAllData('terminal').then(res => res[0]);
-
-    if (!terminal) {
+    if (!this.terminalSelected) {
       return;
     }
 
     //Se não tiver path da balança, não inicia a balança
-    if (!terminal.balance_path) {
+    if (!this.terminalSelected.balance_path) {
       return;
     }
 
     //A cada 5 segundos, faz a chamada à api
     interval(5000)
       .pipe(
-        switchMap(() => this.serverLocalhostService.getBalance(terminal.api_url, terminal)),
+        switchMap(() => this.serverLocalhostService.getBalance(this.terminalSelected.api_url, this.terminalSelected)),
         takeWhile(() => this.balanceConnection),
       )
       .subscribe({
@@ -512,6 +534,45 @@ export class MainComponent implements OnInit  {
 
           if (this.productSelected) {
             this.productSelected.amount = this.productAmount;
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+  }
+
+  checkCardPayment() {
+    //A cada 5 segundos, faz a chamada à api
+    interval(5000)
+      .pipe(
+        switchMap(() => this.serverLocalhostService.tefPayGoStatus(this.terminalSelected.api_url)),
+        takeWhile(() => this.statusCardPayment === 1),
+      )
+      .subscribe({
+        next: (res) => {
+          this.paymentSelectedForm.value.status = res.status;
+          this.paymentSelectedForm.value.note = res.message;
+
+          //Se o status do cardPayment for 1, significa que o pagamento foi finalizado com sucesso
+          if (this.paymentSelectedForm.value.status === 1) {
+            this.statusCardPayment = 0;
+            this.plots.push(this.paymentSelectedForm);
+            this.paymentSelected = 0;
+            this.searchStatus.setValue('');
+
+            //Se o pagamento for maior ou igual ao total finaliza a venda
+            if (this.sumPayments() >= this.sumProducts().total) {
+              //Salva a venda
+              this.save();
+            }
+          }
+
+          //Transação cancelada
+          if (this.paymentSelectedForm.value.status === 2) {
+            this.statusCardPayment = 0;
+            this.paymentSelected = 0;
+            this.searchStatus.setValue('');
           }
         },
         error: (error) => {

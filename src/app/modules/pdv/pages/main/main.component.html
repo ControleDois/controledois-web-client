@@ -10,7 +10,8 @@
     <div class="item-active card">
       <app-search-product *ngIf="!productSelected && statusProcess === 1"></app-search-product>
       <app-selected-product *ngIf="productSelected && statusProcess === 1" [product]="productSelected"></app-selected-product>
-      <app-payment-methods *ngIf="statusProcess === 2" [selectedPayment]="paymentSelected"></app-payment-methods>
+      <app-payment-methods *ngIf="statusProcess === 2 && statusCardPayment === 0" [selectedPayment]="paymentSelected"></app-payment-methods>
+      <app-payment-card *ngIf="statusProcess === 2 && statusCardPayment === 1" [cardPayment]="this.paymentSelectedForm.value"></app-payment-card>
     </div>
 
     <div class="control card">
