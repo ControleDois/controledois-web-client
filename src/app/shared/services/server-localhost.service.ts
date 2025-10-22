@@ -173,10 +173,7 @@ export class ServerLocalhostService {
         codigo_barras_tributavel: findProduct.barcode,
         descricao: product?.description || findProduct.name,
         codigo_ncm: findProduct?.ncm?.code,
-        cfop:
-          people?.address.state && company.people?.address?.state !== people?.address?.state
-            ? operation.cfop_interstate
-            : operation.cfop_state,
+        cfop: operation.cfop_state,
         unidade_comercial: findProduct.unit,
         quantidade_comercial: product.amount,
 
