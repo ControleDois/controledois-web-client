@@ -43,7 +43,7 @@ export class IndexedDbService {
     });
   }
 
-  async addData(data: any, storeName: string) {
+  async addData(data: any, storeName: string): Promise<any | undefined> {
     const db = await this.dbPromise;
     return db.transaction(storeName, 'readwrite').objectStore(storeName).add(data);
   }
@@ -51,6 +51,11 @@ export class IndexedDbService {
   async getData(id: string, storeName: string): Promise<any | undefined> {
     const db = await this.dbPromise;
     return db.transaction(storeName).objectStore(storeName).get(id);
+  }
+
+  async getDataBy(field: string, value: string, storeName: string): Promise<any | undefined> {
+    const db = await this.dbPromise;
+    return db.transaction(storeName).objectStore(storeName).getAll().then(data => data.find(item => item[field] === value));
   }
 
   async updateData(data: any, storeName: string) {

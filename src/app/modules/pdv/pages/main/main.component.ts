@@ -10,6 +10,8 @@ import { SaleService } from 'src/app/shared/services/sale.service';
 import { EncryptService } from 'src/app/shared/services/encrypt.service';
 import { ServerLocalhostService } from 'src/app/shared/services/server-localhost.service';
 import { BalancaService } from 'src/app/shared/services/balanca.service';
+import { NFeService } from 'src/app/shared/services/nfe.service';
+import { ConfigService } from 'src/app/shared/services/config.service';
 
 @Component({
   selector: 'app-main',
@@ -105,7 +107,14 @@ export class MainComponent implements OnInit  {
   //Conexão com a balança
   public balanceConnection: boolean = false;
 
-  //Conexão com o cardPayment
+  //Status da NFe
+  public statusNFeRequest: any = {
+    status: 0,
+    message: '',
+    number: 0,
+    id: '',
+  };
+
 
   constructor(
     private indexedDbService: IndexedDbService,
@@ -114,6 +123,8 @@ export class MainComponent implements OnInit  {
     private internetService: InternetService,
     private saleService: SaleService,
     private serverLocalhostService: ServerLocalhostService,
+    private nfeService: NFeService,
+    private configService: ConfigService,
   ) {
     this.auth = storageService.getAuth();
    }
@@ -136,7 +147,11 @@ export class MainComponent implements OnInit  {
         switchMap(() => this.internetService.hasGoodConnection(this.statusProcess === 0)),
         filter((isGoodConnection) => isGoodConnection)
       )
-      .subscribe(() => this.syncSales());
+      .subscribe(() => {
+        this.syncSales();
+        this.syncNFe();
+        this.updateTerminal();
+      });
   }
 
   public changeInput(): void {
@@ -417,13 +432,8 @@ export class MainComponent implements OnInit  {
     this.indexedDbService.addData(this.myForm.value, 'sales');
     this.statusProcessChange = this.getTotalChange().change;
 
-    //Mostrar troco
-    this.timerChange = setTimeout(() => {
-      this.statusProcessChange = 0;
-    }, 60000);
-
     if (this.terminalSelected) {
-      if (this.terminalSelected.nfce_active > 0) {
+      if (this.terminalSelected.nfce_active > 0 && this.statusNFeRequest.status === 0) {
         //Gerar NFCe
         const nfe = this.serverLocalhostService.generateNFCe(this.auth.company,
           this.terminalSelected,
@@ -432,7 +442,10 @@ export class MainComponent implements OnInit  {
           this.plots.value
         );
 
-        this.indexedDbService.addData(nfe, 'nfes');
+        //Salva a nfe e pega o id colocando no statusNfe
+        await this.indexedDbService.addData(nfe, 'nfes').then((res: any) => {
+          this.statusNFeRequest.id = res;
+        });
 
         //Enviar nfe
         this.serverLocalhostService.sendNFe(this.terminalSelected.api_url, {
@@ -446,11 +459,15 @@ export class MainComponent implements OnInit  {
           }),
           map(() => {
             //Atualiza o número da NFCe somando 1
-            this.terminalSelected.nfce_numero = nfe.nfce_numero + 1;
-            this.indexedDbService.updateData(this.terminalSelected, 'terminal');
+            this.statusNFeRequest.status = 1;
+            this.statusNFeRequest.number = this.terminalSelected.nfce_numero;
+            this.statusNFeRequest.message = 'Aguarde a emissão do cupom fiscal...';
+            this.checkNFeStatus();
           })
         )
         .subscribe();
+
+        return
       }
 
       //Imprime venda
@@ -471,7 +488,14 @@ export class MainComponent implements OnInit  {
         })
       )
       .subscribe();
+
+      this.statusNFeRequest.status = 0;
     }
+
+    //Mostrar troco
+    this.timerChange = setTimeout(() => {
+      this.statusProcessChange = 0;
+    }, 60000);
 
     this.statusProcess = 0;
     this.products.clear();
@@ -482,11 +506,11 @@ export class MainComponent implements OnInit  {
     this.searchStatus.setValue('');
   }
 
-  syncSales(): void {
+  async syncSales(): Promise<void> {
     if (this.statusProcess === 0) {
-      this.indexedDbService.getAllData('sales').then((res: any) => {
-        res.forEach((sale: any) => {
-          this.saleService
+      this.indexedDbService.getAllData('sales').then(async (res: any) => {
+        res.forEach(async (sale: any) => {
+          await this.saleService
             .save('new', sale)
             .pipe(
               finalize(() => ( console.log('Venda sincronizada.'))),
@@ -502,6 +526,79 @@ export class MainComponent implements OnInit  {
             .subscribe();
         });
       })
+    }
+  }
+
+  async syncNFe(): Promise<void> {
+    //Synchroniza NFCe com o servidor quando status for 0
+    if (this.statusNFeRequest.status === 0) {
+      this.indexedDbService.getAllData('nfes').then(async (res: any) => {
+        res.forEach(async (nfe: any) => {
+          //Só envia se status for '2'
+          if (nfe.status !== '2') {
+            return;
+          }
+
+          const obj = nfe;
+          //Deletar nova tributação por inguanto
+          delete obj['ibscbs_vbc'];
+
+          delete obj['ibscbs_gibs_vibs'];
+          delete obj['ibscbs_gibs_vcred_pres'];
+          delete obj['ibscbs_gibs_vcred_cond_sus'];
+
+          delete obj['ibscbs_gibs_gibsuf_vdif'];
+          delete obj['ibscbs_gibs_gibsuf_vdev_trib'];
+          delete obj['ibscbs_gibs_gibsuf_vibs_uf'];
+
+
+          delete obj['ibscbs_gibs_gibsmun_vdif'];
+          delete obj['ibscbs_gibs_gibsmun_vdev_trib'];
+          delete obj['ibscbs_gibs_gibmun_vibs_mun'];
+
+          delete obj['ibscbs_gcbs_vdif'];
+          delete obj['ibscbs_gcbs_vdev_trib'];
+          delete obj['ibscbs_gcbs_vcbs'];
+          delete obj['ibscbs_gcbs_vcred_pres'];
+          delete obj['ibscbs_gcbs_vcred_pres_cond_sus'];
+
+          //Deletar nova tributação nos itens também
+          obj['itens'].forEach((item: any) => {
+            delete item['ibscbs_cst'];
+            delete item['ibscbs_cclass_trib'];
+
+            delete item['ibscbs_vbc'];
+            delete item['ibscbs_vibs'];
+
+            delete item['ibscbs_pibs_uf'];
+            delete item['ibscbs_vibs_uf'];
+
+            delete item['ibscbs_pibs_mun'];
+            delete item['ibscbs_vibs_mun'];
+
+            delete item['ibscbs_pcbs'];
+            delete item['ibscbs_vcbs'];
+
+            delete item['valor_total_item'];
+          });
+
+          //Deleta os dados de pagamento
+          obj['pagamentos'].forEach((pagamento: any) => {
+            delete pagamento['autentication'];
+          });
+
+          await this.nfeService.syncPDV(obj).pipe(
+            finalize(() => (console.log('NFCe sincronizada.'))),
+            catchError((error) => {
+              console.log(error);
+              return throwError(error);
+            }),
+            map((res) => {
+              this.indexedDbService.deleteData(nfe.id, 'nfes');
+            })
+          ).subscribe();
+        });
+      });
     }
   }
 
@@ -579,5 +676,62 @@ export class MainComponent implements OnInit  {
           console.log(error);
         }
       });
+  }
+
+  checkNFeStatus() {
+    //A cada 5 segundos, faz a chamada à api
+    interval(5000)
+      .pipe(
+        switchMap(() => this.serverLocalhostService.getStatusNFe(this.terminalSelected.api_url)),
+        takeWhile(() => this.statusNFeRequest.status === 1),
+      )
+      .subscribe({
+        next: (localhost) => {
+          this.statusNFeRequest.status = localhost.status;
+          this.statusNFeRequest.message = localhost.message;
+
+
+          if (this.statusNFeRequest.status === '2') {
+            this.statusNFeRequest.status = 2;
+            this.statusNFeRequest.message = 'NFCe gerada com sucesso';
+
+            // //Consulta a NFCe pelo numero
+            this.indexedDbService.getData(this.statusNFeRequest.id, 'nfes').then((nfe: any) => {
+              nfe.chave_nfe = localhost.chave_nfe;
+              nfe.protocolo = localhost.protocolo;
+              nfe.caminho_xml_nota_fiscal = localhost.caminho_xml_nota_fiscal;
+              nfe.serie = localhost.serie;
+              nfe.numero = localhost.numero;
+              nfe.status = localhost.status;
+              nfe.caminho_danfe = localhost.caminho_danfe;
+              nfe.mensagem_sefaz = localhost.mensagem_sefaz;
+              nfe.status_sefaz = localhost.status_sefaz;
+
+              this.indexedDbService.updateData(nfe, 'nfes');
+            });
+
+            this.terminalSelected.nfce_numero = this.statusNFeRequest.number + 1;
+            this.indexedDbService.updateData(this.terminalSelected, 'terminal');
+
+            this.save();
+          }
+        },
+        error: (error) => {
+          console.log(error);
+          this.statusNFeRequest.status = 2;
+          this.statusNFeRequest.message = 'Erro ao gerar NFCe';
+        }
+      });
+  }
+
+  updateTerminal() {
+    this.configService.updateTerminal(this.terminalSelected.id, this.terminalSelected).subscribe({
+      next: (res) => {
+        console.log('Terminal atualizado com sucesso');
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
   }
 }

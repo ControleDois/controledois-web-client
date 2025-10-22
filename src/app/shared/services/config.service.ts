@@ -24,6 +24,10 @@ export class ConfigService {
     return this.update(id, body);
   }
 
+  updateTerminal(id: string, body: Object): Observable<any> {
+    return this.apiService.on(`${this.resource}/terminal/${id}`, body, 'put-token');
+  }
+
   whatsappConnect(id: string): Observable<any> {
     return this.apiService.on(`${environment.whatsapp}/session/${id}`, '', 'get-no-environment');
   }

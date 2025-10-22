@@ -59,4 +59,8 @@ export class NFeService {
   cancel(id: string): Observable<any> {
     return this.apiService.on(`${this.resource}/cancel/${id}`, '', 'post-token');
   }
+
+  syncPDV(body: Object): Observable<any> {
+    return this.apiService.on(`${this.resource}/sync-pdv`, body, 'post-token');
+  }
 }

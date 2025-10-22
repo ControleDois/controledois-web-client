@@ -22,6 +22,10 @@ export class ServerLocalhostService {
     return this.apiService.on(`${api}/nfe-off`, body, 'post-no-environment');
   }
 
+  getStatusNFe(api: string): Observable<any> {
+    return this.apiService.on(`${api}/nfe-off-status`, '', 'get-no-environment');
+  }
+
   tefPayGo(api: string, body: Object): Observable<any> {
     return this.apiService.on(`${api}/tef-paygo`, body, 'post-no-environment');
   }
@@ -43,8 +47,8 @@ export class ServerLocalhostService {
       companyId: company.id,
       peopleId: people.id,
       modelo: 65,
-      nfce_serie: terminal.nfce_serie,
-      nfce_numero: terminal.nfce_numero,
+      serie: terminal.nfce_serie,
+      numero: terminal.nfce_numero,
       nfeNatureOperationId: operation.id,
       natureza_operacao: operation.description,
       data_emissao: new Date(),

@@ -15,6 +15,7 @@ import { GridPaymentsComponent } from './components/main/grid-payments/grid-paym
 import { GridPaymentValuesComponent } from './components/main/grid-payment-values/grid-payment-values.component';
 import { SplashChangeComponent } from './pages/splash-change/splash-change.component';
 import { PaymentCardComponent } from './components/sidebar/payment-card/payment-card.component';
+import { ProcessNfeComponent } from './components/sidebar/process-nfe/process-nfe.component';
 
 const appName = 'CTrix';
 
@@ -39,6 +40,7 @@ const routes: Routes = [
     GridPaymentValuesComponent,
     SplashChangeComponent,
     PaymentCardComponent,
+    ProcessNfeComponent,
   ],
   imports: [
     CommonModule,

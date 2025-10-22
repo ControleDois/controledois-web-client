@@ -23,6 +23,7 @@ import { DropboxFile } from 'src/app/shared/interfaces/dropbox.interface';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { IndexedDbService } from 'src/app/shared/services/indexed-db.service';
 import { ProductService } from 'src/app/shared/services/product.service';
+import { ServerLocalhostService } from 'src/app/shared/services/server-localhost.service';
 
 @Component({
   selector: 'app-config',
@@ -417,7 +418,8 @@ export class ConfigComponent implements OnInit {
     private dropboxService: DropboxService,
     private indexedDbService: IndexedDbService,
     private productService: ProductService,
-    public dialog: MatDialog
+    private serverLocalhostService: ServerLocalhostService,
+    public dialog: MatDialog,
   ) {
     this.terminalsOutPut = [];
   }
@@ -1021,5 +1023,25 @@ export class ConfigComponent implements OnInit {
 
   getFavoriteTerminalId(): string {
     return ''
+  }
+
+  installTefPayGo(indexTerminal: number): void {
+
+    const terminal = this.terminals.value[indexTerminal];
+    const company = this.myForm.value.company;
+    const payment = null;
+
+    this.loadingFull.active = true;
+    this.loadingFull.message = 'Instalando TEF PayGo'
+    this.serverLocalhostService.tefPayGo(terminal.api_url, {
+      status: 0,
+      company: company,
+      payment: payment,
+      terminal: terminal
+    }).subscribe(
+      (res) => {
+        console.log(res);
+      }
+    );
   }
 }
