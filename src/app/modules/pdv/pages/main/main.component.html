@@ -8,7 +8,7 @@
 
   <div class="sidebar">
     <div class="item-active card">
-      <app-search-product *ngIf="!productSelected && statusProcess === 1"></app-search-product>
+      <app-search-product *ngIf="!productSelected && statusProcess === 1 && !activateSetPrice"></app-search-product>
       <app-selected-product *ngIf="productSelected && statusProcess === 1" [product]="productSelected"></app-selected-product>
       <app-payment-methods *ngIf="statusProcess === 2 && statusCardPayment === 0 && statusNFeRequest.status !== 1" [selectedPayment]="paymentSelected"></app-payment-methods>
       <app-payment-card *ngIf="statusProcess === 2 && statusCardPayment === 1" [cardPayment]="this.paymentSelectedForm.value"></app-payment-card>
@@ -16,7 +16,7 @@
     </div>
 
     <div class="control card" *ngIf="statusNFeRequest.status !== 1">
-      <input [formControl]="searchStatus" (keyup.enter)="processStatus()"  type="text" placeholder="Código do produto" autofocus>
+      <input [formControl]="searchStatus" (keyup.enter)="processStatus()" (keyup.escape)="rollbackProcess()"  type="text" placeholder="Código do produto" autofocus>
     </div>
   </div>
 

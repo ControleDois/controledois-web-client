@@ -107,6 +107,9 @@ export class MainComponent implements OnInit  {
   //Conexão com a balança
   public balanceConnection: boolean = false;
 
+  //Ativar setar preço do produto
+  public activateSetPrice: boolean = false;
+
   //Status da NFe
   public statusNFeRequest: any = {
     status: 0,
@@ -114,7 +117,6 @@ export class MainComponent implements OnInit  {
     number: 0,
     id: '',
   };
-
 
   constructor(
     private indexedDbService: IndexedDbService,
@@ -155,7 +157,7 @@ export class MainComponent implements OnInit  {
   }
 
   public changeInput(): void {
-    if (this.statusProcess === 1) {
+    if (this.statusProcess === 1 && !this.activateSetPrice) {
       //Se estiver vazio o texto limpa o produto selecionado
       if ((this.searchStatus.value || '').trim() === '') {
         this.productSelected = null;
@@ -187,6 +189,12 @@ export class MainComponent implements OnInit  {
           this.productAmount = 1;
         }
       });
+    }
+
+    if (this.statusProcess === 1 && this.activateSetPrice) {
+      //Pegar o preço colocado no input
+      const price = this.searchStatus.value;
+      this.productSelected.sale_value = price;
     }
 
     if (this.statusProcess === 2) {
@@ -260,11 +268,32 @@ export class MainComponent implements OnInit  {
 
       // Se houver um produto selecionado, adiciona o produto
       if (this.productSelected) {
-        this.addProduct();
-        this.productSelected = null;
-        this.searchStatus.setValue('');
-        this.productAmount = 1;
-        this.balanceConnection = false;
+
+        //Se o produto for necessário setar o preço
+        if (this.productSelected.change_price) {
+          if (this.activateSetPrice) {
+            //Pegar o preço colocado no input
+            const price = this.searchStatus.value;
+            this.productSelected.sale_value = price;
+
+            this.addProduct();
+            this.productSelected = null;
+            this.searchStatus.setValue('');
+            this.productAmount = 1;
+            this.balanceConnection = false;
+            this.activateSetPrice = false;
+          } else {
+            this.searchStatus.setValue('');
+            this.activateSetPrice = true;
+            return;
+          }
+        } else {
+          this.addProduct();
+          this.productSelected = null;
+          this.searchStatus.setValue('');
+          this.productAmount = 1;
+          this.balanceConnection = false;
+        }
         return;
       }
 
@@ -294,9 +323,9 @@ export class MainComponent implements OnInit  {
       product_id: new FormControl(this.productSelected?.id || null),
       barcode: new FormControl(this.productSelected?.barcode || ''),
       description: new FormControl(this.productSelected?.name || ''),
-      amount: new FormControl(this.productAmount || 0),
-      cost_value: new FormControl(this.productSelected?.sale_value || 0),
-      subtotal: new FormControl(this.productAmount * this.productSelected?.sale_value || 0),
+      amount: new FormControl(this.productAmount || 1),
+      cost_value: new FormControl(this.productSelected?.sale_value || 1),
+      subtotal: new FormControl(this.productAmount * (this.productSelected?.sale_value || 1) || 0),
       removed: new FormControl(false),
       product: new FormControl(this.productSelected)
     });
@@ -733,5 +762,9 @@ export class MainComponent implements OnInit  {
         console.log(error);
       }
     });
+  }
+
+  rollbackProcess(): void {
+    //
   }
 }

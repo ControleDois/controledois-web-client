@@ -21,6 +21,7 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     message: 'Aguarde, carregando...'
   }
   public displayedColumns: string[] = [
+    'code',
     'name',
     'sale_value',
     'actions'];

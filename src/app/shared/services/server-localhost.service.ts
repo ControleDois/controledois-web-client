@@ -145,7 +145,7 @@ export class ServerLocalhostService {
 
       //Calcule o valor base do produto, removendo os impostos
       const totalTaxRate = (pIBS_UF + pIBS_MUN + pCBS) / 100;
-      const valorBrutoBase = company.people.crt === 3 ? parseFloat((valorFinalItem / (1 + totalTaxRate)).toFixed(2)) : product.cost_value;
+      const valorBrutoBase = parseFloat((valorFinalItem / (1 + totalTaxRate)).toFixed(2));
 
       //Calcule os valores de IBS e CBS sobre o novo valor base
       let  vIBS_UF = parseFloat(((valorBrutoBase * pIBS_UF) / 100).toFixed(2));
@@ -178,24 +178,24 @@ export class ServerLocalhostService {
         quantidade_comercial: product.amount,
 
         // ALTERADO: O valor unitário agora é baseado no novo valor base
-        valor_unitario_comercial: company.people.crt === 3 ? parseFloat((valorBrutoBase / product.amount).toFixed(10)) : product.cost_value, // Maior precisão aqui
+        valor_unitario_comercial: parseFloat((valorBrutoBase / product.amount).toFixed(10)), // Maior precisão aqui
 
         // ALTERADO: O valor bruto do item é o valor base calculado
-        valor_bruto: company.people.crt === 3 ? valorBrutoBase : product.cost_value,
+        valor_bruto: valorBrutoBase,
 
-        valor_total_item: company.people.crt === 3 ? valorFinalItem : product.cost_value * product.amount,
+        valor_total_item: valorFinalItem,
 
         unidade_tributavel: findProduct.unit,
         quantidade_tributavel: product.amount,
 
         // ALTERADO: O valor unitário tributável também é baseado no novo valor base
-        valor_unitario_tributavel: company.people.crt === 3 ? parseFloat((valorBrutoBase / product.amount).toFixed(10)) : product.cost_value,
+        valor_unitario_tributavel: parseFloat((valorBrutoBase / product.amount).toFixed(10)),
 
         icms_origem: findProduct.icms_origin,
         inclui_no_total: 1,
 
         // ALTERADO: A base de cálculo do ICMS (se houver) também deve ser o valor base
-        icms_base_calculo: company.people.crt === 3 ? valorBrutoBase : product.cost_value,
+        icms_base_calculo: valorBrutoBase,
 
         valor_desconto: 0,
       }
@@ -283,7 +283,7 @@ export class ServerLocalhostService {
 
     // **A JOGADA É AQUI:**
     // Coloque a soma dos novos impostos em "outras despesas"
-    nfe.valor_outras_despesas = company.people.crt === 3 ? parseFloat(totalNovosImpostos.toFixed(2)) : 0;
+    nfe.valor_outras_despesas = parseFloat(totalNovosImpostos.toFixed(2));
 
     // O valor total da nota DEVE ser a soma do valor base dos produtos + impostos.
     // Usar o valorTotal (soma dos pagamentos) é a forma mais segura para evitar erros de arredondamento.

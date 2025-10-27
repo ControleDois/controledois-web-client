@@ -380,6 +380,11 @@ export class ConfigComponent implements OnInit {
     { name: '⦿ pc1252', type: 6 },
   ];
 
+  public nfAmbiente = [
+    { name: '⦿ Produção', type: 0 },
+    { name: '⦿ Homologação', type: 1 },
+  ];
+
   //Dados para salvar no indexedDB do PDV
   private currentPagePeople = 1;
   private currentPageSale = 1;
@@ -948,11 +953,11 @@ export class ConfigComponent implements OnInit {
       nfeNatureOperationId: new FormControl(value?.nfe_nature_operation_id || ''),
       nfe_serie: new FormControl(value?.nfe_serie || 1),
       nfe_numero: new FormControl(value?.nfe_numero || 1),
-      nfe_ambiente: new FormControl(value?.nfe_ambiente || 1),
+      nfe_ambiente: new FormControl(value?.nfe_ambiente),
       nfe_active: new FormControl(value?.nfe_active || 0),
       nfce_serie: new FormControl(value?.nfce_serie || 1),
       nfce_numero: new FormControl(value?.nfce_numero || 1),
-      nfce_ambiente: new FormControl(value?.nfce_ambiente || 1),
+      nfce_ambiente: new FormControl(value?.nfce_ambiente),
       nfce_id_token: new FormControl(value?.nfce_id_token || 1),
       nfce_csc: new FormControl(value?.nfce_csc || ''),
       nfce_active: new FormControl(value?.nfce_active || 0),
@@ -982,6 +987,12 @@ export class ConfigComponent implements OnInit {
       tef_paygo_posprinter_colunas: new FormControl(value?.tef_paygo_posprinter_colunas || 0),
       tef_paygo_posprinter_linhas: new FormControl(value?.tef_paygo_posprinter_linhas || 0),
       tef_paygo_posprinter_espaco: new FormControl(value?.tef_paygo_posprinter_espaco || 0),
+      nfce_nome_impressora: new FormControl(value?.nfce_nome_impressora || ''),
+      nfce_impressora_largura_bonina: new FormControl(value?.nfce_impressora_largura_bonina || 280),
+      nfe_nome_impressora: new FormControl(value?.nfe_nome_impressora || ''),
+      path_server: new FormControl(value?.path_server || ''),
+      tef_ponto_captura: new FormControl(value?.tef_ponto_captura || 0),
+      tef_cnpj: new FormControl(value?.tef_cnpj || ''),
     });
 
     this.terminalsOutPut.push({

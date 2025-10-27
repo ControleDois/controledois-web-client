@@ -203,8 +203,8 @@
                 <label class="label-w100">
                   <span class="field">Ambiente:</span>
                   <select formControlName="nfe_ambiente">
-                    <option value="1">Homologação</option>
-                    <option value="0">Produção</option>
+                    <option *ngFor="let options of nfAmbiente" [ngValue]="options.type">{{ options.name }}
+                    </option>
                   </select>
                 </label>
 
@@ -227,8 +227,8 @@
                 <label class="label-w100">
                   <span class="field">Ambiente:</span>
                   <select formControlName="nfce_ambiente">
-                    <option value="1">Homologação</option>
-                    <option value="0">Produção</option>
+                    <option *ngFor="let options of nfAmbiente" [ngValue]="options.type">{{ options.name }}
+                    </option>
                   </select>
                 </label>
 
@@ -499,8 +499,8 @@
                           <label class="label-w100">
                             <span class="field">Ambiente:</span>
                             <select formControlName="nfe_ambiente">
-                              <option value="1">Homologação</option>
-                              <option value="0">Produção</option>
+                              <option *ngFor="let options of nfAmbiente" [ngValue]="options.type">{{ options.name }}
+                              </option>
                             </select>
                           </label>
 
@@ -515,6 +515,13 @@
                           </label>
                         </div>
 
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Nome da impressora:</span>
+                            <input formControlName="nfe_nome_impressora" type="text">
+                          </label>
+                        </div>
+
                         <div class="basic-form-header" style="margin-bottom: 20px;">
                           <h3>Configurações de NFC-e</h3>
                         </div>
@@ -523,8 +530,8 @@
                           <label class="label-w100">
                             <span class="field">Ambiente:</span>
                             <select formControlName="nfce_ambiente">
-                              <option value="1">Homologação</option>
-                              <option value="0">Produção</option>
+                              <option *ngFor="let options of nfAmbiente" [ngValue]="options.type">{{ options.name }}
+                              </option>
                             </select>
                           </label>
 
@@ -546,6 +553,18 @@
                           <label class="label-w100">
                             <span class="field">CSC</span>
                             <input formControlName="nfce_csc">
+                          </label>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Nome da impressora:</span>
+                            <input formControlName="nfce_nome_impressora" type="text">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Largura da bonina:</span>
+                            <input formControlName="nfce_impressora_largura_bonina" type="number">
                           </label>
                         </div>
 
@@ -707,6 +726,18 @@
                           </div>
                         </label>
 
+                        <div class="label-group">
+                          <label class="label-w100">
+                            <span class="field">Ponto de captura:</span>
+                            <input formControlName="tef_ponto_captura" type="number">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">CNPJ:</span>
+                            <input formControlName="tef_cnpj" type="text">
+                          </label>
+                        </div>
+
                         <div class="basic-form-header" style="margin-bottom: 20px;">
                           <h3>Impressora TEF</h3>
                         </div>
@@ -761,6 +792,11 @@
                           <label class="label-w100">
                             <span class="field">API:</span>
                             <input formControlName="api_url" type="text">
+                          </label>
+
+                          <label class="label-w100">
+                            <span class="field">Path do servidor:</span>
+                            <input formControlName="path_server" type="text">
                           </label>
                         </div>
                       </ng-container>
