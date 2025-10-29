@@ -8,23 +8,27 @@
     </div>
 
     <div class="summary-header" style="margin-top: 20px;">
-      <article class="red" (click)="filterAmountRefused()" [style.border-top]="filterStatus === 2 ? '2px solid #F43E61' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 2 ? 1 : 0.4">
+      <article class="red" (click)="filterAmountRefused()" [style.border-top]="filterStatus === 2 ? '2px solid #F43E61' : ''" [style.opacity]="filterStatus === 5 || filterStatus === 2 ? 1 : 0.4">
         <span>Resusados ({{getTotalAmountRefusedQtd()}})</span>
         <h4>R$ <b style="color: #F43E61">{{getTotalAmountRefused()}}</b></h4>
       </article>
-      <article class="orange" (click)="filterAmountBudget()" [style.border-top]="filterStatus === 0 ? '2px solid #FFC200' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 0 ? 1 : 0.4">
+      <article class="orange" (click)="filterAmountBudget()" [style.border-top]="filterStatus === 0 ? '2px solid #FFC200' : ''" [style.opacity]="filterStatus === 5 || filterStatus === 0 ? 1 : 0.4">
         <span>Orçamentos ({{getTotalAmountBudgetQtd()}})</span>
         <h4>R$ <b style="color: #FFC200">{{getTotalAmountBudget()}}</b></h4>
       </article>
-      <article class="content-icon plus green" (click)="filterAmountAccepted()" [style.border-top]="filterStatus === 1 ? '2px solid #4AB858' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 1 ? 1 : 0.4">
+      <article class="content-icon plus green" (click)="filterAmountAccepted()" [style.border-top]="filterStatus === 1 ? '2px solid #4AB858' : ''" [style.opacity]="filterStatus === 5 || filterStatus === 1 ? 1 : 0.4">
         <span>Aceitos ({{getTotalAmountAcceptedQtd()}})</span>
         <h4>R$ <b style="color: #4AB858">{{getTotalAmountAccepted()}}</b></h4>
       </article>
-      <article class="content-icon plus blue" (click)="filterAmountSale()" [style.border-top]="filterStatus === 3 ? '2px solid #2687E9' : ''" [style.opacity]="filterStatus === 4 || filterStatus === 3 ? 1 : 0.4">
+      <article class="content-icon plus blue" (click)="filterAmountSale()" [style.border-top]="filterStatus === 3 ? '2px solid #2687E9' : ''" [style.opacity]="filterStatus === 5 || filterStatus === 3 ? 1 : 0.4">
         <span>Vendas ({{getTotalAmountSaleQtd()}})</span>
         <h4>R$ <b style="color: #2687E9">{{getTotalAmountSale()}}</b></h4>
       </article>
-      <article class="content-icon black" (click)="filterAmountTotal()" [style.border-top]="filterStatus === 4 ? '2px solid #7A7A7F' : ''" [style.opacity]="filterStatus === 4 ? 1 : 0.4">
+      <article *ngIf="auth.company.config.central_box_active > 0" class="content-icon purple" (click)="filterAmountSaleBoxCentral()" [style.border-top]="filterStatus === 4 ? '2px solid #d926e9' : ''" [style.opacity]="filterStatus === 5 || filterStatus === 4 ? 1 : 0.4">
+        <span>Caixa ({{getTotalAmountSaleBoxCentralQtd()}})</span>
+        <h4>R$ <b style="color: #d926e9">{{getTotalAmountSaleBoxCentral()}}</b></h4>
+      </article>
+      <article class="content-icon black" (click)="filterAmountTotal()" [style.border-top]="filterStatus === 5 ? '2px solid #7A7A7F' : ''" [style.opacity]="filterStatus === 5 ? 1 : 0.4">
         <span>Previsão ({{getTotalAmountTotalQtd()}})</span>
         <h4>R$ <b>{{getTotal()}}</b></h4>
       </article>
@@ -79,6 +83,15 @@
         <td mat-cell *matCellDef="let element" class="hide-62em"> {{element.net_total | currency}} </td>
       </ng-container>
 
+      <ng-container matColumnDef="buttons">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button (click)="receiveSaleBoxCentral(element.id)" *ngIf="auth.company.config.central_box_active > 0 && element.status === 3">
+            <mat-icon>point_of_sale</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
@@ -88,13 +101,20 @@
           </div>
           <mat-menu #actions="matMenu">
             <button mat-menu-item (click)="createPDF(element.id)">
+              <mat-icon>description</mat-icon>
               <span>Comprovante</span>
             </button>
             <button mat-menu-item [routerLink]="'/sale/' + element.id">
+              <mat-icon>edit_square</mat-icon>
               <span>Editar</span>
             </button>
             <button mat-menu-item (click)="delete(element.id)">
+              <mat-icon>delete_sweep</mat-icon>
               <span>Remover</span>
+            </button>
+            <button style="border-top: 1px solid #e0e0e0;" mat-menu-item (click)="receiveSaleBoxCentral(element.id)" *ngIf="auth.company.config.central_box_active > 0 && element.status === 3">
+              <mat-icon>point_of_sale</mat-icon>
+              <span>Receber Venda</span>
             </button>
           </mat-menu>
         </td>

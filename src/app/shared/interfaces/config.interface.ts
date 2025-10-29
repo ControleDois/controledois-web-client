@@ -18,4 +18,5 @@ export interface Config {
   firebase_storage_bucket?: string;
   firebase_messaging_sender_id?: string;
   firebase_app_id?: string;
+  central_box_active: number;
 }

@@ -575,6 +575,12 @@ option {
     }
   }
 
+  .purple {
+    &:hover {
+      border-top: 2px solid #d926e9;
+    }
+  }
+
   .green {
     &:hover {
       border-top: 2px solid #4AB858;

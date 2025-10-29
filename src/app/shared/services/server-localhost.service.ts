@@ -34,7 +34,7 @@ export class ServerLocalhostService {
     return this.apiService.on(`${api}/tef-paygo-status`, '', 'get-no-environment');
   }
 
-  generateNFCe(company: any, terminal: any, people: any, products: any, payments: any): any {
+  generateNFCe(company: any, terminal: any, people: any, products: any, payments: any, tpEmis: number = 0): any {
     let operation = terminal.natureOperation || company.config.natureOperation;
 
     let consumidorFinal = 0
@@ -43,6 +43,8 @@ export class ServerLocalhostService {
     }
 
     let nfe: any = {
+      saleId: '',
+      tipo_emissao: tpEmis,
       status: 0,
       companyId: company.id,
       peopleId: people.id,
@@ -129,6 +131,8 @@ export class ServerLocalhostService {
     let indexItem = 0
     let nfeItens: any[] = []
     let valorTotal = 0
+
+    console.log(products);
 
     // Adiciona Produtos
     for (const product of products) {

@@ -1,0 +1,77 @@
+<div class="container" style="padding: 0; margin: 0;">
+  <div class="page-content">
+    <app-page-header [header]="pageHeader"></app-page-header>
+    <div class="basic-form">
+      <form [formGroup]="myForm">
+
+        <div class="label-group">
+          <label>
+            <span class="field">Data da venda</span>
+            <input formControlName="date_sale" type="date" readonly>
+          </label>
+
+          <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
+          <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
+        </div>
+
+        <div class="label-group">
+          <app-search-loading-unique class="label-w50" [search]="searchUser"></app-search-loading-unique>
+          <app-search-loading-unique class="label-w50" [search]="searchBank"></app-search-loading-unique>
+
+          <label class="label-w30">
+            <span class="field">Condição de pagamento</span>
+            <select formControlName="payment_terms" (change)="changePortion()">
+              <option *ngFor="let term of paymentTermsList" [value]="term.type">{{ term.name }}
+              </option>
+            </select>
+          </label>
+        </div>
+
+        <div class="shopping-budget" style="margin-bottom: 10px; margin-right: 0;">
+          <div class="shopping-budget-grid">
+            <ul class="shopping-budget-grid-header">
+              <li style="width: 10%">Parcela</li>
+              <li style="width: 30%">Pagamento</li>
+              <li style="width: 20%">Vencimento</li>
+              <li style="text-align: right; width: 20%">Valor</li>
+              <li style="width: 20%">Obsercação da parcela</li>
+            </ul>
+
+            <ng-container formArrayName="plots">
+              <div *ngFor="let portion of plots.controls; index as i" class="shopping-budget-grid-list">
+                <ng-container [formGroupName]="i">
+                  <div class="label-group">
+                    <p style="font-weight: bold; margin-top: 10px; width: 10%; text-align: center; color: #395a7a">{{portion.value.portion}} / {{plots.length}}</p>
+
+                    <label style="width: 30%">
+                      <select formControlName="form_payment">
+                        <option *ngFor="let payment of formPaymentList" [value]="payment.type">{{ payment.name }}
+                        </option>
+                      </select>
+                    </label>
+
+                    <label style="width: 20%">
+                      <input formControlName="date_due" type="date">
+                    </label>
+
+                    <label style="width: 20%">
+                      <input formControlName="amount" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right">
+                    </label>
+
+                    <label style="width: 20%">
+                      <input formControlName="note" type="text">
+                    </label>
+                  </div>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </form>
+
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+    </div>
+  </div>
+</div>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>

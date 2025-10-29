@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, ComponentFactoryResolver, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
-import {merge, throwError} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, finalize, map, tap} from 'rxjs/operators';
+import {interval, merge, throwError} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, tap} from 'rxjs/operators';
 import {SelectionModel} from '@angular/cdk/collections';
 import {FormControl} from '@angular/forms';
 import {DatePipe} from '@angular/common';
@@ -17,6 +17,9 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { MatPaginator } from '@angular/material/paginator';
 import { PageHeader } from '../../../interfaces/page-header.interface';
+import { Auth } from 'src/app/shared/interfaces/auth.interface';
+import { ReceivedBoxCentralComponent } from '../../modals/received-box-central/received-box-central.component';
+import { InternetService } from 'src/app/shared/services/internet.service';
 
 @Component({
   selector: 'app-sale-list',
@@ -24,7 +27,7 @@ import { PageHeader } from '../../../interfaces/page-header.interface';
 })
 export class SaleListComponent implements OnInit, AfterViewInit {
   private sales: Array<any> = [];
-  public filterStatus = 4;
+  public filterStatus = 5;
   public loadingFull: LoadingFull = {
     active: false,
     message: 'Aguarde, carregando...'
@@ -36,6 +39,7 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     'people',
     'status',
     'net_total',
+    'buttons',
     'actions'
   ];
   public dataSource = new MatTableDataSource<any>();
@@ -60,16 +64,20 @@ export class SaleListComponent implements OnInit, AfterViewInit {
     },
   };
 
+  public auth!: Auth;
+
   constructor(
     private saleService: SaleService,
     private widGetService: WidgetService,
     private datePipe: DatePipe,
     public libraryService: LibraryService,
-    private dialogReport: MatDialog,
     private readonly resolver: ComponentFactoryResolver,
     private notificationService: NotificationService,
     private storageService: StorageService,
+    private dialog: MatDialog,
+    private internetService: InternetService,
   ) {
+    this.auth = storageService.getAuth();
   }
 
   ngOnInit(): void {
@@ -84,6 +92,16 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       .subscribe();
 
     this.load();
+
+    //Verifica a cada 10 segundos se a conexão está boa
+    interval(10000)
+      .pipe(
+        switchMap(() => this.internetService.hasGoodConnection(true)),
+        filter((isGoodConnection) => isGoodConnection)
+      )
+      .subscribe(() => {
+        this.load()
+      });
   }
 
   ngAfterViewInit(): void {
@@ -111,6 +129,8 @@ export class SaleListComponent implements OnInit, AfterViewInit {
   }
 
   getStatus(element: any): string {
+
+    console.log(element);
     switch (element.status) {
       case 0:
         return 'Em orçamento';
@@ -122,7 +142,21 @@ export class SaleListComponent implements OnInit, AfterViewInit {
         if (element.is_contract) {
           return element.contract_portion;
         } else {
-          return 'Venda';
+          if (element.nfe) {
+            return `Venda com ${element.modelo === 65 ? 'NFCe' : 'NFe'} (${element.serie}-${element.numero})`;
+          } else {
+            return 'Venda';
+          }
+        }
+      case 4:
+        if (element.is_contract) {
+          return element.contract_portion;
+        } else {
+          if (element.nfe) {
+            return `Venda com ${element.nfe.modelo === 65 ? 'NFCe' : 'NFe'} (${element.nfe.serie}-${element.nfe.numero})`;
+          } else {
+            return 'Venda';
+          }
         }
       default:
         return 'Venda'
@@ -225,21 +259,37 @@ export class SaleListComponent implements OnInit, AfterViewInit {
 
   filterAmountSale(): void {
     this.filterStatus = 3;
-    this.dataSource.data = this.sales.length > 0 ? this.sales.filter(t => t.status === 3) : [];
+    //Buscar status 3 ou 4
+    this.dataSource.data = this.sales.length > 0 ? this.sales.filter(t => t.status === 3 || t.status === 4) : [];
+  }
+
+  filterAmountSaleBoxCentral(): void {
+    this.filterStatus = 4;
+    this.dataSource.data = this.sales.length > 0 ? this.sales.filter(t => t.status === 4) : [];
   }
 
   getTotalAmountSaleQtd(): number {
-    return this.sales.length > 0 ? this.sales.filter(t => t.status === 3).reduce((acc) => acc + 1, 0) : 0;
+    return this.sales.length > 0 ? this.sales.filter(t => t.status === 3 || t.status === 4).reduce((acc) => acc + 1, 0) : 0;
+  }
+
+  getTotalAmountSaleBoxCentralQtd(): number {
+    return this.sales.length > 0 ? this.sales.filter(t => t.status === 4).reduce((acc) => acc + 1, 0) : 0;
   }
 
   getTotalAmountSale(): string {
-    const total = this.sales.length > 0 ? this.sales.filter(t => t.status === 3)
+    const total = this.sales.length > 0 ? this.sales.filter(t => t.status === 3 || t.status === 4)
+      .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
+    return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
+  }
+
+  getTotalAmountSaleBoxCentral(): string {
+    const total = this.sales.length > 0 ? this.sales.filter(t => t.status === 4)
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.net_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
 
   filterAmountTotal(): void {
-    this.filterStatus = 4;
+    this.filterStatus = 5;
     this.dataSource.data = this.sales;
   }
 
@@ -329,5 +379,21 @@ export class SaleListComponent implements OnInit, AfterViewInit {
       .from(content)
       .toPdf()
       .outputPdf('dataurlnewwindow');
+  }
+
+  receiveSaleBoxCentral(id: string): void {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = false;
+    dialogConfig.width = '1020px';
+    dialogConfig.data = id;
+    dialogConfig.minHeight = '480px';
+    dialogConfig.maxHeight = '720px';
+
+    //Se fechar o modal, atualizar a lista
+    const dialogRef = this.dialog.open(ReceivedBoxCentralComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(() => {
+      this.load();
+    });
   }
 }

@@ -91,6 +91,7 @@ import { ChatClosedComponent } from './pages/modals/chat-closed/chat-closed.comp
 import { NewChatDialogComponent } from './pages/modals/new-chat-dialog/new-chat-dialog.component';
 import { NfceListComponent } from './pages/nfce/nfce-list/nfce-list.component';
 import { NfceFormComponent } from './pages/nfce/nfce-form/nfce-form.component';
+import { ReceivedBoxCentralComponent } from './pages/modals/received-box-central/received-box-central.component';
 
 const appName = 'CTrix';
 
@@ -517,7 +518,8 @@ const routes: Routes = [
     ChatClosedComponent,
     NewChatDialogComponent,
     NfceListComponent,
-    NfceFormComponent
+    NfceFormComponent,
+    ReceivedBoxCentralComponent
   ],
   imports: [
     CommonModule,

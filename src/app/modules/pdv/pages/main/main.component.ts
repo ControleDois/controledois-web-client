@@ -386,16 +386,16 @@ export class MainComponent implements OnInit  {
       date_due: new FormControl(
         this.datePipe.transform(new Date(), 'yyyy-MM-dd')
       ),
-      amount: new FormControl(values.total - totalPayments|| 0),
-      bill_value: new FormControl(valuePayment|| 0),
+      amount: new FormControl(values.total - totalPayments || 0),
+      bill_value: new FormControl(valuePayment || 0),
       change: new FormControl(Math.abs(totalChange)),
       note: new FormControl(''),
-      status: new FormControl(1),
+      status: new FormControl(this.auth.company.config.central_box_active > 0 ? 0 : 1),
     });
 
     this.statusCardPayment = 0;
     if (this.terminalSelected) {
-      if (this.paymentSelected == 2 || this.paymentSelected == 3) {
+      if (this.paymentSelected == 2 || this.paymentSelected == 3 || this.auth.company.config.central_box_active <= 0) {
         this.statusCardPayment = 1;
 
         await this.serverLocalhostService.tefPayGo(this.terminalSelected.api_url, {
@@ -462,7 +462,7 @@ export class MainComponent implements OnInit  {
     this.statusProcessChange = this.getTotalChange().change;
 
     if (this.terminalSelected) {
-      if (this.terminalSelected.nfce_active > 0 && this.statusNFeRequest.status === 0) {
+      if (this.terminalSelected.nfce_active > 0 && this.statusNFeRequest.status === 0 && this.auth.company.config.central_box_active <= 0) {
         //Gerar NFCe
         const nfe = this.serverLocalhostService.generateNFCe(this.auth.company,
           this.terminalSelected,

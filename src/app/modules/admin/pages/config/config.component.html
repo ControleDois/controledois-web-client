@@ -192,6 +192,16 @@
               <app-search-loading-unique class="label-w50" [search]="searchPeople"></app-search-loading-unique>
               <app-search-loading-unique class="label-w50" [search]="searchCategory"></app-search-loading-unique>
               <app-search-loading-unique class="label-w50" [search]="searchBank"></app-search-loading-unique>
+
+              <div class="label-group">
+                <label class="label-w100">
+                  <span class="field">Caixa central:</span>
+                  <select formControlName="central_box_active">
+                    <option [value]="1">Sim</option>
+                    <option [value]="0">Não</option>
+                  </select>
+                </label>
+              </div>
             </mat-tab>
 
             <mat-tab>

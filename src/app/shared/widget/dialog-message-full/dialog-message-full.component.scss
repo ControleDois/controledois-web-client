@@ -3,6 +3,12 @@
   /* Adicione outros estilos conforme necessário */
 }
 
+::ng-deep {
+  .mat-dialog-container {
+    padding: 20px;
+  }
+}
+
 .message {
   text-align: center;
   max-width: 400px;
@@ -22,6 +28,7 @@
 
   p {
     color: #575757;
+    word-wrap: break-word;
   }
 }
 
@@ -44,6 +51,7 @@
     color: #606060;
     margin-top: 10px;
     font-size: 14px;
+    word-wrap: break-word;
   }
 }
 
