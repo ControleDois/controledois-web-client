@@ -54,6 +54,9 @@ export class NfeListComponent implements OnInit, OnDestroy {
 
   private messageSubscription!: Subscription;
 
+  private nfes: Array<any> = [];
+  public filterStatus = 5;
+
   constructor(
     private nfeService: NFeService,
     private widGetService: WidgetService,
@@ -108,6 +111,7 @@ export class NfeListComponent implements OnInit, OnDestroy {
       this.paginator?.pageSize ? (this.paginator?.pageSize).toString() : '10').pipe(
       map(res => {
         this.dataSource.data = res.data;
+        this.nfes = res.data;
         this.tableLength = res.meta.total;
       })
     ).subscribe();
@@ -283,5 +287,35 @@ export class NfeListComponent implements OnInit, OnDestroy {
         this.updateStatus(id, 2);
       })
     ).subscribe();
+  }
+
+  filterNfeFromStatus(status: number): void {
+    this.filterStatus = status;
+    this.dataSource.data = this.nfes.filter(t => t.status === status);
+  }
+
+  getTotalNfeFromStatusQtd(status: number): number {
+    return this.nfes ? this.nfes.filter(t => t.status === status).reduce((acc) => acc + 1, 0) : 0;
+  }
+
+  getTotalAmountFromStatus(status: number): string {
+    const total = this.nfes ? this.nfes.filter(t => t.status === status)
+      .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.valor_total) || 0), 0) : 0;
+    return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
+  }
+
+  filterAmountTotal(): void {
+    this.filterStatus = 5;
+    this.dataSource.data = this.nfes;
+  }
+
+  getTotalAmountTotalQtd(): number {
+    return this.nfes.length > 0 ? this.nfes.filter(t => t.status !== 4).reduce((acc) => acc + 1, 0): 0;
+  }
+
+  getTotal(): string {
+    const total = this.nfes.length > 0 ? this.nfes.filter(t => t.status !== 4)
+      .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.valor_total) || 0), 0) : 0;
+    return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
 }
