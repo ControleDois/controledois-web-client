@@ -200,9 +200,9 @@ export class OrderServiceFormComponent implements OnInit {
           this.notificationService.warn(error.error);
           return throwError(error);
         }),
-        map(() => {
+        map((res) => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['os']);
+          this.formId = res.id;
         })
       ).subscribe();
     } else {

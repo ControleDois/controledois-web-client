@@ -237,9 +237,9 @@ export class TaskFormComponent implements OnInit {
               this.notificationService.warn(error.error?.message);
               return throwError(error);
             }),
-            map(() => {
+            map((res) => {
               this.notificationService.success('Salvo com sucesso.');
-              this.router.navigate(['task']);
+              this.formId = res.id;
             })
           ).subscribe();
         })

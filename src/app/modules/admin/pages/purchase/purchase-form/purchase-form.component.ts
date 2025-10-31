@@ -231,14 +231,7 @@ export class PurchaseFormComponent implements OnInit {
         action: () => this.save(false),
         class: 'c2-btn c2-btn-green',
         navigation: false,
-      },
-      {
-        text: 'Salvar e Continuar',
-        icon: 'save_as',
-        action: () => this.save(true),
-        class: 'c2-btn c2-btn-green',
-        navigation: false,
-      },
+      }
     ]
   }
 
@@ -366,11 +359,9 @@ export class PurchaseFormComponent implements OnInit {
           this.notificationService.warn(error.error);
           return throwError(error);
         }),
-        map(() => {
+        map((res) => {
           this.notificationService.success('Salvo com sucesso.');
-          if (!continueForm) {
-            this.router.navigate(['purchase']);
-          }
+          this.formId = res.id;
         })
       ).subscribe();
     } else {

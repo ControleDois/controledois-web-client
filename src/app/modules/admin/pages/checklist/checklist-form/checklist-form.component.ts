@@ -148,9 +148,9 @@ export class ChecklistFormComponent implements OnInit {
             });
           return throwError(res);
         }),
-        map(() => {
+        map((res) => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['checklist']);
+          this.formId = res.id;
         })
       ).subscribe();
     } else {

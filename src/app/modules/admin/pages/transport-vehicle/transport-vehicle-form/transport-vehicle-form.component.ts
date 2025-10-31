@@ -185,9 +185,9 @@ export class TransportVehicleFormComponent implements OnInit {
         this.notificationService.warn(error.error.errors[0].message);
         return throwError(error);
       }),
-      map(() => {
+      map((res) => {
         this.notificationService.success('Salvo com sucesso.');
-        this.router.navigate(['transport-vehicle']);
+        this.formId = res.id;
       })
     ).subscribe();
   }

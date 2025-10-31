@@ -239,9 +239,9 @@ export class NfeFormComponent implements OnInit {
           this.notificationService.warn(error.error);
           return throwError(error);
         }),
-        map(() => {
+        map((res) => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['nfe']);
+          this.formId = res.id;
         })
       ).subscribe();
     } else {

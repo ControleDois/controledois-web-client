@@ -91,9 +91,9 @@ export class UserFormComponent implements OnInit {
         this.notificationService.warn(error.error.errors[0].message);
         return throwError(error);
       }),
-      map(() => {
+      map((res) => {
         this.notificationService.success('Salvo com sucesso.');
-        this.router.navigate(['user']);
+        this.formId = res.id;
       })
     ).subscribe();
   }

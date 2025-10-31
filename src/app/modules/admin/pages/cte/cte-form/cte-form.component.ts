@@ -472,9 +472,9 @@ export class CteFormComponent implements OnInit {
 
           return throwError(res);
         }),
-        map(() => {
+        map((res) => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['cte']);
+          this.formId = res.id;
         })
       ).subscribe();
     } else {

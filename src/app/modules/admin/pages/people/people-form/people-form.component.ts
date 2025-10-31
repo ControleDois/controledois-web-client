@@ -337,7 +337,6 @@ export class PeopleFormComponent implements OnInit {
         }),
         map(() => {
           this.notificationService.success('Salvo com sucesso.');
-          this.router.navigate(['people']);
         })
       ).subscribe();
     } else {

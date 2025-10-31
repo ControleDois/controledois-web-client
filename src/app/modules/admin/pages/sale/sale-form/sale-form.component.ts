@@ -422,11 +422,9 @@ export class SaleFormComponent implements OnInit {
             this.notificationService.warn(error.error);
             return throwError(error);
           }),
-          map(() => {
+          map((res) => {
             this.notificationService.success('Salvo com sucesso.');
-            if (!continueForm) {
-              this.router.navigate(['sale']);
-            }
+            this.formId = res.id;
           })
         )
         .subscribe();
