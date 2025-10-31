@@ -395,7 +395,7 @@ export class MainComponent implements OnInit  {
 
     this.statusCardPayment = 0;
     if (this.terminalSelected) {
-      if (this.paymentSelected == 2 || this.paymentSelected == 3 || this.auth.company.config.central_box_active <= 0) {
+      if ((this.paymentSelected == 2 || this.paymentSelected == 3) && this.auth.company.config.central_box_active <= 0) {
         this.statusCardPayment = 1;
 
         await this.serverLocalhostService.tefPayGo(this.terminalSelected.api_url, {
