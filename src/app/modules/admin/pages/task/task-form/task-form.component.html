@@ -96,8 +96,8 @@
                     <span
                       *ngFor="let role of getUserRoles(user)"
                       class="tag"
-                      [ngClass]="roleMap[role]?.class">
-                      {{ roleMap[role]?.label }}
+                      [ngClass]="roleMap[role].class">
+                      {{ roleMap[role].label }}
                     </span>
                   </div>
                 </div>
