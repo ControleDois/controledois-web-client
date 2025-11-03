@@ -14,6 +14,7 @@ import { WebsocketService } from 'src/app/shared/services/websocket.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
+import { DanfeViewerModalComponent } from '../../modals/danfe-viewer-modal/danfe-viewer-modal.component';
 
 @Component({
   selector: 'app-mdfe-list',
@@ -34,6 +35,7 @@ export class MdfeListComponent implements OnInit {
   @ViewChild(MatSort)
   public sort!: MatSort;
   @Output() search = new FormControl('');
+  public vDateFilter = new Date();
 
   @Output() public pageHeader: PageHeader = {
     title: 'MDF-e',
@@ -46,6 +48,9 @@ export class MdfeListComponent implements OnInit {
   };
 
   private messageSubscription!: Subscription;
+
+  public filterStatus = 6;
+  private mdfes: Array<any> = [];
 
   constructor(
     private mdfeService: MdfeService,
@@ -89,6 +94,7 @@ export class MdfeListComponent implements OnInit {
     this.mdfeService.index(this.search.value ? this.search.value : '', 'name', 'name', this.paginator?.page ? (this.paginator?.pageIndex + 1).toString() : '1').pipe(
       map(res => {
         this.dataSource.data = res.data;
+        this.mdfes = res.data;
         this.tableLength = res.meta.total;
       })
     ).subscribe();
@@ -279,5 +285,56 @@ export class MdfeListComponent implements OnInit {
         this.updateStatus(id, 2);
       })
     ).subscribe();
+  }
+
+  openDanfeViewer(path: string): void {
+    this.loadingFull.active = true;
+    this.dropboxService.getTemporaryLink(path.replace(/\\/g, "/")).subscribe((res) => {
+      this.loadingFull.active = false;
+
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = false;
+      dialogConfig.autoFocus = false;
+      dialogConfig.width = '1020px';
+      dialogConfig.maxHeight = '740px';
+      dialogConfig.data = {
+        pdfUrl: res.link,
+      };
+
+      this.dialog.open(DanfeViewerModalComponent, dialogConfig);
+    }, (error) => {
+      this.notificationService.warn('Erro ao abrir o Danfe Viewer');
+      this.loadingFull.active = false;
+    });
+  }
+
+  filterNfeFromStatus(status: number): void {
+    this.filterStatus = status;
+    this.dataSource.data = this.mdfes.filter(t => t.status === status);
+  }
+
+  getTotalAmountFromStatus(status: number): string {
+    const total = this.mdfes ? this.mdfes.filter(t => t.status === status)
+      .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.total_load_value) || 0), 0) : 0;
+    return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
+  }
+
+  filterAmountTotal(): void {
+    this.filterStatus = 6;
+    this.dataSource.data = this.mdfes;
+  }
+
+  getTotalAmountTotalQtd(): number {
+    return this.mdfes.length > 0 ? this.mdfes.filter(t => t.status !== 4).reduce((acc) => acc + 1, 0): 0;
+  }
+
+  getTotalNfeFromStatusQtd(status: number): number {
+    return this.mdfes ? this.mdfes.filter(t => t.status === status).reduce((acc) => acc + 1, 0) : 0;
+  }
+
+  getTotal(): string {
+    const total = this.mdfes.length > 0 ? this.mdfes.filter(t => t.status !== 4)
+      .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.total_load_value) || 0), 0) : 0;
+    return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
   }
 }

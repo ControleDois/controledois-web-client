@@ -4,6 +4,34 @@
 
     <div class="page-search">
       <app-search-simple [search]="search"></app-search-simple>
+      <app-search-date-month [date]="vDateFilter" (eventEmit)="load()"></app-search-date-month>
+    </div>
+
+    <div class="summary-header" style="margin-top: 20px;">
+      <article class="red" (click)="filterNfeFromStatus(4)" [style.border-top]="filterStatus === 4 ? '2px solid #F43E61' : ''" [style.opacity]="filterStatus === 6 || filterStatus === 4 ? 1 : 0.4">
+        <span>Canceladas ({{getTotalNfeFromStatusQtd(4)}})</span>
+        <h4>R$ <b style="color: #F43E61">{{getTotalAmountFromStatus(4)}}</b></h4>
+      </article>
+      <article class="orange" (click)="filterNfeFromStatus(1)" [style.border-top]="filterStatus === 1 ? '2px solid #FFC200' : ''" [style.opacity]="filterStatus === 6 || filterStatus === 1 ? 1 : 0.4">
+        <span>Em processamento ({{getTotalNfeFromStatusQtd(1)}})</span>
+        <h4>R$ <b style="color: #FFC200">{{getTotalAmountFromStatus(1)}}</b></h4>
+      </article>
+      <article class="content-icon plus green" (click)="filterNfeFromStatus(2)" [style.border-top]="filterStatus === 2 ? '2px solid #4AB858' : ''" [style.opacity]="filterStatus === 6 || filterStatus === 2 ? 1 : 0.4">
+        <span>Emitidas ({{getTotalNfeFromStatusQtd(2)}})</span>
+        <h4>R$ <b style="color: #4AB858">{{getTotalAmountFromStatus(2)}}</b></h4>
+      </article>
+      <article class="content-icon plus blue" (click)="filterNfeFromStatus(0)" [style.border-top]="filterStatus === 0 ? '2px solid #2687E9' : ''" [style.opacity]="filterStatus === 6 || filterStatus === 0 ? 1 : 0.4">
+        <span>Aguardando envio ({{getTotalNfeFromStatusQtd(0)}})</span>
+        <h4>R$ <b style="color: #2687E9">{{getTotalAmountFromStatus(0)}}</b></h4>
+      </article>
+      <article class="content-icon plus gray" (click)="filterNfeFromStatus(5)" [style.border-top]="filterStatus === 5 ? '2px solid #6a6a6a' : ''" [style.opacity]="filterStatus === 6 || filterStatus === 5 ? 1 : 0.4">
+        <span>Encerradas ({{getTotalNfeFromStatusQtd(5)}})</span>
+        <h4>R$ <b style="color: #6a6a6a">{{getTotalAmountFromStatus(5)}}</b></h4>
+      </article>
+      <article class="content-icon black" (click)="filterAmountTotal()" [style.border-top]="filterStatus === 6 ? '2px solid #7A7A7F' : ''" [style.opacity]="filterStatus === 6 ? 1 : 0.4">
+        <span>Previsão ({{getTotalAmountTotalQtd()}})</span>
+        <h4>R$ <b>{{getTotal()}}</b></h4>
+      </article>
     </div>
 
     <table class="basic-table" mat-table [dataSource]="dataSource" matSort>
@@ -57,25 +85,34 @@
           </div>
           <mat-menu #actions="matMenu">
             <button mat-menu-item (click)="send(element.id)" *ngIf="(element.status === 0 || element.status === 1) && !element.document_protocol">
+              <mat-icon>drive_file_move</mat-icon>
               <span>Enviar MDFe</span>
             </button>
             <button mat-menu-item [routerLink]="'/mdfe/' + element.id" *ngIf="(element.status === 0 || element.status === 1) && !element.document_protocol">
+              <mat-icon>edit_square</mat-icon>
               <span>Editar</span>
             </button>
             <button mat-menu-item (click)="delete(element.id)" *ngIf="(element.status === 0 || element.status === 1) && !element.document_protocol">
+              <mat-icon>delete_sweep</mat-icon>
               <span>Remover</span>
             </button>
             <button mat-menu-item (click)="showLog(element)" *ngIf="element.status === 0">
+              <mat-icon>error</mat-icon>
               <span>Verificar Erro</span>
             </button>
-            <button mat-menu-item (click)="closing(element.id)" *ngIf="(element.status === 0 || element.status === 3) && element.document_protocol">
-              <span>Encerrar MDFe</span>
-            </button>
-            <button mat-menu-item (click)="downloadFile(element.path_damdfe)" *ngIf="element.status >= 3">
+            <!-- <button mat-menu-item (click)="downloadFile(element.path_damdfe)" *ngIf="element.status >= 3">
               <span>Danfe</span>
+            </button> -->
+            <button mat-menu-item (click)="openDanfeViewer(element.path_damdfe)" *ngIf="(element.status >= 3)">
+              <mat-icon>picture_as_pdf</mat-icon>
+              <span>Visualizar Danfe</span>
             </button>
             <button mat-menu-item (click)="downloadFile(element.path_xml)" *ngIf="element.status >= 3">
+              <mat-icon>description</mat-icon>
               <span>XML</span>
+            </button>
+            <button style="border-top: 1px solid #e0e0e0;" mat-menu-item (click)="closing(element.id)" *ngIf="(element.status === 0 || element.status === 3) && element.document_protocol">
+              <span>Encerrar MDFe</span>
             </button>
           </mat-menu>
         </td>
