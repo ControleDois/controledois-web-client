@@ -92,6 +92,8 @@ import { NewChatDialogComponent } from './pages/modals/new-chat-dialog/new-chat-
 import { NfceListComponent } from './pages/nfce/nfce-list/nfce-list.component';
 import { NfceFormComponent } from './pages/nfce/nfce-form/nfce-form.component';
 import { ReceivedBoxCentralComponent } from './pages/modals/received-box-central/received-box-central.component';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+import { DanfeViewerModalComponent } from './pages/modals/danfe-viewer-modal/danfe-viewer-modal.component';
 
 const appName = 'CTrix';
 
@@ -519,7 +521,8 @@ const routes: Routes = [
     NewChatDialogComponent,
     NfceListComponent,
     NfceFormComponent,
-    ReceivedBoxCentralComponent
+    ReceivedBoxCentralComponent,
+    DanfeViewerModalComponent
   ],
   imports: [
     CommonModule,
@@ -529,7 +532,8 @@ const routes: Routes = [
     NgxMaskModule.forRoot(),
     CurrencyMaskModule,
     ZXingScannerModule,
-    DragDropModule
+    DragDropModule,
+    NgxExtendedPdfViewerModule
   ],
 })
 export class AdminModule { }

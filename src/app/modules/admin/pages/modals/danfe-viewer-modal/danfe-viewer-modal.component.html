@@ -1,0 +1,15 @@
+<div class="container" style="padding: 0; margin: 0;">
+    <div class="page-content" style="height: 100%;">
+      <app-page-header [header]="pageHeader"></app-page-header>
+
+      <ngx-extended-pdf-viewer
+      [src]="data.pdfUrl"
+      [useBrowserLocale]="true"
+      [showPrintButton]="true"
+      [showDownloadButton]="true"
+      [showHandToolButton]="false"
+      [showSecondaryToolbarButton]="false"
+    >
+    </ngx-extended-pdf-viewer>
+    </div>
+  </div>

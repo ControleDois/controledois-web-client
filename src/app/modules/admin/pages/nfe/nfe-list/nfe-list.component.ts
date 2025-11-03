@@ -15,6 +15,7 @@ import { ConsoleMessageModalComponent } from '../../modals/console-message-modal
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import { WebsocketService } from 'src/app/shared/services/websocket.service';
+import { DanfeViewerModalComponent } from '../../modals/danfe-viewer-modal/danfe-viewer-modal.component';
 
 @Component({
   selector: 'app-nfe-list',
@@ -317,5 +318,26 @@ export class NfeListComponent implements OnInit, OnDestroy {
     const total = this.nfes.length > 0 ? this.nfes.filter(t => t.status !== 4)
       .reduce((acc, t) => (parseFloat(acc) || 0) + (parseFloat(t.valor_total) || 0), 0) : 0;
     return total > 0 ? parseFloat(total).toFixed(2) : '0.00';
+  }
+
+  openDanfeViewer(path: string): void {
+    this.loadingFull.active = true;
+    this.dropboxService.getTemporaryLink(path.replace(/\\/g, "/")).subscribe((res) => {
+      this.loadingFull.active = false;
+
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = false;
+      dialogConfig.autoFocus = false;
+      dialogConfig.width = '1020px';
+      dialogConfig.maxHeight = '740px';
+      dialogConfig.data = {
+        pdfUrl: res.link,
+      };
+
+      this.dialog.open(DanfeViewerModalComponent, dialogConfig);
+    }, (error) => {
+      this.notificationService.warn('Erro ao abrir o Danfe Viewer');
+      this.loadingFull.active = false;
+    });
   }
 }

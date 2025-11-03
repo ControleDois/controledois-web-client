@@ -86,15 +86,19 @@
               <mat-icon>error</mat-icon>
               <span>Verificar Erro</span>
             </button>
-            <button mat-menu-item (click)="downloadFile(element.caminho_danfe)" *ngIf="(element.status > 1) && element.protocolo">
+            <!-- <button mat-menu-item (click)="downloadFile(element.caminho_danfe)" *ngIf="(element.status > 1) && element.protocolo">
               <mat-icon>picture_as_pdf</mat-icon>
               <span>Danfe</span>
+            </button> -->
+            <button mat-menu-item (click)="openDanfeViewer(element.caminho_danfe)" *ngIf="(element.status > 1) && element.protocolo">
+              <mat-icon>picture_as_pdf</mat-icon>
+              <span>Visualizar Danfe</span>
             </button>
             <button mat-menu-item (click)="downloadFile(element.caminho_xml_nota_fiscal)" *ngIf="(element.status > 1) && element.protocolo">
               <mat-icon>description</mat-icon>
               <span>XML</span>
             </button>
-            <button mat-menu-item (click)="cancel(element.id)" *ngIf="(element.status === 2 || element.status === 3) && element.protocolo">
+            <button style="border-top: 1px solid #e0e0e0;" mat-menu-item (click)="cancel(element.id)" *ngIf="(element.status === 2 || element.status === 3) && element.protocolo">
               <mat-icon>block</mat-icon>
               <span>Cancelar NFe</span>
             </button>

@@ -29,6 +29,7 @@
     "crypto-js": "^4.1.1",
     "html2pdf.js": "^0.10.1",
     "ng2-currency-mask": "^13.0.3",
+    "ngx-extended-pdf-viewer": "~16.0.0",
     "ngx-loading": "^8.0.0",
     "ngx-mask": "^14.2.4",
     "ngx-qrcode2": "^9.0.0",
