@@ -15,6 +15,7 @@ import { WebsocketService } from 'src/app/shared/services/websocket.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { LibraryService } from 'src/app/shared/services/library.service';
 import { ConsoleMessageModalComponent } from '../../modals/console-message-modal/console-message-modal.component';
+import { DanfeViewerModalComponent } from '../../modals/danfe-viewer-modal/danfe-viewer-modal.component';
 
 @Component({
   selector: 'app-nfce-list',
@@ -283,5 +284,26 @@ export class NfceListComponent implements OnInit {
         this.updateStatus(id, 2);
       })
     ).subscribe();
+  }
+
+  openDanfeViewer(path: string): void {
+    this.loadingFull.active = true;
+    this.dropboxService.getTemporaryLink(path.replace(/\\/g, "/")).subscribe((res) => {
+      this.loadingFull.active = false;
+
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.disableClose = false;
+      dialogConfig.autoFocus = false;
+      dialogConfig.width = '1020px';
+      dialogConfig.maxHeight = '740px';
+      dialogConfig.data = {
+        pdfUrl: res.link,
+      };
+
+      this.dialog.open(DanfeViewerModalComponent, dialogConfig);
+    }, (error) => {
+      this.notificationService.warn('Erro ao abrir o Danfe Viewer');
+      this.loadingFull.active = false;
+    });
   }
 }
