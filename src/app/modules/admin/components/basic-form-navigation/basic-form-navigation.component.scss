@@ -9,13 +9,14 @@
 
     li {
       margin-bottom: 10px;
-      padding: 10px;
 
       span {
-        padding: 10px;
+        padding: 5px;
         border-radius: 15px;
         cursor: pointer;
         color: #333;
+        display: flex;
+        align-items: center;
 
         &:hover {
           background: #f1f4f9;

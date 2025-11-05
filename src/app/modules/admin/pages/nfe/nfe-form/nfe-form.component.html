@@ -105,6 +105,40 @@
                 </label>
               </div>
             </mat-tab>
+
+            <mat-tab>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid">
+                  <ul class="shopping-budget-grid-header">
+                    <li style="width: 100%">Chave</li>
+                  </ul>
+
+                  <ng-container formArrayName="references">
+                    <div *ngFor="let reference of references.controls; index as i" class="shopping-budget-grid-list">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+
+                          <label style="width: 100%">
+                            <span class="label-title">Chave</span>
+                            <input formControlName="chave_nfe" type="text">
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removeReference(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addReference(null)">Adicionar mais uma linha</button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
           </mat-tab-group>
         </form>
 

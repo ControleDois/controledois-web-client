@@ -127,8 +127,8 @@ export class NfeTaxationFormComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = false;
-    dialogConfig.width = '920px';
-    dialogConfig.maxHeight = '550px';
+    dialogConfig.width = '1020px';
+    dialogConfig.maxHeight = '740px';
     dialogConfig.data = {
       taxation_id: this.formId,
       taxation_rule_id: id || 'new'

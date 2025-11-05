@@ -12,4 +12,5 @@ export interface SearchLoadingUnique {
   paramsArray: Array<Object>;
   searchField: FormControl;
   validation: boolean;
+  change?: () => void;
 }

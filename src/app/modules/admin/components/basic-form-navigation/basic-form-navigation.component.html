@@ -1,5 +1,10 @@
 <div class="basic-form-navigation">
   <ul>
-    <li *ngFor="let item of navigation.items"><span [ngClass]="{'active': navigation.selectedItem == item.index}" (click)="navigation.selectedItem = item.index">{{item.text}}</span></li>
+    <li *ngFor="let item of navigation.items">
+      <span [ngClass]="{'active': navigation.selectedItem == item.index}" (click)="navigation.selectedItem = item.index">
+        <mat-icon>{{item.icon}}</mat-icon>
+        <span>{{item.text}}</span>
+      </span>
+    </li>
   </ul>
 </div>

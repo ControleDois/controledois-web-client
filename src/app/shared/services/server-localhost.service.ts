@@ -43,7 +43,7 @@ export class ServerLocalhostService {
     }
 
     let nfe: any = {
-      saleId: '',
+      saleId: null,
       tipo_emissao: tpEmis,
       status: 0,
       companyId: company.id,

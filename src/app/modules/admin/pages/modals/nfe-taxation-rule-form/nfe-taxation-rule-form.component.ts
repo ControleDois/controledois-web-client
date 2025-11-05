@@ -136,6 +136,11 @@ export class NfeTaxationRuleFormComponent implements OnInit {
   @Output() public pageHeader: PageHeader = {
     title: `Regra de Tributação`,
     description: 'Cadastro de Regra de Tributação',
+    button: {
+      text: 'Voltar',
+      icon: 'arrow_back',
+      action: () => this.dialogRef.close(),
+    },
   };
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -363,6 +368,18 @@ export class NfeTaxationRuleFormComponent implements OnInit {
   ];
 
   @ViewChild('stateInput') stateInput!: ElementRef<HTMLInputElement>;
+
+  @Output() public navigationButtons: BasicFormButtons = {
+    buttons: [
+      {
+        text: 'Salvar',
+        icon: 'save',
+        action: () => this.save(),
+        class: 'c2-btn c2-btn-green',
+        navigation: false,
+      }
+    ]
+  }
 
   readonly dialogRef = inject(MatDialogRef<NfeTaxationRuleFormComponent>);
   constructor(

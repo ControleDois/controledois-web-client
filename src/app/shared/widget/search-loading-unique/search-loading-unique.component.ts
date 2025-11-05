@@ -72,6 +72,8 @@ export class SearchLoadingUniqueComponent implements OnInit {
 
     this.search.searchField.setValue(event.option.viewValue);
     this.eventEmit.emit(this.search.searchFieldOn);
+
+    this.search.change?.();
   }
 
   removeItem(): void {

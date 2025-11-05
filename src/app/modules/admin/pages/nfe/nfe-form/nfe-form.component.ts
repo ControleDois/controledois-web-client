@@ -37,6 +37,7 @@ export class NfeFormComponent implements OnInit {
     modelo: new FormControl(55),
     amount: new FormControl(0),
     products: new FormArray([]),
+    references: new FormArray([]),
   });
 
   public keys = this.myForm.get('keys') as FormArray;
@@ -121,6 +122,7 @@ export class NfeFormComponent implements OnInit {
     searchField: new FormControl(''),
     validation: true,
     paramsArray: [],
+    change: () => this.checkNatureOperation(),
   };
 
   @Output() public pageHeader: PageHeader = {
@@ -161,9 +163,9 @@ export class NfeFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Dados da NFe', index: 0, icon: 'info' },
-      { text: 'Produtos', index: 1, icon: 'info' },
-      { text: 'Outros', index: 2, icon: 'info' },
+      { text: 'Dados da NFe', index: 0, icon: 'article' },
+      { text: 'Produtos', index: 1, icon: 'shopping_cart' },
+      { text: 'Outros', index: 2, icon: 'lists' },
     ],
     selectedItem: 0
   }
@@ -171,6 +173,7 @@ export class NfeFormComponent implements OnInit {
   public products = this.myForm.get('products') as FormArray;
   @Output() public productsOutPut: Array<SearchLoadingUnique>;
 
+  public references = this.myForm.get('references') as FormArray;
   constructor(
     private activatedRoute: ActivatedRoute,
     private nfeService: NFeService,
@@ -209,8 +212,13 @@ export class NfeFormComponent implements OnInit {
     if (value) {
       if (value.itens && value.itens.length > 0) {
         for (const product of value.itens) {
-          console.log(product)
           this.addProduct(product);
+        }
+      }
+
+      if (value.notas_referenciadas && value.notas_referenciadas.length > 0) {
+        for (const reference of value.notas_referenciadas) {
+          this.addReference(reference);
         }
       }
 
@@ -220,6 +228,7 @@ export class NfeFormComponent implements OnInit {
       this.searchNatureOperation.searchFieldOn = value.natureOperation;
       this.searchNatureOperation.searchField.setValue(value.natureOperation.description);
 
+      this.checkNatureOperation();
       this.myForm.patchValue(value);
     }
   }
@@ -280,10 +289,22 @@ export class NfeFormComponent implements OnInit {
     });
   }
 
+  addReference(value: any): void {
+    const control = new FormGroup({
+      chave_nfe: new FormControl(value?.chave_nfe || ''),
+    });
+
+    this.references.push(control);
+  }
+
   removeProduct(index: any): void {
     this.products.controls.splice(index, 1);
     this.productsOutPut.splice(index, 1);
     this.sumValues();
+  }
+
+  removeReference(index: any): void {
+    this.references.controls.splice(index, 1);
   }
 
   selectProduct(event: any, i: any): void {
@@ -330,6 +351,37 @@ export class NfeFormComponent implements OnInit {
       this.navigation.selectedItem = 0;
     } else if (this.navigation.selectedItem >= this.navigation.items.length) {
       this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
+  }
+
+  changeNavegationBase(): void {
+    this.navigation = {
+      items: [
+        { text: 'Dados da NFe', index: 0, icon: 'article' },
+        { text: 'Produtos', index: 1, icon: 'shopping_cart' },
+        { text: 'Outros', index: 2, icon: 'lists' },
+      ],
+      selectedItem: 0
+    }
+  }
+
+  changeNavegationReturn(): void {
+    this.navigation = {
+      items: [
+        { text: 'Dados da NFe', index: 0, icon: 'article' },
+        { text: 'Produtos', index: 1, icon: 'shopping_cart' },
+        { text: 'Outros', index: 2, icon: 'lists' },
+        { text: 'Doc. Referenciados ', index: 3, icon: 'note_add' },
+      ],
+      selectedItem: 0
+    }
+  }
+
+  checkNatureOperation(): void {
+    if (this.searchNatureOperation.searchFieldOn.finality === 4) {
+      this.changeNavegationReturn();
+    } else {
+      this.changeNavegationBase();
     }
   }
 }

@@ -78,11 +78,11 @@
               <mat-icon>delete_sweep</mat-icon>
               <span>Remover</span>
             </button>
-            <button mat-menu-item (click)="send(element.id)" *ngIf="(element.status === 0 || element.status === 3) && !element.protocolo">
+            <button style="border-top: 1px solid #e0e0e0;" mat-menu-item (click)="send(element.id)" *ngIf="(element.status === 0 || element.status === 3) && !element.protocolo">
               <mat-icon>drive_file_move</mat-icon>
               <span>Enviar NFe</span>
             </button>
-            <button mat-menu-item (click)="showLog(element)" *ngIf="element.status === 3">
+            <button style="border-top: 1px solid #e0e0e0;" mat-menu-item (click)="showLog(element)" *ngIf="element.status === 3">
               <mat-icon>error</mat-icon>
               <span>Verificar Erro</span>
             </button>

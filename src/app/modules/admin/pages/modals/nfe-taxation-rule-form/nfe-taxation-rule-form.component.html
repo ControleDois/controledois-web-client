@@ -1,4 +1,4 @@
-<div class="container" style="padding: 0; margin-bottom: 0;">
+<div class="container" style="padding: 0; margin: 0;">
   <div class="page-content">
     <div class="basic-form">
       <app-page-header [header]="pageHeader"></app-page-header>
@@ -553,11 +553,7 @@
         </mat-tab-group>
       </form>
 
-      <div style="margin-top: 20px; width: 100%; text-align: right">
-        <button class="c2-btn c2-btn-green" mat-button (click)="save()">
-          <mat-icon>save</mat-icon>Salvar
-        </button>
-      </div>
+      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
     </div>
   </div>
 </div>
