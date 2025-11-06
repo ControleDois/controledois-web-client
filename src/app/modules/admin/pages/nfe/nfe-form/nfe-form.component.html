@@ -76,33 +76,130 @@
 
             <mat-tab>
               <div class="label-group">
-                <label>
-                  <select formControlName="indicador_pagamento">
-                    <option *ngFor="let indicador of indicadorPagamento" [value]="indicador.type">{{ indicador.name }}
-                    </option>
-                  </select>
-                </label>
-
-                <label>
+                <label class="label-w50">
+                  <span class="field">Indicador de intermediário</span>
                   <select formControlName="indicador_intermediario">
                     <option *ngFor="let indicador of indicadorIntermediario" [value]="indicador.type">{{ indicador.name }}
                     </option>
                   </select>
                 </label>
 
-                <label class="label-w30">
-                  <select formControlName="forma_pagamento">
-                    <option *ngFor="let indicador of formaPagamento" [value]="indicador.type">{{ indicador.name }}
-                    </option>
-                  </select>
-                </label>
-
-                <label class="label-w30">
+                <label class="label-w50">
+                  <span class="field">Presença do comprador</span>
                   <select formControlName="presenca_comprador">
                     <option *ngFor="let comprador of presencaComprador" [value]="comprador.type">{{ comprador.name }}
                     </option>
                   </select>
                 </label>
+              </div>
+
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+
+                  <ng-container formArrayName="payments">
+                    <div *ngFor="let payment of payments.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <label class="label-w30">
+                            <span class="field">Indicador de pagamento</span>
+                            <select formControlName="indicador_pagamento">
+                              <option *ngFor="let indicador of indicadorPagamento" [value]="indicador.type">{{ indicador.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Forma de pagamento</span>
+                            <select formControlName="forma_pagamento">
+                              <option *ngFor="let indicador of formaPagamento" [value]="indicador.type">{{ indicador.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w30" *ngIf="payment.value.forma_pagamento == '99'">
+                            <span class="field">Descrição do pagamento</span>
+                            <input formControlName="descricao_pagamento" type="text">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Data do pagamento</span>
+                            <input formControlName="data_pagamento" type="date">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Valor do pagamento</span>
+                            <input formControlName="valor_pagamento" prefix="R$ " mask="separator.2" thousandSeparator="." type="text" style="text-align: right">
+                          </label>
+
+                          <button class="add-item" mat-icon-button (click)="removePayment(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w30">
+                            <span class="field">Tipo de integração</span>
+                            <select formControlName="tipo_integracao">
+                              <option *ngFor="let tipo of integrationType" [value]="tipo.type">{{ tipo.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">CNPJ transacional</span>
+                            <input formControlName="cnpj_transacional" type="text" [mask]="'00.000.000/0000-00'">
+                          </label>
+
+                          <label>
+                            <span class="field">UF transacional</span>
+                            <input formControlName="uf_transacional" type="text" maxlength="2">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">CNPJ beneficiário</span>
+                            <input formControlName="cnpj_beneficiario" type="text" [mask]="'00.000.000/0000-00'">
+                          </label>
+                        </div>
+
+                        <div class="label-group">
+                          <label class="label-w30">
+                            <span class="field">CNPJ Credenciadora</span>
+                            <input formControlName="cnpj_credenciadora" type="text" maxlength="2">
+                          </label>
+
+                          <label>
+                            <span class="field">Bandeira operadora</span>
+                            <select formControlName="bandeira_operadora">
+                              <option *ngFor="let bandeira of flagOperator" [value]="bandeira.type">{{ bandeira.name }}
+                              </option>
+                            </select>
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Número de autorização</span>
+                            <input formControlName="numero_autorizacao" type="text">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">CNPJ beneficiário</span>
+                            <input formControlName="cnpj_beneficiario" type="text" [mask]="'00.000.000/0000-00'">
+                          </label>
+
+                          <label class="label-w30">
+                            <span class="field">Id Terminal Pagamento</span>
+                            <input formControlName="id_terminal_pagamento" type="text" maxlength="40">
+                          </label>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addPayment(null)">Adicionar mais uma linha</button>
+                  </div>
+                </div>
               </div>
             </mat-tab>
 

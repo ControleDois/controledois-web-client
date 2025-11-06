@@ -38,9 +38,10 @@ export class NfeFormComponent implements OnInit {
     amount: new FormControl(0),
     products: new FormArray([]),
     references: new FormArray([]),
+    payments: new FormArray([]),
   });
 
-  public keys = this.myForm.get('keys') as FormArray;
+  public payments = this.myForm.get('payments') as FormArray;
 
   public indicadorPagamento = [
     { name: '⦿ Pagamento à Vista', type: 0 },
@@ -90,6 +91,45 @@ export class NfeFormComponent implements OnInit {
     { name: '⦿ Operação presencial, fora do estabelecimento', type: 5 },
     { name: '⦿ Operação não presencial, outros', type: 9 },
   ];
+
+  public integrationType = [
+    { name: '⦿ Pagamento Integrado', type: 1 },
+    { name: '⦿ Pagamento não Integrado', type: 2 },
+  ];
+
+  public flagOperator = [
+    { name: '⦿ Visa', type: '01' },
+    { name: '⦿ Mastercard', type: '02' },
+    { name: '⦿ American Express', type: '03' },
+    { name: '⦿ Sorocred', type: '04' },
+    { name: '⦿ Diners Club', type: '05' },
+    { name: '⦿ Elo', type: '06' },
+    { name: '⦿ Hipercard', type: '07' },
+    { name: '⦿ Aura', type: '08' },
+    { name: '⦿ Cabal', type: '09' },
+    { name: '⦿ Alelo', type: '10' },
+    { name: '⦿ Banes Card', type: '11' },
+    { name: '⦿ CalCard', type: '12' },
+    { name: '⦿ Credz', type: '13' },
+    { name: '⦿ Discover', type: '14' },
+    { name: '⦿ GoodCard', type: '15' },
+    { name: '⦿ GreenCard', type: '16' },
+    { name: '⦿ Hiper', type: '17' },
+    { name: '⦿ JcB', type: '18' },
+    { name: '⦿ Mais', type: '19' },
+    { name: '⦿ MaxVan', type: '20' },
+    { name: '⦿ Policard', type: '21' },
+    { name: '⦿ RedeCompras', type: '22' },
+    { name: '⦿ Sodexo', type: '23' },
+    { name: '⦿ ValeCard', type: '24' },
+    { name: '⦿ Verocheque', type: '25' },
+    { name: '⦿ VR', type: '26' },
+    { name: '⦿ Ticket', type: '27' },
+    { name: '⦿ Outros', type: '99' },
+  ];
+
+
+
 
   public validationFields: Array<any> = [];
 
@@ -165,7 +205,7 @@ export class NfeFormComponent implements OnInit {
     items: [
       { text: 'Dados da NFe', index: 0, icon: 'article' },
       { text: 'Produtos', index: 1, icon: 'shopping_cart' },
-      { text: 'Outros', index: 2, icon: 'lists' },
+      { text: 'Pagamentos', index: 2, icon: 'payments' },
     ],
     selectedItem: 0
   }
@@ -297,6 +337,26 @@ export class NfeFormComponent implements OnInit {
     this.references.push(control);
   }
 
+  addPayment(value: any): void {
+    const control = new FormGroup({
+      indicador_pagamento: new FormControl(value?.indicador_pagamento || 0),
+      forma_pagamento: new FormControl(value?.indicador_pagamento || '01'),
+      descricao_pagamento: new FormControl(value?.descricao_pagamento || ''),
+      valor_pagamento: new FormControl(value?.valor_pagamento || 0),
+      data_pagamento: new FormControl(this.datePipe.transform(value?.date_due || new Date(), 'yyyy-MM-dd')),
+      cnpj_transacional: new FormControl(value?.cnpj_transacional || ''),
+      uf_transacional: new FormControl(value?.uf_transacional || ''),
+      tipo_integracao: new FormControl(value?.tipo_integracao || 0),
+      cnpj_credenciadora: new FormControl(value?.cnpj_credenciadora || ''),
+      bandeira_operadora: new FormControl(value?.bandeira_operadora || ''),
+      numero_autorizacao: new FormControl(value?.numero_autorizacao || ''),
+      cnpj_beneficiario: new FormControl(value?.cnpj_beneficiario || ''),
+      id_terminal_pagamento: new FormControl(value?.id_terminal_pagamento || ''),
+    });
+
+    this.payments.push(control);
+  }
+
   removeProduct(index: any): void {
     this.products.controls.splice(index, 1);
     this.productsOutPut.splice(index, 1);
@@ -305,6 +365,10 @@ export class NfeFormComponent implements OnInit {
 
   removeReference(index: any): void {
     this.references.controls.splice(index, 1);
+  }
+
+  removePayment(index: any): void {
+    this.payments.controls.splice(index, 1);
   }
 
   selectProduct(event: any, i: any): void {
@@ -359,7 +423,7 @@ export class NfeFormComponent implements OnInit {
       items: [
         { text: 'Dados da NFe', index: 0, icon: 'article' },
         { text: 'Produtos', index: 1, icon: 'shopping_cart' },
-        { text: 'Outros', index: 2, icon: 'lists' },
+        { text: 'Pagamentos', index: 2, icon: 'payments' },
       ],
       selectedItem: 0
     }
@@ -370,7 +434,7 @@ export class NfeFormComponent implements OnInit {
       items: [
         { text: 'Dados da NFe', index: 0, icon: 'article' },
         { text: 'Produtos', index: 1, icon: 'shopping_cart' },
-        { text: 'Outros', index: 2, icon: 'lists' },
+        { text: 'Pagamentos', index: 2, icon: 'payments' },
         { text: 'Doc. Referenciados ', index: 3, icon: 'note_add' },
       ],
       selectedItem: 0
