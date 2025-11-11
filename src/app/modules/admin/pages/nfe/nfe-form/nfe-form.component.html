@@ -236,6 +236,30 @@
                 </div>
               </div>
             </mat-tab>
+
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w30">
+                  <span class="field">Valor do frete</span>
+                  <input formControlName="valor_frete" currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: false, precision: 3}" style="text-align: right">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Valor do seguro</span>
+                  <input formControlName="valor_seguro" currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: false, precision: 3}" style="text-align: right">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Valor do desconto</span>
+                  <input formControlName="valor_desconto" currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: false, precision: 3}" style="text-align: right">
+                </label>
+
+                <label class="label-w30">
+                  <span class="field">Valor das outras despesas</span>
+                  <input formControlName="valor_outras_despesas" currencyMask [options]="{ prefix: '', thousands: '.', decimal: ',', allowNegative: false, precision: 3}" style="text-align: right">
+                </label>
+              </div>
+            </mat-tab>
           </mat-tab-group>
         </form>
 

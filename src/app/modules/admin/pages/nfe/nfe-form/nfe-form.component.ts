@@ -39,6 +39,10 @@ export class NfeFormComponent implements OnInit {
     products: new FormArray([]),
     references: new FormArray([]),
     payments: new FormArray([]),
+    valor_frete: new FormControl(0),
+    valor_seguro: new FormControl(0),
+    valor_desconto: new FormControl(0),
+    valor_outras_despesas: new FormControl(0),
   });
 
   public payments = this.myForm.get('payments') as FormArray;
@@ -128,9 +132,6 @@ export class NfeFormComponent implements OnInit {
     { name: '⦿ Outros', type: '99' },
   ];
 
-
-
-
   public validationFields: Array<any> = [];
 
   @Output() searchPeople: SearchLoadingUnique = {
@@ -206,6 +207,7 @@ export class NfeFormComponent implements OnInit {
       { text: 'Dados da NFe', index: 0, icon: 'article' },
       { text: 'Produtos', index: 1, icon: 'shopping_cart' },
       { text: 'Pagamentos', index: 2, icon: 'payments' },
+      { text: 'Avançado', index: 4, icon: 'task' },
     ],
     selectedItem: 0
   }
@@ -260,6 +262,14 @@ export class NfeFormComponent implements OnInit {
         for (const reference of value.notas_referenciadas) {
           this.addReference(reference);
         }
+      }
+
+      if (value.pagamentos && value.pagamentos.length > 0) {
+        for (const payment of value.pagamentos) {
+          this.addPayment(payment);
+        }
+
+        this.sumValues();
       }
 
       this.searchPeople.searchFieldOn = value.people;
@@ -340,13 +350,13 @@ export class NfeFormComponent implements OnInit {
   addPayment(value: any): void {
     const control = new FormGroup({
       indicador_pagamento: new FormControl(value?.indicador_pagamento || 0),
-      forma_pagamento: new FormControl(value?.indicador_pagamento || '01'),
+      forma_pagamento: new FormControl(value?.forma_pagamento || '01'),
       descricao_pagamento: new FormControl(value?.descricao_pagamento || ''),
       valor_pagamento: new FormControl(value?.valor_pagamento || 0),
-      data_pagamento: new FormControl(this.datePipe.transform(value?.date_due || new Date(), 'yyyy-MM-dd')),
+      data_pagamento: new FormControl(this.datePipe.transform(value?.data_pagamento || new Date(), 'yyyy-MM-dd')),
       cnpj_transacional: new FormControl(value?.cnpj_transacional || ''),
       uf_transacional: new FormControl(value?.uf_transacional || ''),
-      tipo_integracao: new FormControl(value?.tipo_integracao || 0),
+      tipo_integracao: new FormControl(value?.tipo_integracao || 1),
       cnpj_credenciadora: new FormControl(value?.cnpj_credenciadora || ''),
       bandeira_operadora: new FormControl(value?.bandeira_operadora || ''),
       numero_autorizacao: new FormControl(value?.numero_autorizacao || ''),
@@ -424,6 +434,7 @@ export class NfeFormComponent implements OnInit {
         { text: 'Dados da NFe', index: 0, icon: 'article' },
         { text: 'Produtos', index: 1, icon: 'shopping_cart' },
         { text: 'Pagamentos', index: 2, icon: 'payments' },
+        { text: 'Avançado', index: 4, icon: 'task' },
       ],
       selectedItem: 0
     }
@@ -436,6 +447,7 @@ export class NfeFormComponent implements OnInit {
         { text: 'Produtos', index: 1, icon: 'shopping_cart' },
         { text: 'Pagamentos', index: 2, icon: 'payments' },
         { text: 'Doc. Referenciados ', index: 3, icon: 'note_add' },
+        { text: 'Avançado', index: 4, icon: 'task' },
       ],
       selectedItem: 0
     }

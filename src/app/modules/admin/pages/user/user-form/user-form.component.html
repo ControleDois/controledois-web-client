@@ -1,23 +1,61 @@
 <div class="container">
   <div class="page-content">
-    <app-page-header [header]="pageHeader"></app-page-header>
+    <div class="basic">
+      <app-basic-form-navigation [navigation]="navigation" class="hide-62em"></app-basic-form-navigation>
 
-    <div class="basic-form">
-      <form [formGroup]="myForm">
-        <div class="label-group">
-          <label class="label-w50">
-            <span class="field">Email</span>
-            <input formControlName="email" type="email"  [readonly]="this.formId !== 'new'">
-          </label>
+      <div class="basic-form">
+        <app-page-header [header]="pageHeader"></app-page-header>
 
-          <label class="label-w50" *ngIf="this.formId === 'new'">
-            <span class="field">Senha</span>
-            <input formControlName="password" type="password">
-          </label>
-        </div>
-      </form>
+        <form [formGroup]="myForm">
+          <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
+            <mat-tab>
+              <div class="label-group">
+                <label class="label-w50">
+                  <span class="field">Email</span>
+                  <input formControlName="email" type="email"  [readonly]="this.formId !== 'new'">
+                </label>
 
-      <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+                <label class="label-w50" *ngIf="this.formId === 'new'">
+                  <span class="field">Senha</span>
+                  <input formControlName="password" type="password">
+                </label>
+              </div>
+            </mat-tab>
+
+            <mat-tab>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+                  <ng-container formArrayName="companies">
+                    <div *ngFor="let company of companies.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                      <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
+                        <li style="width: 100%;">Empresa</li>
+                      </ul>
+
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <app-search-loading-unique style="width: 100%" [search]="companiesOutPut[i]" (eventEmit)="selectCompany($event, i)"></app-search-loading-unique>
+
+                          <button class="add-item" mat-icon-button (click)="removeCompany(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                </div>
+
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addCompany(null)">Adicionar Empresa</button>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+
+        <app-basic-form-buttons [navigation]="navigationButtons"></app-basic-form-buttons>
+      </div>
     </div>
   </div>
 </div>
