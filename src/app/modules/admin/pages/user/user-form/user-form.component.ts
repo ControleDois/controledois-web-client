@@ -52,7 +52,21 @@ export class UserFormComponent implements OnInit {
         action: () => this.save(),
         class: 'c2-btn c2-btn-green',
         navigation: false
-      }
+      },
+      {
+        text: '',
+        icon: 'arrow_back',
+        action: () => this.setNavigation(false),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
+      {
+        text: '',
+        icon: 'arrow_forward',
+        action: () => this.setNavigation(true),
+        class: 'c2-btn c2-btn-bg-no-color',
+        navigation: true,
+      },
     ]
   }
 
@@ -170,5 +184,19 @@ export class UserFormComponent implements OnInit {
     this.companies.at(i).setValue({
       company_id: event.company_id,
     });
+  }
+
+  setNavigation(nextOrBack: boolean): void {
+    if (nextOrBack) {
+      this.navigation.selectedItem++;
+    } else {
+      this.navigation.selectedItem--;
+    }
+
+    if (this.navigation.selectedItem < 0) {
+      this.navigation.selectedItem = 0;
+    } else if (this.navigation.selectedItem >= this.navigation.items.length) {
+      this.navigation.selectedItem = this.navigation.items.length - 1;
+    }
   }
 }

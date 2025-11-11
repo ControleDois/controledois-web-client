@@ -68,7 +68,6 @@ export class SidenavComponent implements OnInit {
     }
   }
 
-
   onClose() {
     this.close.emit();
   }

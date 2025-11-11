@@ -26,9 +26,11 @@
           </div>
           <mat-menu #actions="matMenu">
             <button mat-menu-item [routerLink]="'/user/' + element.user.id">
+              <mat-icon>edit_square</mat-icon>
               <span>Editar</span>
             </button>
-            <button mat-menu-item (click)="deactivate(element.user.id)">
+            <button style="border-top: 1px solid #e0e0e0;" mat-menu-item (click)="deactivate(element.user.id)">
+              <mat-icon>person_remove</mat-icon>
               <span>Inativar</span>
             </button>
           </mat-menu>

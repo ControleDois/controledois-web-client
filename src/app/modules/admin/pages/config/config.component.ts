@@ -160,15 +160,15 @@ export class ConfigComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Dados da Empresa', index: 0, icon: 'info' },
-      { text: 'Fiscal', index: 1, icon: 'info' },
-      { text: 'Endereço', index: 2, icon: 'info' },
-      { text: 'Config. Venda', index: 3, icon: 'info' },
-      { text: 'Config. Nota', index: 4, icon: 'info' },
-      { text: 'Shop', index: 5, icon: 'info' },
-      { text: 'Config. Api', index: 6, icon: 'contacts' },
-      { text: 'PDV', index: 7, icon: 'contacts' },
-      { text: 'Terminais', index: 8, icon: 'contacts' },
+      { text: 'Dados da Empresa', index: 0, icon: 'business_center' },
+      { text: 'Fiscal', index: 1, icon: 'fact_check' },
+      { text: 'Endereço', index: 2, icon: 'explore' },
+      { text: 'Config. Venda', index: 3, icon: 'point_of_sale' },
+      { text: 'Config. Nota', index: 4, icon: 'receipt' },
+      { text: 'Shop', index: 5, icon: 'shopping_bag_speed' },
+      { text: 'Config. Api', index: 6, icon: 'api' },
+      { text: 'PDV', index: 7, icon: 'add_shopping_cart' },
+      { text: 'Terminais', index: 8, icon: 'terminal' },
     ],
     selectedItem: 0
   }

@@ -76,10 +76,10 @@ export class CompanyFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Dados da Empresa', index: 0, icon: 'info' },
-      { text: 'Fiscal', index: 1, icon: 'info' },
-      { text: 'Endereço', index: 2, icon: 'info' },
-      { text: 'Observação', index: 3, icon: 'contacts' },
+      { text: 'Dados da Empresa', index: 0, icon: 'business_center' },
+      { text: 'Fiscal', index: 1, icon: 'fact_check' },
+      { text: 'Endereço', index: 2, icon: 'explore' },
+      { text: 'Observação', index: 3, icon: 'visibility' },
     ],
     selectedItem: 0
   }

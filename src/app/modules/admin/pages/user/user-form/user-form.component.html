@@ -10,12 +10,12 @@
           <mat-tab-group [selectedIndex]="navigation.selectedItem" class="tab-no-labels">
             <mat-tab>
               <div class="label-group">
-                <label class="label-w50">
+                <label class="label-w100">
                   <span class="field">Email</span>
                   <input formControlName="email" type="email"  [readonly]="this.formId !== 'new'">
                 </label>
 
-                <label class="label-w50" *ngIf="this.formId === 'new'">
+                <label class="label-w100" *ngIf="this.formId === 'new'">
                   <span class="field">Senha</span>
                   <input formControlName="password" type="password">
                 </label>
