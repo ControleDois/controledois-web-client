@@ -27,7 +27,7 @@ export class SidenavComponent implements OnInit {
   }
 
   public auth: Auth;
-  public menuShow = [false, false];
+  public menuShow = new Array(10).fill(false);
   public selectedCompany = false;
 
 

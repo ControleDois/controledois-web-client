@@ -6,6 +6,7 @@ import { StorageService } from 'src/app/shared/services/storage.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BackupsModalComponent } from '../modals/backups-modal/backups-modal.component';
 import { PurchaseNoteComponent } from '../modals/purchase-note/purchase-note.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-dashboard',
@@ -41,6 +42,7 @@ export class DashboardComponent implements OnInit {
     private dashboardService: DashboardService,
     private storageService: StorageService,
     private dialog: MatDialog,
+    private breakpointObserver: BreakpointObserver
   ) {
     Chart.register(
       CategoryScale,
@@ -205,8 +207,22 @@ export class DashboardComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = false;
-    dialogConfig.width = '920px';
-    dialogConfig.maxHeight = '550px';
+
+    // Verifica se é Mobile (Celular)
+    const isMobile = this.breakpointObserver.isMatched(Breakpoints.Handset);
+
+    if (isMobile) {
+      // Configuração para Tela Inteira
+      dialogConfig.width = '100vw'; // Largura total da viewport
+      dialogConfig.height = '100vh'; // Altura total da viewport
+      dialogConfig.maxWidth = '100vw'; // Importante: sobrescreve o limite padrão do Material
+      dialogConfig.maxHeight = '100vh';
+    } else {
+      // Configuração Original (Desktop)
+      dialogConfig.width = '920px';
+      dialogConfig.maxHeight = '550px';
+    }
+
     this.dialog.open(BackupsModalComponent, dialogConfig);
   }
 

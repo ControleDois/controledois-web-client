@@ -403,139 +403,62 @@
             </mat-tab>
 
             <mat-tab *ngIf="myForm.value.id !== 0">
-              <mat-tab-group class="tab-labels">
-                <mat-tab label="Cadastro" *ngIf="myForm.value.id !== 0">
-                  <ng-template mat-tab-label>
-                    <mat-icon class="example-tab-icon">table</mat-icon>
-                    Cadastro
-                  </ng-template>
+              <div class="shopping-budget">
+                <div class="shopping-budget-grid" style="border: none !important">
+                  <ng-container formArrayName="backups">
+                    <div *ngFor="let backup of backups.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
+                      <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
+                        <li>Ativo</li>
+                        <li>Tipo</li>
+                        <li style="width: 30%">Nome</li>
+                        <li style="width: 50%">Local</li>
+                      </ul>
 
-                  <div class="shopping-budget">
-                    <div class="shopping-budget-grid" style="border: none !important">
-                      <ng-container formArrayName="backups">
-                        <div *ngFor="let backup of backups.controls; index as i" class="shopping-budget-grid-list" style="border: 1px solid #C9D3DD; margin-bottom: 20px;">
-                          <ul class="shopping-budget-grid-header" style="padding: 0 10px;">
-                            <li>Ativo</li>
-                            <li>Tipo</li>
-                            <li style="width: 30%">Nome</li>
-                            <li style="width: 50%">Local</li>
-                          </ul>
+                      <ng-container [formGroupName]="i">
+                        <div class="label-group">
+                          <label>
+                            <span class="label-title">Obrigatório</span>
+                            <select formControlName="active">
+                              <option [value]="false">Desativado</option>
+                              <option [value]="true">Ativado</option>
+                            </select>
+                          </label>
 
-                          <ng-container [formGroupName]="i">
-                            <div class="label-group">
-                              <label>
-                                <span class="label-title">Obrigatório</span>
-                                <select formControlName="active">
-                                  <option [value]="false">Desativado</option>
-                                  <option [value]="true">Ativado</option>
-                                </select>
-                              </label>
+                          <label>
+                            <span class="label-title">Obrigatório</span>
+                            <select formControlName="role">
+                              <option [value]="0">Outros</option>
+                              <option [value]="1">Banco de dados</option>
+                              <option [value]="2">NFe</option>
+                              <option [value]="3">NFCe</option>
+                            </select>
+                          </label>
 
-                              <label>
-                                <span class="label-title">Obrigatório</span>
-                                <select formControlName="role">
-                                  <option [value]="0">Outros</option>
-                                  <option [value]="1">Banco de dados</option>
-                                  <option [value]="2">NFe</option>
-                                  <option [value]="3">NFCe</option>
-                                </select>
-                              </label>
+                          <label style="width: 30%">
+                            <span class="label-title">Nome</span>
+                            <input formControlName="name" type="text">
+                          </label>
 
-                              <label style="width: 30%">
-                                <span class="label-title">Nome</span>
-                                <input formControlName="name" type="text">
-                              </label>
+                          <label style="width: 50%">
+                            <span class="label-title">Local</span>
+                            <input formControlName="path" type="text">
+                          </label>
 
-                              <label style="width: 50%">
-                                <span class="label-title">Local</span>
-                                <input formControlName="path" type="text">
-                              </label>
-
-                              <button class="add-item" mat-icon-button (click)="removeBackup(i)">
-                                <mat-icon>clear</mat-icon>
-                              </button>
-                            </div>
-                          </ng-container>
+                          <button class="add-item" mat-icon-button (click)="removeBackup(i)">
+                            <mat-icon>clear</mat-icon>
+                          </button>
                         </div>
                       </ng-container>
                     </div>
+                  </ng-container>
+                </div>
 
-                    <div class="shopping-budget-footer">
-                      <div class="amount-button-add">
-                        <button mat-button (click)="addBackup(null)">Adicionar</button>
-                      </div>
-                    </div>
+                <div class="shopping-budget-footer">
+                  <div class="amount-button-add">
+                    <button mat-button (click)="addBackup(null)">Adicionar</button>
                   </div>
-                </mat-tab>
-
-                <mat-tab label="Banco de Dados" *ngIf="myForm.value.id !== 0">
-                  <ng-template mat-tab-label>
-                    <mat-icon class="example-tab-icon">table</mat-icon>
-                    Banco de dados
-                  </ng-template>
-
-                  <section class="files">
-                    <div *ngFor="let file of files" class="file-item">
-                      <i class="file-icon fas fa-hdd"></i>
-                      <div class="file-info">
-                        <p class="file-name">{{ file.name }}</p>
-                        <p class="file-date">{{ file.client_modified | date:'mediumDate' }} | {{formatBytes(file.size, 2)}}
-                        </p>
-                      </div>
-                      <button class="action-btn" mat-button (click)="downloadFile(file.path_display)">Baixar</button>
-                    </div>
-                    <div *ngIf="files.length === 0" class="no-files-message">
-                      Nenhum resultado encontrado
-                    </div>
-                  </section>
-                </mat-tab>
-
-                <mat-tab label="XML NFe" *ngIf="myForm.value.id !== 0">
-                  <ng-template mat-tab-label>
-                    <mat-icon class="example-tab-icon">description</mat-icon>
-                    XML NFe
-                  </ng-template>
-
-                  <section class="files">
-                    <div *ngFor="let nfe of nfe" class="file-item">
-                      <i class="file-icon fas fa-file"></i>
-                      <div class="file-info">
-                        <p class="file-name">{{ nfe.name }}</p>
-                        <p class="file-date">{{ nfe.client_modified | date:'mediumDate' }} | {{formatBytes(nfe.size,
-                          2)}}
-                        </p>
-                      </div>
-                      <button class="action-btn" mat-button (click)="downloadFile(nfe.path_display)">Baixar</button>
-                    </div>
-                    <div *ngIf="nfe.length === 0" class="no-files-message">
-                      Nenhum resultado encontrado
-                    </div>
-                  </section>
-                </mat-tab>
-
-                <mat-tab label="XML NFCe" *ngIf="myForm.value.id !== 0">
-                  <ng-template mat-tab-label>
-                    <mat-icon class="example-tab-icon">receipt_long</mat-icon>
-                    XML NFCe
-                  </ng-template>
-
-                  <section class="files">
-                    <div *ngFor="let nfce of nfce" class="file-item">
-                      <i class="file-icon fas fa-receipt"></i>
-                      <div class="file-info">
-                        <p class="file-name">{{ nfce.name }}</p>
-                        <p class="file-date">{{ nfce.client_modified | date:'mediumDate' }} | {{formatBytes(nfce.size,
-                          2)}}
-                        </p>
-                      </div>
-                      <button class="action-btn" mat-button (click)="downloadFile(nfce.path_display)">Baixar</button>
-                    </div>
-                    <div *ngIf="nfce.length === 0" class="no-files-message">
-                      Nenhum resultado encontrado
-                    </div>
-                  </section>
-                </mat-tab>
-              </mat-tab-group>
+                </div>
+              </div>
             </mat-tab>
 
             <mat-tab>

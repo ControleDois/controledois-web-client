@@ -45,8 +45,8 @@ export class ContactFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Informações Gerais', index: 0, icon: 'info' },
-      { text: 'Observações', index: 1, icon: 'info' },
+      { text: 'Informações Gerais', index: 0, icon: 'assignment_ind' },
+      { text: 'Observações', index: 1, icon: 'visibility' },
     ],
     selectedItem: 0
   }

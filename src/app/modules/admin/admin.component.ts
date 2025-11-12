@@ -14,11 +14,6 @@ export class AdminComponent implements OnInit {
     this.checkScreenSize();
   }
 
-  @HostListener('window:resize', [])
-  onResize() {
-    this.checkScreenSize();
-  }
-
   private checkScreenSize() {
     const isMobile = window.innerWidth < 992;
     this.activeSidenav = !isMobile;

@@ -9,6 +9,7 @@ import { WidgetService } from 'src/app/shared/services/widget.service';
 import { LoadingFull } from 'src/app/shared/interfaces/loadingFull.interface';
 import { PageHeader } from '../../../interfaces/page-header.interface';
 import { FormControl } from '@angular/forms';
+import { LibraryService } from 'src/app/shared/services/library.service';
 
 @Component({
   selector: 'app-category-list',
@@ -45,6 +46,7 @@ export class CategoryListComponent implements OnInit, AfterViewInit {
   constructor(
     private categoryService: CategoryService,
     private widGetService: WidgetService,
+    public libraryService: LibraryService
   ) {
   }
 

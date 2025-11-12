@@ -155,11 +155,11 @@ export class PeopleFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Dados da Pessoa', index: 0, icon: 'info' },
-      { text: 'Fiscal', index: 1, icon: 'info' },
-      { text: 'Endereço', index: 2, icon: 'info' },
-      { text: 'Contatos', index: 3, icon: 'contacts' },
-      { text: 'Veículos', index: 4, icon: 'contacts' },
+      { text: 'Dados da Pessoa', index: 0, icon: 'person' },
+      { text: 'Fiscal', index: 1, icon: 'fact_check' },
+      { text: 'Endereço', index: 2, icon: 'explore' },
+      { text: 'Contatos', index: 3, icon: 'group_add' },
+      { text: 'Veículos', index: 4, icon: 'directions_car' },
     ],
     selectedItem: 0
   }
@@ -218,8 +218,8 @@ export class PeopleFormComponent implements OnInit {
       this.navigation.items.push({ text: 'Chaves', index: 5, icon: 'vpn_key' });
       this.navigation.items.push({ text: 'Backups', index: 6, icon: 'backup' });
     }
-    this.navigation.items.push({ text: 'Acesso Remoto', index: 7, icon: 'folder' });
-    this.navigation.items.push({ text: 'Observações', index: 8, icon: 'folder' });
+    this.navigation.items.push({ text: 'Acesso Remoto', index: 7, icon: 'cast_for_education' });
+    this.navigation.items.push({ text: 'Observações', index: 8, icon: 'visibility' });
   }
 
   validateForm(): void {

@@ -12,6 +12,7 @@ import { LibraryService } from 'src/app/shared/services/library.service';
 import { DropboxService } from 'src/app/shared/services/dropbox.service';
 import html2pdf from 'html2pdf.js'
 import { BackupViewComponent } from '../../report/backup-view/backup-view.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-backups-modal',
@@ -43,6 +44,11 @@ export class BackupsModalComponent implements OnInit {
   @Output() public pageHeader: PageHeader = {
     title: 'Gerenciamento de backups',
     description: 'Aqui você pode gerenciar os backups do sistema.',
+    button: {
+      text: 'Voltar',
+      icon: 'arrow_back',
+      action: () => this.closeModal(),
+    },
   };
 
   @Output() optionSelectBackup = new FormControl(0);
@@ -73,6 +79,7 @@ export class BackupsModalComponent implements OnInit {
     private widGetService: WidgetService,
     private dropboxService: DropboxService,
     private readonly resolver: ComponentFactoryResolver,
+    private dialogRef: MatDialogRef<BackupsModalComponent>,
     public libraryService: LibraryService,
   ) {
   }
@@ -335,5 +342,9 @@ export class BackupsModalComponent implements OnInit {
       .from(content)
       .toPdf()
       .outputPdf('dataurlnewwindow');
+  }
+
+  closeModal() {
+    this.dialogRef.close();
   }
 }

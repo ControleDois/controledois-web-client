@@ -21,9 +21,11 @@
           </div>
           <mat-menu #actions="matMenu">
             <button mat-menu-item [routerLink]="'/cost-center/' + element.id">
+              <mat-icon>edit_square</mat-icon>
               <span>Editar</span>
             </button>
             <button mat-menu-item (click)="delete(element.id)">
+              <mat-icon>delete_sweep</mat-icon>
               <span>Remover</span>
             </button>
           </mat-menu>

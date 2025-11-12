@@ -102,9 +102,9 @@ export class OrderServiceFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Informações Gerais', index: 0, icon: 'info' },
-      { text: 'Equipamento', index: 1, icon: 'info' },
-      { text: 'Observações', index: 2, icon: 'shopping_cart' },
+      { text: 'Informações Gerais', index: 0, icon: 'home_repair_service' },
+      { text: 'Equipamento', index: 1, icon: 'construction' },
+      { text: 'Observações', index: 2, icon: 'visibility' },
     ],
     selectedItem: 0
   }

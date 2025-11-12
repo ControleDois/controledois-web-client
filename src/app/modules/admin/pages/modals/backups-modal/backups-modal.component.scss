@@ -7,3 +7,9 @@
 .hidden {
   display: none !important;
 }
+
+@media (max-width: 62em) {
+  .page-content {
+    height: 100vh;
+  }
+}

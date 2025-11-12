@@ -91,9 +91,9 @@ export class ProductFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Informações Gerais', index: 0, icon: 'info' },
-      { text: 'Shop', index: 1, icon: 'info' },
-      { text: 'Complementos', index: 2, icon: 'shopping_cart' },
+      { text: 'Informações Gerais', index: 0, icon: 'inventory' },
+      { text: 'Shop', index: 1, icon: 'shopping_bag_speed' },
+      { text: 'Complementos', index: 2, icon: 'sell' },
     ],
     selectedItem: 0
   }
