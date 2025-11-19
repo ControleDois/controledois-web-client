@@ -307,6 +307,23 @@
         </li>
       </ul>
     </li>
+    <li class="menu-show" [ngClass]="{'show': menuShow[9]}">
+      <a (click)="menuShow[9] = !menuShow[9]">
+        <mat-icon>text_snippet</mat-icon>
+        <span>Relatórios</span>
+        <mat-icon [ngClass]="{'icon-show': menuShow[9]}" >keyboard_arrow_down</mat-icon>
+      </a>
+
+      <ul class="menu-1" [ngClass]="{'ul-show': menuShow[9]}">
+        <li routerLink="/sale-report" routerLinkActive="active" (click)="clickRoute()">
+          <a>
+            <mat-icon>add_shopping_cart</mat-icon>
+            <div class="border-active"></div>
+            <span>Vendas</span>
+          </a>
+        </li>
+      </ul>
+    </li>
   </ul>
 </div>
 

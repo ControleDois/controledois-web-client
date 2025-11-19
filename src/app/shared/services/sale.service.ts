@@ -46,4 +46,18 @@ export class SaleService {
   save(id: string, body: Object): Observable<any> {
     return id === 'new' ? this.store(body) : this.update(id, body);
   }
+
+  report(search: string, dtIni: any, dtFim: any, sorteBy?: string, orderBy?: string, page?: string, limit?: string): Observable<any> {
+    const params = new HttpParams()
+      .set('role', '1')
+      .set('search', search)
+      .set('dtIni', dtIni)
+      .set('dtFim', dtFim)
+      .set('sortedBy', sorteBy || 'id')
+      .set('orderBy', orderBy || 'id')
+      .set('page', page || '1')
+      .set('limit', limit || '10');
+
+    return this.apiService.on(`sale-report`, '', 'get-token-params', params);
+  }
 }

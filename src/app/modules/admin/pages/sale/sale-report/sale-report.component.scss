@@ -1,0 +1,25 @@
+.filter-dates {
+  display: flex;
+  align-items: center;
+
+  span {
+    padding: 10px;
+  }
+
+  label {
+    input {
+      font-size: 1em;
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-family: "Product Sans";
+      font-weight: 400;
+      color: #575757;
+      font-size: 14px;
+      margin-bottom: 15px;
+      background-color: rgb(247, 247, 247);
+      border-radius: 12px;
+      border: 2px solid rgb(229, 229, 229);
+    }
+  }
+}

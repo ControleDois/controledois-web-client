@@ -94,6 +94,8 @@ import { NfceFormComponent } from './pages/nfce/nfce-form/nfce-form.component';
 import { ReceivedBoxCentralComponent } from './pages/modals/received-box-central/received-box-central.component';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { DanfeViewerModalComponent } from './pages/modals/danfe-viewer-modal/danfe-viewer-modal.component';
+import { SaleReportComponent } from './pages/sale/sale-report/sale-report.component';
+import { SaleReportViewComponent } from './pages/report/sale-report-view/sale-report-view.component';
 
 const appName = 'CTrix';
 
@@ -432,7 +434,12 @@ const routes: Routes = [
     path: 'brand/:id',
     component: BrandFormComponent,
     data: { title: `Cadastro de Marcas -  ${appName}`},
-  }
+  },
+  {
+    path: 'sale-report',
+    component: SaleReportComponent,
+    data: { title: `Relatório de Vendas -  ${appName}`},
+  },
 ]
 
 @NgModule({
@@ -522,7 +529,9 @@ const routes: Routes = [
     NfceListComponent,
     NfceFormComponent,
     ReceivedBoxCentralComponent,
-    DanfeViewerModalComponent
+    DanfeViewerModalComponent,
+    SaleReportComponent,
+    SaleReportViewComponent
   ],
   imports: [
     CommonModule,

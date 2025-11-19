@@ -1,0 +1,89 @@
+<div class="report" id="order-report">
+  <header>
+    <div>Comprovante de Venda</div>
+    <div>{{getDateNow()}}</div>
+  </header>
+
+  <section class="company">
+    <!--<div class="logo">
+      <h1>eebu</h1>
+    </div>-->
+
+    <div class="description">
+      <h1>{{auth.company.people.name}}</h1>
+      <p>{{auth.company.people?.address?.address}},
+        {{auth.company.people.address?.number}},
+        {{auth.company.people.address?.district}},
+        {{auth.company.people.address?.city}}-{{auth.company.people.address?.state}}
+        CEP: {{auth.company.people.address?.zip_code}}</p>
+      <div>
+        <p>{{auth.company.people.role == 0 ? 'CPF: ' : 'CNPJ: '}}{{auth.company.people.document | mask: auth.company.people.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} </p>
+        <p style="margin-left: 20px">Fone: {{auth.company.people.phone_commercial || '' | mask: '(00) 00000-0000'}}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="people">
+    <div class="namePhone">
+      <p>FANTASIA: {{sale?.people?.name}}</p>
+      <p>{{sale?.people?.phone_commercial ? (sale?.people?.phone_commercial | mask: sale?.people?.phone_commercial.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000') : ''}}</p>
+    </div>
+
+    <div class="namePhone" *ngIf="sale?.people?.social_name">
+      <p>RAZÃO SOCIAL: {{sale?.people?.social_name}}</p>
+    </div>
+
+    <div class="documentEmail">
+      <p style="opacity: 0.8">CNPJ: {{sale?.people?.document | mask: sale?.people?.role == 0 ? '000.000.000-00' : '00.000.000/0000-00'}} IE: {{sale?.people?.ie}}</p>
+      <p>{{sale?.people?.email}}</p>
+    </div>
+
+    <p style="margin-top: 5px">{{sale?.people?.address?.address}}, {{sale?.people?.address?.number}} - {{sale?.people?.address?.complement}} - {{sale?.people?.address?.district}} - {{sale?.people?.address?.city}} - {{sale?.people?.address?.state}} - CEP: {{sale?.people?.address?.zip_code}}</p>
+  </section>
+
+  <!-- <section class="people">
+    <div class="namePhone" *ngIf="sale?.vehicle">
+      <p>PLACA: {{sale?.vehicle?.license_plate}}</p>
+    </div>
+
+    <div class="namePhone" *ngIf="!sale?.vehicle">
+      <p>PLACA: {{sale?.vehicle_description}}</p>
+    </div>
+  </section> -->
+
+  <section class="products-grid">
+    <ul class="products-grid-header">
+      <li style="width: 80%">Produto/Serviço</li>
+      <!-- <li style="width: 30%">Detalhes do item</li> -->
+      <li style="text-align: right">Quantidade</li>
+    </ul>
+
+    <ul class="products-grid-list" *ngFor="let product of sale?.products; index as i">
+      <li style="width: 80%">{{product?.product?.shop?.name || product?.shop?.name || product?.description }}</li>
+      <!-- <li style="width: 30%">{{product.description}}</li> -->
+      <li style="text-align: right">{{product?.amount}}</li>
+    </ul>
+  </section>
+
+  <section class="assinatura">
+    <p>ASSINATURA</p>
+  </section>
+</div>
+
+<section class="product-edit">
+  <div style="background-color: #ddd;" class="product-edit-item">
+    <div class="product-edit-item-detail">
+      <button (click)="downloadPDF()" mat-button style="background-color: #1b9b45; color: #fff;">
+        <mat-icon style="margin-right: 0;">cloud_download</mat-icon>
+        <span>Download</span>
+      </button>
+
+      <button mat-button (click)="closeModal()">
+        <mat-icon style="margin-right: 0;">cancel</mat-icon>
+        <span>Fechar</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<app-loading-full [loadingFull]="loadingFull"></app-loading-full>
