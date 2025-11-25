@@ -116,6 +116,7 @@ export class MainComponent implements OnInit  {
     message: '',
     number: 0,
     id: '',
+    tpEmis: 0
   };
 
   constructor(
@@ -468,7 +469,8 @@ export class MainComponent implements OnInit  {
           this.terminalSelected,
           this.auth.company.config.sale_people_default,
           this.products.value,
-          this.plots.value
+          this.plots.value,
+          1,
         );
 
         //Salva a nfe e pega o id colocando no statusNfe
@@ -719,7 +721,6 @@ export class MainComponent implements OnInit  {
           this.statusNFeRequest.status = localhost.status;
           this.statusNFeRequest.message = localhost.message;
 
-
           if (this.statusNFeRequest.status === '2') {
             this.statusNFeRequest.status = 2;
             this.statusNFeRequest.message = 'NFCe gerada com sucesso';
@@ -742,6 +743,15 @@ export class MainComponent implements OnInit  {
             this.terminalSelected.nfce_numero = this.statusNFeRequest.number + 1;
             this.indexedDbService.updateData(this.terminalSelected, 'terminal');
 
+            this.save();
+          }
+
+          console.log(localhost);
+
+          //Caso acontecer algum erro na emissão onde o status for 3 gerar nota em contingencia
+          if (this.statusNFeRequest.status === '3' && this.statusNFeRequest.tpEmis === 0) {
+            console.log('Gerar NFCe em contingência');
+            this.statusNFeRequest.tpEmis = 1;
             this.save();
           }
         },
