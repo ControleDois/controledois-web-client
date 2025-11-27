@@ -312,6 +312,7 @@ export class MainComponent implements OnInit  {
 
       //Se o pagamento for maior ou igual ao total finaliza a venda
       if (this.sumPayments() >= this.sumProducts().total) {
+        this.statusNFeRequest.tpEmis = 0;
         //Salva a venda
         this.save();
       }
@@ -470,7 +471,7 @@ export class MainComponent implements OnInit  {
           this.auth.company.config.sale_people_default,
           this.products.value,
           this.plots.value,
-          1,
+          this.statusNFeRequest.tpEmis,
         );
 
         //Salva a nfe e pega o id colocando no statusNfe
