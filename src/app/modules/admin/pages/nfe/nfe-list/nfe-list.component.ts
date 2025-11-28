@@ -340,4 +340,5 @@ export class NfeListComponent implements OnInit, OnDestroy {
       this.loadingFull.active = false;
     });
   }
+
 }

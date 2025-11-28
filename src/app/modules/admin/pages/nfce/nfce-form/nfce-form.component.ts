@@ -35,12 +35,18 @@ export class NfceFormComponent implements OnInit {
     indicador_intermediario: new FormControl(0),
     forma_pagamento: new FormControl('01'),
     presenca_comprador: new FormControl(1),
+    payments: new FormArray([]),
     amount: new FormControl(0),
     modelo: new FormControl(65),
+    references: new FormArray([]),
     products: new FormArray([]),
+    valor_frete: new FormControl(0),
+    valor_seguro: new FormControl(0),
+    valor_desconto: new FormControl(0),
+    valor_outras_despesas: new FormControl(0),
   });
 
-  public keys = this.myForm.get('keys') as FormArray;
+  public payments = this.myForm.get('payments') as FormArray;
 
   public indicadorPagamento = [
     { name: '⦿ Pagamento à Vista', type: 0 },
@@ -162,12 +168,49 @@ export class NfceFormComponent implements OnInit {
 
   @Output() public navigation: BasicFormNavigation = {
     items: [
-      { text: 'Dados da NFCe', index: 0, icon: 'info' },
-      { text: 'Produtos', index: 1, icon: 'info' },
-      { text: 'Outros', index: 2, icon: 'info' },
+      { text: 'Dados da NFCe', index: 0, icon: 'article' },
+      { text: 'Produtos', index: 1, icon: 'shopping_cart' },
+      { text: 'Pagamentos', index: 2, icon: 'payments' },
+      { text: 'Avançado', index: 4, icon: 'task' },
     ],
     selectedItem: 0
   }
+
+  public integrationType = [
+    { name: '⦿ Pagamento Integrado', type: 1 },
+    { name: '⦿ Pagamento não Integrado', type: 2 },
+  ];
+
+  public flagOperator = [
+    { name: '⦿ Visa', type: '01' },
+    { name: '⦿ Mastercard', type: '02' },
+    { name: '⦿ American Express', type: '03' },
+    { name: '⦿ Sorocred', type: '04' },
+    { name: '⦿ Diners Club', type: '05' },
+    { name: '⦿ Elo', type: '06' },
+    { name: '⦿ Hipercard', type: '07' },
+    { name: '⦿ Aura', type: '08' },
+    { name: '⦿ Cabal', type: '09' },
+    { name: '⦿ Alelo', type: '10' },
+    { name: '⦿ Banes Card', type: '11' },
+    { name: '⦿ CalCard', type: '12' },
+    { name: '⦿ Credz', type: '13' },
+    { name: '⦿ Discover', type: '14' },
+    { name: '⦿ GoodCard', type: '15' },
+    { name: '⦿ GreenCard', type: '16' },
+    { name: '⦿ Hiper', type: '17' },
+    { name: '⦿ JcB', type: '18' },
+    { name: '⦿ Mais', type: '19' },
+    { name: '⦿ MaxVan', type: '20' },
+    { name: '⦿ Policard', type: '21' },
+    { name: '⦿ RedeCompras', type: '22' },
+    { name: '⦿ Sodexo', type: '23' },
+    { name: '⦿ ValeCard', type: '24' },
+    { name: '⦿ Verocheque', type: '25' },
+    { name: '⦿ VR', type: '26' },
+    { name: '⦿ Ticket', type: '27' },
+    { name: '⦿ Outros', type: '99' },
+  ];
 
   public products = this.myForm.get('products') as FormArray;
   @Output() public productsOutPut: Array<SearchLoadingUnique>;
@@ -210,9 +253,16 @@ export class NfceFormComponent implements OnInit {
     if (value) {
       if (value.itens && value.itens.length > 0) {
         for (const product of value.itens) {
-          console.log(product)
           this.addProduct(product);
         }
+      }
+
+      if (value.pagamentos && value.pagamentos.length > 0) {
+        for (const payment of value.pagamentos) {
+          this.addPayment(payment);
+        }
+
+        this.sumValues();
       }
 
       this.searchPeople.searchFieldOn = value.people;
@@ -332,5 +382,29 @@ export class NfceFormComponent implements OnInit {
     } else if (this.navigation.selectedItem >= this.navigation.items.length) {
       this.navigation.selectedItem = this.navigation.items.length - 1;
     }
+  }
+
+  addPayment(value: any): void {
+    const control = new FormGroup({
+      indicador_pagamento: new FormControl(value?.indicador_pagamento || 0),
+      forma_pagamento: new FormControl(value?.forma_pagamento || '01'),
+      descricao_pagamento: new FormControl(value?.descricao_pagamento || ''),
+      valor_pagamento: new FormControl(value?.valor_pagamento || 0),
+      data_pagamento: new FormControl(this.datePipe.transform(value?.data_pagamento || new Date(), 'yyyy-MM-dd')),
+      cnpj_transacional: new FormControl(value?.cnpj_transacional || ''),
+      uf_transacional: new FormControl(value?.uf_transacional || ''),
+      tipo_integracao: new FormControl(value?.tipo_integracao || 1),
+      cnpj_credenciadora: new FormControl(value?.cnpj_credenciadora || ''),
+      bandeira_operadora: new FormControl(value?.bandeira_operadora || ''),
+      numero_autorizacao: new FormControl(value?.numero_autorizacao || ''),
+      cnpj_beneficiario: new FormControl(value?.cnpj_beneficiario || ''),
+      id_terminal_pagamento: new FormControl(value?.id_terminal_pagamento || ''),
+    });
+
+    this.payments.push(control);
+  }
+
+  removePayment(index: any): void {
+    this.payments.controls.splice(index, 1);
   }
 }
