@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  api: 'https://api.ctrix.com.br',
-  ws: 'wss://api.ctrix.com.br',
+  api: 'https://api.controledois.com.br',
+  ws: 'wss://api.controledois.com.br',
   whatsapp: 'https://boot.wwebj.001.ctrix.com.br',
   firebase: {
     apiKey: "AIzaSyA7Rb1Eh33X8fd8XU284V0_zxt2tWHBXEk",
