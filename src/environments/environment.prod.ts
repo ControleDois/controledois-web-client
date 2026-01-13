@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  api: 'https://dev.controledois.com.br',
-  ws: 'wss://dev.controledois.com.br',
+  api: 'https://api.controledois.com.br',
+  ws: 'wss://api.controledois.com.br',
   whatsapp: 'https://whatsapp.controledois.com.br',
   firebase: {
     apiKey: "AIzaSyA7Rb1Eh33X8fd8XU284V0_zxt2tWHBXEk",
