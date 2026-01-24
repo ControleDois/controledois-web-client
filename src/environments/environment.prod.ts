@@ -1,8 +1,8 @@
 export const environment = {
   production: true,
-  api: 'https://api.controledois.com.br',
-  ws: 'wss://api.controledois.com.br',
-  whatsapp: 'https://whatsapp.controledois.com.br',
+  api: 'https://api.grupoamsfacilita.com.br',
+  ws: 'wss://api.grupoamsfacilita.com.br',
+  whatsapp: 'https://whatsapp.grupoamsfacilita.com.br',
   firebase: {
     apiKey: "AIzaSyA7Rb1Eh33X8fd8XU284V0_zxt2tWHBXEk",
     authDomain: "controledois-br.firebaseapp.com",
